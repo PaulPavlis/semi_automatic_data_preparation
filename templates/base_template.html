@@ -27,14 +27,14 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('import_data')}}">Import data</a>
+                <a class="nav-link" href="{{ url_for('import_data.home')}}">Import data</a>
             </li>
 
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                     aria-expanded="false">Data exploration</a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="{{ url_for('data_exploration_home')}}">Interesting details</a></li>
+                    <li><a class="nav-link" href="{{ url_for('data_exploration.home')}}">Interesting details</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
@@ -48,7 +48,7 @@
                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                     aria-expanded="false">Data preparation</a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="{{ url_for('data_preparation_home')}}">Home</a></li>
+                    <li><a class="nav-link" href="{{ url_for('data_preparation.home')}}">Home</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
@@ -62,7 +62,7 @@
                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Using the
                     data</a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="{{ url_for('data_preparation_home')}}">Output to file</a></li>
+                    <li><a class="nav-link" href="{{ url_for('using_the_data.home')}}">Output to file</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>

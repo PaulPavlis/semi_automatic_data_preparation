@@ -1,6 +1,14 @@
 from flask import Flask, redirect, url_for, render_template, request
+from controller.data_exploration import data_exploration
+from controller.data_preparation import data_preparation
+from controller.import_data import import_data
+from controller.using_the_data import using_the_data
 
 app = Flask(__name__)
+app.register_blueprint(data_exploration, url_prefix="/data_exploration")
+app.register_blueprint(data_preparation, url_prefix="/data_preparation")
+app.register_blueprint(import_data, url_prefix="/import_data")
+app.register_blueprint(using_the_data, url_prefix="/using_the_data")
 
 
 @app.route("/")
@@ -14,26 +22,6 @@ def home():
         return render_template("index.html", email=form_email, password=form_password)
     else:
         return "Use get or post to request this page"
-
-
-@app.route("/import_data")
-def import_data():
-    return "<h1>Fill me in</h1>"
-
-
-@app.route("/data_exploration_home")
-def data_exploration_home():
-    return "<h1>Fill me in</h1>"
-
-
-@app.route("/data_preparation_home")
-def data_preparation_home():
-    return "<h1>Fill me in</h1>"
-
-
-@app.route("/machine_learning")
-def machine_learning():
-    return "<h1>Fill me in</h1>"
 
 
 if __name__ == "__main__":
