@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 
 <head>
     <meta charset="utf-8">
@@ -21,7 +21,7 @@
     <div class="container mt-3">
 
         <!-- Navbar start -->
-        <ul class="nav nav-pills nav-fill mb-3">
+        <ul class="nav nav-pills nav-fill mb-3 text-secondary-emphasis bg-secondary-subtle border border-secondary-subtle rounded-3">
             <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('home')}}">Home</a>
             </li>
@@ -83,6 +83,16 @@
                 
             {% endif %}
         {% endwith %} #}
+
+        {% if sub_navbar_list %}
+            <ul class="nav nav-pills nav-justified mb-3">
+                {% for navbar_entry in sub_navbar_list %}
+                    <li class="nav-item text-light-emphasis border border-light-subtle rounded-3 m-1 {% print('bg-primary-subtle') if navbar_entry == sub_navbar_active %}">
+                        <a class="nav-link" href="{{navbar_entry}}">{{navbar_entry}}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
         <!-- Main content block for child templates to write to -->
         {% block main_content %}
