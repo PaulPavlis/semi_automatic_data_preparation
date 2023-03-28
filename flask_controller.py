@@ -1,12 +1,19 @@
-from flask import Flask, redirect, url_for, render_template, request, session, flash
-from datetime import timedelta
+from flask import Flask, redirect, url_for, render_template, request
 
 app = Flask(__name__)
 
+
 @app.route("/")
-@app.route("/home")
+@app.route("/home", methods=["POST", "GET"])
 def home():
-    return render_template("index.html")
+    if request.method == "GET":
+        return render_template("index.html")
+    elif request.method == "POST":
+        form_email = request.form["email"]
+        form_password = request.form["password"]
+        return render_template("index.html", email=form_email, password=form_password)
+    else:
+        return "Use get or post to request this page"
 
 
 @app.route("/import_data")
