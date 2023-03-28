@@ -42,7 +42,6 @@ def home():
 
 @data_preparation.route("/automatic_detection")
 def automatic_detection():
-    return __name__
     return get_controller_specific_template_with_args(
         "index_data_preparation.html",
         automatic_detection.__name__,
