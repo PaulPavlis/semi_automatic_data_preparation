@@ -26,8 +26,8 @@
                 <a class="nav-link" href="{{ url_for('home')}}">Home</a>
             </li>
 
-            <li class="nav-item {% if main_navbar_active == 'import_data' %}bg-info-subtle border border-info-subtle rounded-3{% endif %}">
-                <a class="nav-link" href="{{ url_for('import_data.home')}}">Import data</a>
+            <li class="nav-item {% if main_navbar_active == 'data_selection' %}bg-info-subtle border border-info-subtle rounded-3{% endif %}">
+                <a class="nav-link" href="{{ url_for('data_selection.home')}}">Data Selection</a>
             </li>
 
             <li class="nav-item dropdown {% if main_navbar_active == 'data_exploration' %}bg-info-subtle border border-info-subtle rounded-3{% endif %}">

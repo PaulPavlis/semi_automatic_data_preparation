@@ -1,13 +1,13 @@
 from flask import Flask, redirect, url_for, render_template, request
 from controller.data_exploration import data_exploration
 from controller.data_preparation import data_preparation
-from controller.import_data import import_data
+from controller.data_selection import data_selection
 from controller.using_the_data import using_the_data
 
 app = Flask(__name__)
 app.register_blueprint(data_exploration, url_prefix="/data_exploration")
 app.register_blueprint(data_preparation, url_prefix="/data_preparation")
-app.register_blueprint(import_data, url_prefix="/import_data")
+app.register_blueprint(data_selection, url_prefix="/data_selection")
 app.register_blueprint(using_the_data, url_prefix="/using_the_data")
 
 
