@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, render_template, request
+from flask import Flask, render_template
 from controller.data_exploration import data_exploration
 from controller.data_preparation import data_preparation
 from controller.data_selection import data_selection
@@ -10,18 +10,16 @@ app.register_blueprint(data_preparation, url_prefix="/data_preparation")
 app.register_blueprint(data_selection, url_prefix="/data_selection")
 app.register_blueprint(using_the_data, url_prefix="/using_the_data")
 
+UPLOAD_FOLDER = "stored_user_files"
+ALLOWED_EXTENSIONS = {"csv", "json"}
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+app.config["ALLOWED_EXTENSIONS"] = ALLOWED_EXTENSIONS
+
 
 @app.route("/")
-@app.route("/home", methods=["POST", "GET"])
+@app.route("/home")
 def home():
-    if request.method == "GET":
-        return render_template("index.html", main_navbar_active="home")
-    elif request.method == "POST":
-        form_email = request.form["email"]
-        form_password = request.form["password"]
-        return render_template("index.html", email=form_email, password=form_password)
-    else:
-        return "Use get or post to request this page"
+    return render_template("index.html", main_navbar_active="home")
 
 
 if __name__ == "__main__":
