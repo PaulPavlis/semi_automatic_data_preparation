@@ -3,6 +3,7 @@ from controller.data_exploration import data_exploration
 from controller.data_preparation import data_preparation
 from controller.data_selection import data_selection
 from controller.using_the_data import using_the_data
+import os
 
 app = Flask(__name__)
 app.register_blueprint(data_exploration, url_prefix="/data_exploration")
@@ -12,8 +13,10 @@ app.register_blueprint(using_the_data, url_prefix="/using_the_data")
 
 UPLOAD_FOLDER = "stored_user_files"
 ALLOWED_EXTENSIONS = {"csv", "json"}
+ACTIVE_DATASET_FOLDER = os.path.join(UPLOAD_FOLDER, "active_dataset")
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["ALLOWED_EXTENSIONS"] = ALLOWED_EXTENSIONS
+app.config["ACTIVE_DATASET_FOLDER"] = ACTIVE_DATASET_FOLDER
 
 
 @app.route("/")
