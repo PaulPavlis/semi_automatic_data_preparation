@@ -6,12 +6,14 @@ def get_controller_general_template_with_args(
     sub_navbar_list_arg=None,
     sub_navbar_active_arg="",
     main_navbar_active_arg="",
+    *additional_args
 ):
     return render_template(
         template_name,
         sub_navbar_list=sub_navbar_list_arg,
         sub_navbar_active=sub_navbar_active_arg,
         main_navbar_active=main_navbar_active_arg,
+        additional_args=additional_args,
     )
 
 

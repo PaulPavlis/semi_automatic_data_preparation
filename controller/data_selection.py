@@ -7,6 +7,7 @@ from controller.controller_helper import (
 import pandas as pd
 import os
 from werkzeug.utils import secure_filename
+import shutil
 
 data_selection = Blueprint(
     "data_selection",
@@ -23,13 +24,16 @@ method_usage_list = [
 
 
 def get_controller_specific_template_with_args(
-    template_name_arg="index_data_selection.html", sub_navbar_active_arg=""
+    template_name_arg="index_data_selection.html",
+    sub_navbar_active_arg="",
+    *additional_args,
 ):
     return get_controller_general_template_with_args(
         template_name_arg,
         method_usage_list,
         sub_navbar_active_arg,
         get_controller_filename(__name__),
+        *additional_args,
     )
 
 
@@ -101,13 +105,53 @@ def import_new_dataset():
 
 @data_selection.route("/select_dataset_as_active", methods=["POST", "GET"])
 def select_dataset_as_active():
+    dataset_list = [
+        f
+        for f in os.listdir(current_app.config["UPLOAD_FOLDER"])
+        if os.path.isfile(os.path.join(current_app.config["UPLOAD_FOLDER"], f))
+    ]
+
+    print(dataset_list)
+
     if request.method == "GET":
         return get_controller_specific_template_with_args(
-            "select_dataset_as_active.html", select_dataset_as_active.__name__
+            "select_dataset_as_active.html",
+            select_dataset_as_active.__name__,
+            dataset_list,
         )
     elif request.method == "POST":
+        print(f"{request.form=}")
+
+        # Move old active file to stored user files
+        active_dataset_list = [
+            f
+            for f in os.listdir(current_app.config["ACTIVE_DATASET_FOLDER"])
+            if os.path.isfile(
+                os.path.join(current_app.config["ACTIVE_DATASET_FOLDER"], f)
+            )
+        ]
+
+        for active_dataset in active_dataset_list:
+            shutil.move(
+                os.path.join(
+                    current_app.config["ACTIVE_DATASET_FOLDER"], active_dataset
+                ),
+                os.path.join(current_app.config["UPLOAD_FOLDER"], active_dataset),
+            )
+
+        # Move new active dataset to active folder
+        new_active_dataset = request.form["new_active_dataset"]
+        shutil.copyfile(
+            os.path.join(current_app.config["UPLOAD_FOLDER"], new_active_dataset),
+            os.path.join(
+                current_app.config["ACTIVE_DATASET_FOLDER"], new_active_dataset
+            ),
+        )
+
         return get_controller_specific_template_with_args(
-            "select_dataset_as_active.html", select_dataset_as_active.__name__
+            "select_dataset_as_active.html",
+            select_dataset_as_active.__name__,
+            dataset_list,
         )
 
     else:
