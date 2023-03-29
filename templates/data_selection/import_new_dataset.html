@@ -1,0 +1,22 @@
+{% extends "base_template.html" %}
+
+{% block title %}Data selection - Import new dataset{% endblock %}
+{% block main_content %}
+
+<form action="#" method="POST">
+  <div class="mb-3">
+    <label for="new_file_name" class="form-label">File name</label>
+    <input type="text" class="form-control" name="new_file_name" id="new_file_name" placeholder="Leave empty if you do not wish to change the name of the file">
+  </div>
+  <div class="mb-3">
+    <label for="new_file_input" class="form-label">File</label>
+    <input type="file" class="form-control" name="new_file_input" id="new_file_input" required>
+  </div>
+    <div class="mb-3 form-check">
+    <input type="checkbox" class="form-check-input" name="new_file_as_active" id="new_file_as_active" checked>
+    <label class="form-check-label" for="new_file_as_active">Set as active dataset</label>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+{% endblock %}

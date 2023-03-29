@@ -33,3 +33,11 @@ def get_controller_specific_template_with_args(
 @data_selection.route("/home")
 def home():
     return get_controller_specific_template_with_args("index_data_selection.html")
+
+
+@data_selection.route("/import_new_dataset")
+def import_new_dataset():
+    return get_controller_specific_template_with_args(
+        "import_new_dataset.html",
+        import_new_dataset.__name__,
+    )
