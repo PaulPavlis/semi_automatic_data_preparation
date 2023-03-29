@@ -185,24 +185,14 @@ def delete_dataset():
         if os.path.isfile(os.path.join(current_app.config["UPLOAD_FOLDER"], f))
     ]
 
-    print(dataset_list)
-
-    if request.method == "GET":
-        return get_controller_specific_template_with_args(
-            "delete_dataset.html",
-            delete_dataset.__name__,
-            dataset_list,
-        )
-    elif request.method == "POST":
-        print(f"{request.form=}")
-
-        delete_dataset_with_name(request.form["delete_dataset_name"])
+    if request.method == "GET" or request.method == "POST":
+        if request.method == "POST":
+            delete_dataset_with_name(request.form["delete_dataset_name"])
 
         return get_controller_specific_template_with_args(
             "delete_dataset.html",
             delete_dataset.__name__,
             dataset_list,
         )
-
     else:
         return "Use get or post to request this page"
