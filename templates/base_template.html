@@ -30,54 +30,56 @@
                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                     aria-expanded="false">Data Selection</a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="{{ url_for('data_selection.home')}}">import_new_dataset</a></li>
+                    <li><a class="nav-link" href="{{ url_for('data_selection.home')}}">Help</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
+                    <li><a class="dropdown-item" href="#">import_new_dataset</a></li>
                     <li><a class="dropdown-item" href="#">select_dataset_as_active</a></li>
                     <li><a class="dropdown-item" href="#">delete_dataset</a></li>
                 </ul>
             </li>
-
+            
             <li class="nav-item dropdown {% if main_navbar_active == 'data_exploration' %}bg-info-subtle border border-info-subtle rounded-3{% endif %}">
                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                     aria-expanded="false">Data exploration</a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="{{ url_for('data_exploration.home')}}">Interesting details</a></li>
+                    <li><a class="nav-link" href="{{ url_for('data_exploration.home')}}">Help</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="#">Visual exploration</a></li>
-                    <li><a class="dropdown-item" href="#">Manual exploration</a></li>
+                    <li><a class="dropdown-item" href="#">general_overview</a></li>
+                    <li><a class="dropdown-item" href="#">manual_exploration</a></li>
+                    <li><a class="dropdown-item" href="#">visual_exploration</a></li>
                 </ul>
             </li>
-
 
             <li class="nav-item dropdown {% if main_navbar_active == 'data_preparation' %}bg-info-subtle border border-info-subtle rounded-3{% endif %}">
                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                     aria-expanded="false">Data preparation</a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="{{ url_for('data_preparation.home')}}">Home</a></li>
+                    <li><a class="nav-link" href="{{ url_for('data_preparation.home')}}">Help</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="#">Method 1</a></li>
-                    <li><a class="dropdown-item" href="#">Method 2</a></li>
-                    <li><a class="dropdown-item" href="#">Method 3</a></li>
+                    <li><a class="dropdown-item" href="#">automatic_detection</a></li>
+                    <li><a class="dropdown-item" href="#">manual_repairing</a></li>
+                    <li><a class="dropdown-item" href="#">transpose</a></li>
+                    <li><a class="dropdown-item" href="#">anomaly_detection</a></li>
+                    <li><a class="dropdown-item" href="#">normalisation</a></li>
                 </ul>
             </li>
 
             <li class="nav-item dropdown {% if main_navbar_active == 'using_the_data' %}bg-info-subtle border border-info-subtle rounded-3{% endif %}">
-                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Using the
-                    data</a>
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Using the data</a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="{{ url_for('using_the_data.home')}}">Output to file</a></li>
+                    <li><a class="nav-link" href="{{ url_for('using_the_data.home')}}">Help</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="#">AutoML solution 1</a></li>
-                    <li><a class="dropdown-item" href="#">AutoML solution 2</a></li>
-                    <li><a class="dropdown-item" href="#">AutoML solution 3</a></li>
+                    <li><a class="dropdown-item" href="#">output_to_file</a></li>
+                    <li><a class="dropdown-item" href="#">automl_solution_1</a></li>
+                    <li><a class="dropdown-item" href="#">automl_solution_2</a></li>
                 </ul>
             </li>
             </ul>
