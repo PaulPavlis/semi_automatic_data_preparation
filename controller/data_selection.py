@@ -54,6 +54,38 @@ def get_active_dataset_list():
     ]
 
 
+def set_active_file(new_active_dataset):
+    active_dataset_list = get_active_dataset_list()
+
+    for active_dataset in active_dataset_list:
+        shutil.move(
+            os.path.join(current_app.config["ACTIVE_DATASET_FOLDER"], active_dataset),
+            os.path.join(current_app.config["UPLOAD_FOLDER"], active_dataset),
+        )
+
+    # Move new active dataset to active folder
+    if new_active_dataset:
+        shutil.copyfile(
+            os.path.join(current_app.config["UPLOAD_FOLDER"], new_active_dataset),
+            os.path.join(
+                current_app.config["ACTIVE_DATASET_FOLDER"], new_active_dataset
+            ),
+        )
+
+
+def delete_dataset_with_name(delete_dataset_name):
+    if delete_dataset_name:
+        if delete_dataset_name == "active_file":
+            delete_all_active_files()
+        else:
+            os.remove(
+                os.path.join(
+                    current_app.config["UPLOAD_FOLDER"],
+                    delete_dataset_name,
+                )
+            )
+
+
 @data_selection.route("/")
 @data_selection.route("/home")
 def home():
@@ -96,8 +128,6 @@ def import_new_dataset():
                     os.path.join(current_app.config["UPLOAD_FOLDER"], file_name_final)
                 )
 
-                # new_file_dataframe = read_generic_input_file(new_file)
-
                 if "is_new_file_active" in request.form:
                     print("Add me as active file")  # TODO: Do this
 
@@ -135,26 +165,7 @@ def select_dataset_as_active():
     elif request.method == "POST":
         print(f"{request.form=}")
 
-        # Move old active file to stored user files
-        active_dataset_list = get_active_dataset_list()
-
-        for active_dataset in active_dataset_list:
-            shutil.move(
-                os.path.join(
-                    current_app.config["ACTIVE_DATASET_FOLDER"], active_dataset
-                ),
-                os.path.join(current_app.config["UPLOAD_FOLDER"], active_dataset),
-            )
-
-        # Move new active dataset to active folder
-        new_active_dataset = request.form["new_active_dataset"]
-        if new_active_dataset:
-            shutil.copyfile(
-                os.path.join(current_app.config["UPLOAD_FOLDER"], new_active_dataset),
-                os.path.join(
-                    current_app.config["ACTIVE_DATASET_FOLDER"], new_active_dataset
-                ),
-            )
+        set_active_file(request.form["new_active_dataset"])
 
         return get_controller_specific_template_with_args(
             "select_dataset_as_active.html",
@@ -185,16 +196,7 @@ def delete_dataset():
     elif request.method == "POST":
         print(f"{request.form=}")
 
-        if request.form["delete_dataset_name"]:
-            if request.form["delete_dataset_name"] == "active_file":
-                delete_all_active_files()
-            else:
-                os.remove(
-                    os.path.join(
-                        current_app.config["UPLOAD_FOLDER"],
-                        request.form["delete_dataset_name"],
-                    )
-                )
+        delete_dataset_with_name(request.form["delete_dataset_name"])
 
         return get_controller_specific_template_with_args(
             "delete_dataset.html",
