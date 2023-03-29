@@ -154,25 +154,15 @@ def select_dataset_as_active():
         if os.path.isfile(os.path.join(current_app.config["UPLOAD_FOLDER"], f))
     ]
 
-    print(dataset_list)
-
-    if request.method == "GET":
-        return get_controller_specific_template_with_args(
-            "select_dataset_as_active.html",
-            select_dataset_as_active.__name__,
-            dataset_list,
-        )
-    elif request.method == "POST":
-        print(f"{request.form=}")
-
-        set_active_file(request.form["new_active_dataset"])
+    if request.method == "GET" or request.method == "POST":
+        if request.method == "POST":
+            set_active_file(request.form["new_active_dataset"])
 
         return get_controller_specific_template_with_args(
             "select_dataset_as_active.html",
             select_dataset_as_active.__name__,
             dataset_list,
         )
-
     else:
         return "Use get or post to request this page"
 
