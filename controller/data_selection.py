@@ -107,7 +107,7 @@ def get_active_dataset_list():
     ]
 
 
-def set_active_file(new_active_dataset):
+def set_active_file(new_active_dataset_name):
     active_dataset_list = get_active_dataset_list()
 
     for active_dataset in active_dataset_list:
@@ -117,11 +117,11 @@ def set_active_file(new_active_dataset):
         )
 
     # Move new active dataset to active folder
-    if new_active_dataset:
+    if new_active_dataset_name:
         shutil.copyfile(
-            os.path.join(current_app.config["UPLOAD_FOLDER"], new_active_dataset),
+            os.path.join(current_app.config["UPLOAD_FOLDER"], new_active_dataset_name),
             os.path.join(
-                current_app.config["ACTIVE_DATASET_FOLDER"], new_active_dataset
+                current_app.config["ACTIVE_DATASET_FOLDER"], new_active_dataset_name
             ),
         )
 
@@ -178,8 +178,7 @@ def add_new_file(request):
             )
 
             if "is_new_file_active" in request.form:
-                print("Add me as active file")  # TODO: Do this
-
+                set_active_file(file_name_final)
         else:
             raise ValueError(
                 "Custom Error: This file extension is not currently supported."
