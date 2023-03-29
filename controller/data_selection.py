@@ -86,6 +86,14 @@ def delete_dataset_with_name(delete_dataset_name):
             )
 
 
+def get_all_datasets():
+    return [
+        f
+        for f in os.listdir(current_app.config["UPLOAD_FOLDER"])
+        if os.path.isfile(os.path.join(current_app.config["UPLOAD_FOLDER"], f))
+    ]
+
+
 @data_selection.route("/")
 @data_selection.route("/home")
 def home():
@@ -148,11 +156,7 @@ def import_new_dataset():
 
 @data_selection.route("/select_dataset_as_active", methods=["POST", "GET"])
 def select_dataset_as_active():
-    dataset_list = [
-        f
-        for f in os.listdir(current_app.config["UPLOAD_FOLDER"])
-        if os.path.isfile(os.path.join(current_app.config["UPLOAD_FOLDER"], f))
-    ]
+    dataset_list = get_all_datasets()
 
     if request.method == "GET" or request.method == "POST":
         if request.method == "POST":
@@ -169,11 +173,7 @@ def select_dataset_as_active():
 
 @data_selection.route("/delete_dataset", methods=["POST", "GET"])
 def delete_dataset():
-    dataset_list = [
-        f
-        for f in os.listdir(current_app.config["UPLOAD_FOLDER"])
-        if os.path.isfile(os.path.join(current_app.config["UPLOAD_FOLDER"], f))
-    ]
+    dataset_list = get_all_datasets()
 
     if request.method == "GET" or request.method == "POST":
         if request.method == "POST":
