@@ -37,10 +37,6 @@ def get_controller_specific_template_with_args(
     )
 
 
-def read_generic_input_file(input_file_location):
-    return pd.read_csv(input_file_location)
-
-
 @data_selection.route("/")
 @data_selection.route("/home")
 def home():
@@ -141,12 +137,13 @@ def select_dataset_as_active():
 
         # Move new active dataset to active folder
         new_active_dataset = request.form["new_active_dataset"]
-        shutil.copyfile(
-            os.path.join(current_app.config["UPLOAD_FOLDER"], new_active_dataset),
-            os.path.join(
-                current_app.config["ACTIVE_DATASET_FOLDER"], new_active_dataset
-            ),
-        )
+        if new_active_dataset:
+            shutil.copyfile(
+                os.path.join(current_app.config["UPLOAD_FOLDER"], new_active_dataset),
+                os.path.join(
+                    current_app.config["ACTIVE_DATASET_FOLDER"], new_active_dataset
+                ),
+            )
 
         return get_controller_specific_template_with_args(
             "select_dataset_as_active.html",

@@ -21,7 +21,7 @@
     <div class="container mt-3">
 
         <!-- Navbar start -->
-        <ul class="nav nav-pills nav-fill mb-3 text-secondary-emphasis bg-secondary-subtle border border-secondary-subtle rounded-3">
+        <ul class="nav nav-pills mb-2 nav-fill text-secondary-emphasis bg-secondary-subtle border border-secondary-subtle rounded-3">
             <li class="nav-item {% if main_navbar_active == 'home' %}bg-info-subtle border border-info-subtle rounded-3{% endif %}">
                 <a class="nav-link" href="{{ url_for('home')}}">Home</a>
             </li>
@@ -83,6 +83,13 @@
                 </ul>
             </li>
             </ul>
+
+        {% if active_dataset_info %}
+            <div class="text-wrap bg-secondary-subtle border border-light-subtle rounded-3 mt-1 mb-1 p-1">
+                {{active_dataset_info}}
+            </div>
+        {% endif %}
+
         <!-- Navbar end -->
 
         <!-- Message flashing -->
