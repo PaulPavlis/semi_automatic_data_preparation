@@ -37,6 +37,23 @@ def get_controller_specific_template_with_args(
     )
 
 
+def delete_all_active_files():
+    active_dataset_list = get_active_dataset_list()
+
+    for active_dataset in active_dataset_list:
+        os.remove(
+            os.path.join(current_app.config["ACTIVE_DATASET_FOLDER"], active_dataset)
+        )
+
+
+def get_active_dataset_list():
+    return [
+        f
+        for f in os.listdir(current_app.config["ACTIVE_DATASET_FOLDER"])
+        if os.path.isfile(os.path.join(current_app.config["ACTIVE_DATASET_FOLDER"], f))
+    ]
+
+
 @data_selection.route("/")
 @data_selection.route("/home")
 def home():
@@ -119,13 +136,7 @@ def select_dataset_as_active():
         print(f"{request.form=}")
 
         # Move old active file to stored user files
-        active_dataset_list = [
-            f
-            for f in os.listdir(current_app.config["ACTIVE_DATASET_FOLDER"])
-            if os.path.isfile(
-                os.path.join(current_app.config["ACTIVE_DATASET_FOLDER"], f)
-            )
-        ]
+        active_dataset_list = get_active_dataset_list()
 
         for active_dataset in active_dataset_list:
             shutil.move(
@@ -148,6 +159,46 @@ def select_dataset_as_active():
         return get_controller_specific_template_with_args(
             "select_dataset_as_active.html",
             select_dataset_as_active.__name__,
+            dataset_list,
+        )
+
+    else:
+        return "Use get or post to request this page"
+
+
+@data_selection.route("/delete_dataset", methods=["POST", "GET"])
+def delete_dataset():
+    dataset_list = [
+        f
+        for f in os.listdir(current_app.config["UPLOAD_FOLDER"])
+        if os.path.isfile(os.path.join(current_app.config["UPLOAD_FOLDER"], f))
+    ]
+
+    print(dataset_list)
+
+    if request.method == "GET":
+        return get_controller_specific_template_with_args(
+            "delete_dataset.html",
+            delete_dataset.__name__,
+            dataset_list,
+        )
+    elif request.method == "POST":
+        print(f"{request.form=}")
+
+        if request.form["delete_dataset_name"]:
+            if request.form["delete_dataset_name"] == "active_file":
+                delete_all_active_files()
+            else:
+                os.remove(
+                    os.path.join(
+                        current_app.config["UPLOAD_FOLDER"],
+                        request.form["delete_dataset_name"],
+                    )
+                )
+
+        return get_controller_specific_template_with_args(
+            "delete_dataset.html",
+            delete_dataset.__name__,
             dataset_list,
         )
 

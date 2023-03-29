@@ -1,0 +1,17 @@
+{% extends "base_template.html" %}
+
+{% block title %}Data selection - Delete dataset{% endblock %}
+{% block main_content %}
+
+<form action="#" method="POST" enctype=multipart/form-data>
+    <select class="form-select" name="delete_dataset_name" aria-label="Default select example">
+        <option selected value="">None</option>
+        <option value="active_file">Active file</option>
+        {% for file in additional_args[0] %}
+            <option value="{{file}}">{{file}}</option>
+        {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-warning mt-3 delete_dataset" title="Warning: This can not be undone">Delete Dataset</button>
+</form>
+
+{% endblock %}
