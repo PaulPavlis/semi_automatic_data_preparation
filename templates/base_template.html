@@ -26,8 +26,17 @@
                 <a class="nav-link" href="{{ url_for('home')}}">Home</a>
             </li>
 
-            <li class="nav-item {% if main_navbar_active == 'data_selection' %}bg-info-subtle border border-info-subtle rounded-3{% endif %}">
-                <a class="nav-link" href="{{ url_for('data_selection.home')}}">Data Selection</a>
+            <li class="nav-item dropdown {% if main_navbar_active == 'data_selection' %}bg-info-subtle border border-info-subtle rounded-3{% endif %}">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                    aria-expanded="false">Data Selection</a>
+                <ul class="dropdown-menu">
+                    <li><a class="nav-link" href="{{ url_for('data_selection.home')}}">import_new_dataset</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="#">select_dataset_as_active</a></li>
+                    <li><a class="dropdown-item" href="#">delete_dataset</a></li>
+                </ul>
             </li>
 
             <li class="nav-item dropdown {% if main_navbar_active == 'data_exploration' %}bg-info-subtle border border-info-subtle rounded-3{% endif %}">
