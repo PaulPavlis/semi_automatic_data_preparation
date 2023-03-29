@@ -23,6 +23,59 @@ method_usage_list = [
 ]
 
 
+@data_selection.route("/")
+@data_selection.route("/home")
+def home():
+    return get_controller_specific_template_with_args("index_data_selection.html")
+
+
+@data_selection.route("/import_new_dataset", methods=["POST", "GET"])
+def import_new_dataset():
+    if request.method == "GET" or request.method == "POST":
+        if request.method == "POST":
+            add_new_file(request)
+
+        return get_controller_specific_template_with_args(
+            "import_new_dataset.html", import_new_dataset.__name__
+        )
+    else:
+        return "Use get or post to request this page"
+
+
+@data_selection.route("/select_dataset_as_active", methods=["POST", "GET"])
+def select_dataset_as_active():
+    dataset_list = get_all_datasets()
+
+    if request.method == "GET" or request.method == "POST":
+        if request.method == "POST":
+            set_active_file(request.form["new_active_dataset"])
+
+        return get_controller_specific_template_with_args(
+            "select_dataset_as_active.html",
+            select_dataset_as_active.__name__,
+            dataset_list,
+        )
+    else:
+        return "Use get or post to request this page"
+
+
+@data_selection.route("/delete_dataset", methods=["POST", "GET"])
+def delete_dataset():
+    dataset_list = get_all_datasets()
+
+    if request.method == "GET" or request.method == "POST":
+        if request.method == "POST":
+            delete_dataset_with_name(request.form["delete_dataset_name"])
+
+        return get_controller_specific_template_with_args(
+            "delete_dataset.html",
+            delete_dataset.__name__,
+            dataset_list,
+        )
+    else:
+        return "Use get or post to request this page"
+
+
 def get_controller_specific_template_with_args(
     template_name_arg="index_data_selection.html",
     sub_navbar_active_arg="",
@@ -94,95 +147,43 @@ def get_all_datasets():
     ]
 
 
-@data_selection.route("/")
-@data_selection.route("/home")
-def home():
-    return get_controller_specific_template_with_args("index_data_selection.html")
+def add_new_file(request):
+    file_name_new = ""
 
+    if "file_name_new" in request.form:
+        file_name_new = request.form["file_name_new"]
 
-@data_selection.route("/import_new_dataset", methods=["POST", "GET"])
-def import_new_dataset():
-    if request.method == "GET":
-        return get_controller_specific_template_with_args(
-            "import_new_dataset.html", import_new_dataset.__name__
-        )
-    elif request.method == "POST":
-        file_name_new = ""
+    if "file_input" in request.files:
+        file_uploaded = request.files["file_input"]
+        print(f"{file_uploaded=}")
 
-        if "file_name_new" in request.form:
-            file_name_new = request.form["file_name_new"]
+        file_name_uploaded = secure_filename(file_uploaded.filename)
 
-        if "file_input" in request.files:
-            file_uploaded = request.files["file_input"]
-            print(f"{file_uploaded=}")
-
-            file_name_uploaded = secure_filename(file_uploaded.filename)
-
-            if is_allowed_file(file_name_uploaded):
-                if file_name_new:
-                    if is_allowed_file(secure_filename(file_name_new)):
-                        file_name_final = secure_filename(file_name_new)
-                    else:
-                        raise ValueError(
-                            "Custom Error: The file extension you are giving with the File name is not currently supported."
-                        )
+        if is_allowed_file(file_name_uploaded):
+            if file_name_new:
+                if is_allowed_file(secure_filename(file_name_new)):
+                    file_name_final = secure_filename(file_name_new)
                 else:
-                    file_name_final = file_name_uploaded
-
-                print(
-                    f"{file_name_new=}, {file_name_uploaded=}, {file_uploaded=}, {file_name_final=}"
-                )
-                file_uploaded.save(
-                    os.path.join(current_app.config["UPLOAD_FOLDER"], file_name_final)
-                )
-
-                if "is_new_file_active" in request.form:
-                    print("Add me as active file")  # TODO: Do this
-
+                    raise ValueError(
+                        "Custom Error: The file extension you are giving with the File name is not currently supported."
+                    )
             else:
-                raise ValueError(
-                    "Custom Error: This file extension is not currently supported."
-                )
+                file_name_final = file_name_uploaded
+
+            print(
+                f"{file_name_new=}, {file_name_uploaded=}, {file_uploaded=}, {file_name_final=}"
+            )
+            file_uploaded.save(
+                os.path.join(current_app.config["UPLOAD_FOLDER"], file_name_final)
+            )
+
+            if "is_new_file_active" in request.form:
+                print("Add me as active file")  # TODO: Do this
 
         else:
-            raise ValueError("Custom Error: You have not given a file to the site.")
+            raise ValueError(
+                "Custom Error: This file extension is not currently supported."
+            )
 
-        return get_controller_specific_template_with_args(
-            "import_new_dataset.html", import_new_dataset.__name__
-        )
     else:
-        return "Use get or post to request this page"
-
-
-@data_selection.route("/select_dataset_as_active", methods=["POST", "GET"])
-def select_dataset_as_active():
-    dataset_list = get_all_datasets()
-
-    if request.method == "GET" or request.method == "POST":
-        if request.method == "POST":
-            set_active_file(request.form["new_active_dataset"])
-
-        return get_controller_specific_template_with_args(
-            "select_dataset_as_active.html",
-            select_dataset_as_active.__name__,
-            dataset_list,
-        )
-    else:
-        return "Use get or post to request this page"
-
-
-@data_selection.route("/delete_dataset", methods=["POST", "GET"])
-def delete_dataset():
-    dataset_list = get_all_datasets()
-
-    if request.method == "GET" or request.method == "POST":
-        if request.method == "POST":
-            delete_dataset_with_name(request.form["delete_dataset_name"])
-
-        return get_controller_specific_template_with_args(
-            "delete_dataset.html",
-            delete_dataset.__name__,
-            dataset_list,
-        )
-    else:
-        return "Use get or post to request this page"
+        raise ValueError("Custom Error: You have not given a file to the site.")
