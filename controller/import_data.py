@@ -27,4 +27,4 @@ def get_controller_specific_template_with_args(
 @import_data.route("/home")
 def home():
     # return get_controller_filename(__name__)
-    return get_controller_general_template_with_args("index_import_data.html")
+    return get_controller_specific_template_with_args("index_import_data.html")

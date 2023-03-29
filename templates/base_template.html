@@ -22,15 +22,15 @@
 
         <!-- Navbar start -->
         <ul class="nav nav-pills nav-fill mb-3 text-secondary-emphasis bg-secondary-subtle border border-secondary-subtle rounded-3">
-            <li class="nav-item">
+            <li class="nav-item {% if main_navbar_active == 'home' %}bg-info-subtle border border-info-subtle rounded-3{% endif %}">
                 <a class="nav-link" href="{{ url_for('home')}}">Home</a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item {% if main_navbar_active == 'import_data' %}bg-info-subtle border border-info-subtle rounded-3{% endif %}">
                 <a class="nav-link" href="{{ url_for('import_data.home')}}">Import data</a>
             </li>
 
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown {% if main_navbar_active == 'data_exploration' %}bg-info-subtle border border-info-subtle rounded-3{% endif %}">
                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                     aria-expanded="false">Data exploration</a>
                 <ul class="dropdown-menu">
@@ -44,7 +44,7 @@
             </li>
 
 
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown {% if main_navbar_active == 'data_preparation' %}bg-info-subtle border border-info-subtle rounded-3{% endif %}">
                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                     aria-expanded="false">Data preparation</a>
                 <ul class="dropdown-menu">
@@ -58,7 +58,7 @@
                 </ul>
             </li>
 
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown {% if main_navbar_active == 'using_the_data' %}bg-info-subtle border border-info-subtle rounded-3{% endif %}">
                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Using the
                     data</a>
                 <ul class="dropdown-menu">

@@ -15,7 +15,7 @@ app.register_blueprint(using_the_data, url_prefix="/using_the_data")
 @app.route("/home", methods=["POST", "GET"])
 def home():
     if request.method == "GET":
-        return render_template("index.html")
+        return render_template("index.html", main_navbar_active="home")
     elif request.method == "POST":
         form_email = request.form["email"]
         form_password = request.form["password"]
