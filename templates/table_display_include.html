@@ -1,0 +1,18 @@
+<table id="data" class="table table-striped display_table">
+    <thead>
+        <tr>
+            {% for column_name in additional_args[0][0].keys() %}
+            <th>{{column_name}}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for entry in additional_args[0] %}
+        <tr>
+            {% for column_name in entry %}
+            <td>{{ entry[column_name] }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
