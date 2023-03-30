@@ -3,9 +3,11 @@ from controller.controller_helper import (
     get_controller_general_template_with_args,
     get_controller_filename,
     get_active_dataframe,
+    get_active_dataframe_formatted,
     check_if_active_dataset_is_set,
     send_user_to_set_active_dataset,
 )
+import numpy as np
 
 data_preparation = Blueprint(
     "data_preparation",
@@ -46,14 +48,19 @@ def home():
     return get_controller_specific_template_with_args("index_data_preparation.html")
 
 
-@data_preparation.route("/manual_repairing")
+@data_preparation.route("/return_ajax_data")
+def return_ajax_data():
+    return {
+        "data": get_active_dataframe().astype(object).replace(np.nan, "None").to_dict("records")
+    }
+
+
+@data_preparation.route("/manual_repairing", methods=["POST", "GET"])
 def manual_repairing():
     if not check_if_active_dataset_is_set():
         return send_user_to_set_active_dataset()
 
-    active_dataframe = get_active_dataframe()
-
-    display_df_list_of_dicts = active_dataframe.to_dict("records")
+    display_df_list_of_dicts = get_active_dataframe_formatted()
 
     if request.method == "GET" or request.method == "POST":
         if request.method == "POST":
@@ -71,7 +78,7 @@ def manual_repairing():
         return "Use get or post to request this page"
 
 
-@data_preparation.route("/automatic_detection")
+@data_preparation.route("/automatic_detection", methods=["POST", "GET"])
 def automatic_detection():
     return get_controller_specific_template_with_args(
         "index_data_preparation.html",

@@ -1,4 +1,29 @@
+<!-- My js -->
+<script src="{{ url_for('static', filename='js/display_table.js')}}" type="text/javascript"></script>
+
 <table id="data" class="table table-dark table-striped display_table">
+    <thead>
+        <tr>
+            {% for column_name in additional_args[0][0].keys() %}
+            <th>{{column_name}}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+{# ------------------------------------------------------------------------------------ #}
+{# Safety backup  #}
+
+{# <table id="data" class="table table-dark table-striped display_table">
     <thead>
         <tr>
             {% for column_name in additional_args[0][0].keys() %}
@@ -15,4 +40,4 @@
         </tr>
         {% endfor %}
     </tbody>
-</table>
+</table> #}

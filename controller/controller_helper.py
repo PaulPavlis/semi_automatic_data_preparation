@@ -41,6 +41,10 @@ def get_active_dataframe():
     )
 
 
+def get_active_dataframe_formatted():
+    return get_active_dataframe().to_dict("records")
+
+
 def get_dataset_basic_info_string(dataframe):
     if dataframe.empty:
         return "No dataframe given."
@@ -56,9 +60,9 @@ def read_generic_input_file(file_location, file_name):
     file_path = os.path.join(file_location, file_name)
 
     if file_extension == "csv":
-        return pd.read_csv(file_path, encoding="latin1")
+        return pd.read_csv(file_path, encoding="latin1", header=None)
     elif file_extension == "json":
-        return pd.read_json(file_path, encoding="latin1")
+        return pd.read_json(file_path, encoding="latin1", header=None)
     else:
         flash("This file extension is currently not supported.", "danger")
         return None
