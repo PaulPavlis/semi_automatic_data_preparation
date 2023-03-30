@@ -73,19 +73,23 @@ def read_generic_input_file(file_location, file_name):
     user_file_configs = get_user_file_config(file_name)
 
     header_value = None
+    file_separator = None
     if user_file_configs:
         header_value = (
             0
             if "has_header" in user_file_configs and user_file_configs["has_header"]
             else None
         )
+        file_separator = (
+            user_file_configs["file_separator"]
+            if "file_separator" in user_file_configs
+            else ","
+        )
 
     print(f"{pd_read_function=}, {header_value=}, {user_file_configs=}")
 
     return pd_read_function(
-        file_path,
-        encoding="latin1",
-        header=header_value,
+        file_path, encoding="latin1", header=header_value, sep=file_separator
     )
 
 

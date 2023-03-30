@@ -213,6 +213,11 @@ def add_new_file(request):
             if "new_file_has_header" in request.form:
                 user_file_configs["has_header"] = True
 
+            if "new_file_separator" in request.form:
+                user_file_configs["file_separator"] = request.form["new_file_separator"]
+            else:
+                user_file_configs["file_separator"] = ","  # default csv separator
+
             create_or_modify_user_config_file(file_name_final, user_file_configs)
 
         else:

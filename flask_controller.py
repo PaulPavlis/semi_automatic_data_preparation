@@ -19,7 +19,7 @@ UPLOAD_FOLDER = "stored_user_files"
 ALLOWED_EXTENSIONS = {"csv", "json"}
 ACTIVE_DATASET_FOLDER = os.path.join(UPLOAD_FOLDER, "active_dataset")
 USER_FILE_CONFIGS = os.path.join(UPLOAD_FOLDER, "user_file_configs")
-USER_FILE_CONFIGS_OPTIONS = ["has_header"]
+USER_FILE_CONFIGS_OPTIONS = ["has_header", "file_separator"]
 
 # Create reqired folders:
 Path(UPLOAD_FOLDER).mkdir(parents=True, exist_ok=True)
