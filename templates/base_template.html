@@ -46,6 +46,7 @@
                     <li><a class="dropdown-item" href="{{ url_for('data_selection.import_new_dataset')}}">import_new_dataset</a></li>
                     <li><a class="dropdown-item" href="{{ url_for('data_selection.select_dataset_as_active')}}">select_dataset_as_active</a></li>
                     <li><a class="dropdown-item" href="{{ url_for('data_selection.delete_dataset')}}">delete_dataset</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('data_selection.delete_dataset_config')}}">delete_dataset_config</a></li>
                 </ul>
             </li>
             
@@ -71,6 +72,7 @@
                     <li>
                         <hr class="dropdown-divider">
                     </li>
+                    <li><a class="dropdown-item" href="{{ url_for('data_preparation.adapt_file_configs')}}">adapt_file_configs</a></li>
                     <li><a class="dropdown-item" href="{{ url_for('data_preparation.manual_repairing')}}">manual_repairing</a></li>
                     <li><a class="dropdown-item" href="{{ url_for('data_preparation.automatic_detection')}}">automatic_detection</a></li>
                     <li><a class="dropdown-item" href="#">transpose</a></li>

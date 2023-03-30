@@ -19,6 +19,7 @@ data_preparation = Blueprint(
 
 # Just demonstration TODO: Fill me in correctly
 method_preparation_list = [
+    "adapt_file_configs",
     "manual_repairing",
     "automatic_detection",
     "transpose",
@@ -76,4 +77,12 @@ def automatic_detection():
     return get_controller_specific_template_with_args(
         "index_data_preparation.html",
         automatic_detection.__name__,
+    )
+
+
+@data_preparation.route("/adapt_file_configs", methods=["POST", "GET"])
+def adapt_file_configs():
+    return get_controller_specific_template_with_args(
+        "adapt_file_configs.html",
+        adapt_file_configs.__name__,
     )

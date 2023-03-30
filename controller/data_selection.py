@@ -21,6 +21,7 @@ method_usage_list = [
     "import_new_dataset",
     "select_dataset_as_active",
     "delete_dataset",
+    "delete_dataset_config",
 ]
 
 
@@ -82,6 +83,30 @@ def delete_dataset():
         )
     else:
         return "Use get or post to request this page"
+
+
+@data_selection.route("/delete_dataset_config", methods=["POST", "GET"])
+def delete_dataset_config():
+    dataset_list = get_all_datasets()
+
+    return get_controller_specific_template_with_args(
+        "delete_dataset_config.html",
+        delete_dataset_config.__name__,
+        dataset_list,
+    )
+
+
+    # if request.method == "GET" or request.method == "POST":
+    #     if request.method == "POST":
+    #         delete_dataset_with_name(request.form["delete_dataset_name"])
+
+    #     return get_controller_specific_template_with_args(
+    #         "delete_dataset.html",
+    #         delete_dataset.__name__,
+    #         dataset_list,
+    #     )
+    # else:
+    #     return "Use get or post to request this page"
 
 
 def get_controller_specific_template_with_args(
