@@ -192,15 +192,13 @@ def add_new_file(request):
                 os.path.join(current_app.config["UPLOAD_FOLDER"], file_name_final)
             )
 
-            additional_message = ""
-            if "is_new_file_active" in request.form:
-                set_active_file(file_name_final)
-                additional_message = "Set the dataset as active."
-
             flash(
-                f"Successfully imported the new dataset. {additional_message}",
+                f"Successfully imported the new dataset.",
                 "success",
             )
+
+            if "is_new_file_active" in request.form:
+                set_active_file(file_name_final)
 
         else:
             flash(
