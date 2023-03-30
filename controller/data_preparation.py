@@ -59,10 +59,10 @@ def manual_repairing():
         if request.method == "POST":
             n = 0
 
-            flash(
-                f"Depending on the amount of data, displaying it in a smart table might take a few seconds.",
-                "info",
-            )
+        flash(
+            f"Depending on the amount of data, displaying it in a smart table might take a few seconds.",
+            "info",
+        )
 
         return get_controller_specific_template_with_args(
             "manual_repairing.html", manual_repairing.__name__, display_df_list_of_dicts
