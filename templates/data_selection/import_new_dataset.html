@@ -12,10 +12,14 @@
     <label for="file_input" class="form-label">File</label>
     <input type="file" class="form-control" name="file_input" id="file_input" required>
   </div>
-    <div class="mb-3 form-check">
+  <div class="mb-3 form-check form-check-inline">
     <input type="checkbox" class="form-check-input" name="is_new_file_active" id="is_new_file_active" checked>
     <label class="form-check-label" for="is_new_file_active">Set as active dataset</label>
   </div>
+  <div class="mb-3 form-check form-check-inline">
+    <input type="checkbox" class="form-check-input" name="new_file_has_header" id="new_file_has_header">
+    <label class="form-check-label" for="new_file_has_header">File has a header</label>
+  </div><br/>
   <button type="submit" class="btn btn-primary">Upload file</button>
 </form>
 

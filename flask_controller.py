@@ -15,18 +15,22 @@ app.register_blueprint(data_preparation, url_prefix="/data_preparation")
 app.register_blueprint(data_selection, url_prefix="/data_selection")
 app.register_blueprint(using_the_data, url_prefix="/using_the_data")
 
-# Create reqired folders:
 UPLOAD_FOLDER = "stored_user_files"
 ALLOWED_EXTENSIONS = {"csv", "json"}
 ACTIVE_DATASET_FOLDER = os.path.join(UPLOAD_FOLDER, "active_dataset")
 USER_FILE_CONFIGS = os.path.join(UPLOAD_FOLDER, "user_file_configs")
+USER_FILE_CONFIGS_OPTIONS = ["has_header"]
+
+# Create reqired folders:
 Path(UPLOAD_FOLDER).mkdir(parents=True, exist_ok=True)
 Path(ACTIVE_DATASET_FOLDER).mkdir(parents=True, exist_ok=True)
 Path(USER_FILE_CONFIGS).mkdir(parents=True, exist_ok=True)
+
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["ALLOWED_EXTENSIONS"] = ALLOWED_EXTENSIONS
 app.config["ACTIVE_DATASET_FOLDER"] = ACTIVE_DATASET_FOLDER
 app.config["USER_FILE_CONFIGS"] = USER_FILE_CONFIGS
+app.config["USER_FILE_CONFIGS_OPTIONS"] = USER_FILE_CONFIGS_OPTIONS
 
 
 @app.route("/")

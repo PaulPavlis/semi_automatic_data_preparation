@@ -3,6 +3,7 @@ from controller.controller_helper import (
     get_controller_general_template_with_args,
     get_controller_filename,
     is_allowed_file,
+    create_or_modify_user_config_file,
 )
 import pandas as pd
 import os
@@ -206,6 +207,13 @@ def add_new_file(request):
 
             if "is_new_file_active" in request.form:
                 set_active_file(file_name_final)
+
+            user_file_configs = {}
+
+            if "new_file_has_header" in request.form:
+                user_file_configs["has_header"] = True
+
+            create_or_modify_user_config_file(file_name_final, user_file_configs)
 
         else:
             flash(

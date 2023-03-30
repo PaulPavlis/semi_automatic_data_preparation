@@ -60,13 +60,33 @@ def read_generic_input_file(file_location, file_name):
     file_extension = get_file_extension(file_name)
     file_path = os.path.join(file_location, file_name)
 
+    pd_read_function = None
+
     if file_extension == "csv":
-        return pd.read_csv(file_path, encoding="latin1", header=None)
+        pd_read_function = pd.read_csv
     elif file_extension == "json":
-        return pd.read_json(file_path, encoding="latin1", header=None)
+        pd_read_function = pd.read_json
     else:
         flash("This file extension is currently not supported.", "danger")
         return None
+
+    user_file_configs = get_user_file_config(file_name)
+
+    header_value = None
+    if user_file_configs:
+        header_value = (
+            0
+            if "has_header" in user_file_configs and user_file_configs["has_header"]
+            else None
+        )
+
+    print(f"{pd_read_function=}, {header_value=}, {user_file_configs=}")
+
+    return pd_read_function(
+        file_path,
+        encoding="latin1",
+        header=header_value,
+    )
 
 
 def get_controller_filename(complete_name):
@@ -117,20 +137,22 @@ def create_user_file_config(user_file_name, config_dict={}):
 
 
 def get_user_file_config(user_file_name):
-    with open(
-        os.path.join(
-            current_app.config["USER_FILE_CONFIGS"],
-            get_user_file_config_name(user_file_name),
-            "r",
-        )
-    ) as fr:
+    user_file_config_full_path = os.path.join(
+        current_app.config["USER_FILE_CONFIGS"],
+        get_user_file_config_name(user_file_name),
+    )
+
+    if not os.path.exists(user_file_config_full_path):
+        return None
+
+    with open(user_file_config_full_path, "r") as fr:
         try:
             return yaml.safe_load(fr)
         except yaml.YAMLError as exc:
             print(exc)
 
 
-def modify_user_config_file(user_file_name, config_dict={}):
+def create_or_modify_user_config_file(user_file_name, config_dict={}):
     if not isinstance(config_dict, dict):
         return None
 
@@ -138,8 +160,23 @@ def modify_user_config_file(user_file_name, config_dict={}):
 
     print(f"{current_configs=}")
     print(f"{config_dict=}")
-    current_configs.update(config_dict)
+
+    if not current_configs:
+        flash(
+            "No persisted user file configs found. Trying to create it ...", "warning"
+        )
+        current_configs = config_dict
+    else:
+        current_configs.update(config_dict)
 
     print(f"Updated dict: {current_configs}")
 
-    create_user_file_config(get_user_file_config_name(user_file_name), current_configs)
+    final_configs = {
+        config_option: config_dict[config_option]
+        for config_option in current_app.config["USER_FILE_CONFIGS_OPTIONS"]
+        if config_option in config_dict
+    }
+
+    print(f"Updated dict after checking options: {final_configs}")
+
+    create_user_file_config(get_user_file_config_name(user_file_name), final_configs)
