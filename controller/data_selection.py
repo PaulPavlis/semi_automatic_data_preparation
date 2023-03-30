@@ -1,4 +1,4 @@
-from flask import Blueprint, request, current_app, flash
+from flask import Blueprint, request, current_app, flash, redirect, url_for
 from controller.controller_helper import (
     get_controller_general_template_with_args,
     get_controller_filename,
@@ -45,6 +45,13 @@ def import_new_dataset():
 @data_selection.route("/select_dataset_as_active", methods=["POST", "GET"])
 def select_dataset_as_active():
     dataset_list = get_all_datasets()
+
+    if not dataset_list:
+        flash(
+            f"No datasets imported yet. Redirecting you ...",
+            "warning",
+        )
+        return redirect(url_for("data_selection.import_new_dataset"))
 
     if request.method == "GET" or request.method == "POST":
         if request.method == "POST":
