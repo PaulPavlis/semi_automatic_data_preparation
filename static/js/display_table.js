@@ -18,26 +18,6 @@ $(document).ready(function () {
         $("#data").DataTable({
             ajax: "/data_preparation/return_ajax_data",
             columns: table_keys_dict,
-            // [
-            //     { data: "1" },
-            //     { data: "3" },
-            //     { data: "35" },
-            //     { data: "-213.25" },
-            //     {
-            //         data: "Eldon Base for stackable storage shelf, platinum",
-            //     },
-            //     { data: "Muhammed MacIntyre" },
-            //     { data: "Nunavut" },
-            //     { data: "Storage & Organization" },
-            // ],
         });
     });
 });
-
-// ----------------------------------------------------------------------------------
-// Backup
-
-// Display tables functionality
-// $(document).ready(function () {
-//     $(".display_table").DataTable();
-// });

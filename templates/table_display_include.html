@@ -1,5 +1,9 @@
-<!-- My js -->
+<!-- Inspiration from: https://blog.miguelgrinberg.com/post/beautiful-interactive-tables-for-your-flask-templates -->
+
+<!-- My js for display_table -->
 <script src="{{ url_for('static', filename='js/display_table.js')}}" type="text/javascript"></script>
+<!-- My css for display_table -->
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/display_table.css')}}" />
 
 <table id="data" class="table table-dark table-striped display_table">
     <thead>
@@ -12,32 +16,3 @@
     <tbody>
     </tbody>
 </table>
-
-
-
-
-
-
-
-
-{# ------------------------------------------------------------------------------------ #}
-{# Safety backup  #}
-
-{# <table id="data" class="table table-dark table-striped display_table">
-    <thead>
-        <tr>
-            {% for column_name in additional_args[0][0].keys() %}
-            <th>{{column_name}}</th>
-            {% endfor %}
-        </tr>
-    </thead>
-    <tbody>
-        {% for entry in additional_args[0] %}
-        <tr>
-            {% for column_name in entry %}
-            <td>{{ entry[column_name] }}</td>
-            {% endfor %}
-        </tr>
-        {% endfor %}
-    </tbody>
-</table> #}
