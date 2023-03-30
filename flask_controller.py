@@ -5,7 +5,8 @@ from controller.data_selection import data_selection
 from controller.using_the_data import using_the_data
 import os
 from pathlib import Path
-
+from controller.controller_helper import get_active_dataframe
+from numpy import nan
 
 app = Flask(__name__)
 app.secret_key = "semi_automatic_data_preparation"
@@ -29,6 +30,16 @@ app.config["ACTIVE_DATASET_FOLDER"] = ACTIVE_DATASET_FOLDER
 @app.route("/home")
 def home():
     return render_template("index.html", main_navbar_active="home")
+
+
+@app.route("/return_active_ajax_data")
+def return_active_ajax_data():
+    return {
+        "data": get_active_dataframe()
+        .astype(object)
+        .replace(nan, "None")
+        .to_dict("records")
+    }
 
 
 if __name__ == "__main__":

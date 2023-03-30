@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $.ajax({
         method: "GET",
-        url: "/data_preparation/return_ajax_data",
+        url: "/return_active_ajax_data",
         cache: false,
     }).done(function (data) {
         console.log("Hi");
@@ -16,7 +16,7 @@ $(document).ready(function () {
         console.log(table_keys_dict);
 
         $("#data").DataTable({
-            ajax: "/data_preparation/return_ajax_data",
+            ajax: "/return_active_ajax_data",
             columns: table_keys_dict,
         });
     });

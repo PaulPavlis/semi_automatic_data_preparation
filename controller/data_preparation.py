@@ -48,13 +48,6 @@ def home():
     return get_controller_specific_template_with_args("index_data_preparation.html")
 
 
-@data_preparation.route("/return_ajax_data")
-def return_ajax_data():
-    return {
-        "data": get_active_dataframe().astype(object).replace(np.nan, "None").to_dict("records")
-    }
-
-
 @data_preparation.route("/manual_repairing", methods=["POST", "GET"])
 def manual_repairing():
     if not check_if_active_dataset_is_set():
