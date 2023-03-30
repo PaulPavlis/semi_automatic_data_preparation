@@ -15,6 +15,11 @@
     <!-- My css -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/my_style.css')}}" />
 
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <!-- My js -->
+    <script src="{{ url_for('static', filename='js/my_js.js')}}"></script>
+
 </head>
 
 <body>
@@ -34,9 +39,9 @@
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="#">import_new_dataset</a></li>
-                    <li><a class="dropdown-item" href="#">select_dataset_as_active</a></li>
-                    <li><a class="dropdown-item" href="#">delete_dataset</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('data_selection.import_new_dataset')}}">import_new_dataset</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('data_selection.select_dataset_as_active')}}">select_dataset_as_active</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('data_selection.delete_dataset')}}">delete_dataset</a></li>
                 </ul>
             </li>
             
@@ -62,8 +67,8 @@
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="#">automatic_detection</a></li>
-                    <li><a class="dropdown-item" href="#">manual_repairing</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('data_preparation.manual_repairing')}}">manual_repairing</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('data_preparation.automatic_detection')}}">automatic_detection</a></li>
                     <li><a class="dropdown-item" href="#">transpose</a></li>
                     <li><a class="dropdown-item" href="#">anomaly_detection</a></li>
                     <li><a class="dropdown-item" href="#">normalisation</a></li>
@@ -92,15 +97,6 @@
 
         <!-- Navbar end -->
 
-        <!-- Message flashing -->
-        {# {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for msg in message %}
-                    <p>{{msg}}</p>
-                {% endfor %}
-                
-            {% endif %}
-        {% endwith %} #}
 
         {% if sub_navbar_list %}
             <ul class="nav nav-pills nav-justified mb-3">
@@ -116,6 +112,18 @@
         {% block main_content %}
         {% endblock %}
         
+        <!-- Message flashing -->
+        <div class="mt-3">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <ul class="list-group flashed_messages">
+                {% for category, message in messages %}
+                <li class="list-group-item bg-{{ category }}-subtle text-light-emphasis border border-light-subtle rounded-3">{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+        </div>
 
     </div>
 

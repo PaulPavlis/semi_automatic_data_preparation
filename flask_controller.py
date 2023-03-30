@@ -6,6 +6,7 @@ from controller.using_the_data import using_the_data
 import os
 
 app = Flask(__name__)
+app.secret_key = "semi_automatic_data_preparation"
 app.register_blueprint(data_exploration, url_prefix="/data_exploration")
 app.register_blueprint(data_preparation, url_prefix="/data_preparation")
 app.register_blueprint(data_selection, url_prefix="/data_selection")

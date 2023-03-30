@@ -1,4 +1,4 @@
-from flask import render_template, current_app
+from flask import render_template, current_app, redirect, url_for, flash
 import os
 import pandas as pd
 
@@ -15,7 +15,7 @@ def get_controller_general_template_with_args(
         sub_navbar_list=sub_navbar_list_arg,
         sub_navbar_active=sub_navbar_active_arg,
         main_navbar_active=main_navbar_active_arg,
-        active_dataset_info=f"Currently active dataset: {get_active_dataset_name()} || Infos: {get_dataset_basic_info_string(get_active_dataset())}"
+        active_dataset_info=f"Currently active dataset: {get_active_dataset_name()} || Infos: {get_dataset_basic_info_string(get_active_dataframe())}"
         if get_active_dataset_name()
         else "No active dataframe selected. Please choose one under data_selection --> select_dataset_as_active",
         additional_args=additional_args,
@@ -33,7 +33,7 @@ def get_active_dataset_name():
     return active_datasets[0] if active_datasets else None
 
 
-def get_active_dataset():
+def get_active_dataframe():
     if not get_active_dataset_name():
         return None
     return read_generic_input_file(
@@ -78,3 +78,12 @@ def is_allowed_file(filename):
 
 def get_file_extension(filename):
     return filename.rsplit(".", 1)[1].lower()
+
+
+def check_if_active_dataset_is_set():
+    return True if get_active_dataset_name() else False
+
+
+def send_user_to_set_active_dataset():
+    flash("You need to select an active dataset first. Redirecting you ...", "warning")
+    return redirect(url_for("data_selection.select_dataset_as_active"))
