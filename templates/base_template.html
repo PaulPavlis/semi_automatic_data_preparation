@@ -112,10 +112,6 @@
             </ul>
         {% endif %}
 
-        <!-- Main content block for child templates to write to -->
-        {% block main_content %}
-        {% endblock %}
-        
         <!-- Message flashing -->
         <div class="mt-3">
             {% with messages = get_flashed_messages(with_categories=true) %}
@@ -129,6 +125,10 @@
             {% endwith %}
         </div>
 
+        <!-- Main content block for child templates to write to -->
+        {% block main_content %}
+        {% endblock %}
+        
     </div>
 
     <!-- Bootstrap -->
