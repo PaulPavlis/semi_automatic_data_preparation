@@ -177,9 +177,11 @@ def add_new_file(request):
                 if is_allowed_file(secure_filename(file_name_new)):
                     file_name_final = secure_filename(file_name_new)
                 else:
-                    raise ValueError(
-                        "Custom Error: The file extension you are giving with the File name is not currently supported."
+                    flash(
+                        f"The file extension you are giving with the Filename is currently not supported.",
+                        "danger",
                     )
+                    return None
             else:
                 file_name_final = file_name_uploaded
 
@@ -201,9 +203,14 @@ def add_new_file(request):
             )
 
         else:
-            raise ValueError(
-                "Custom Error: This file extension is not currently supported."
+            flash(
+                f"This file extension is currently not supported.",
+                "danger",
             )
-
+            return None
     else:
-        raise ValueError("Custom Error: You have not given a file to the site.")
+        flash(
+            f"You have not given a file to the site.",
+            "warning",
+        )
+        return None

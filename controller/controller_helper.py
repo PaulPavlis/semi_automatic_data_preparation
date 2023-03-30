@@ -60,9 +60,8 @@ def read_generic_input_file(file_location, file_name):
     elif file_extension == "json":
         return pd.read_json(file_path, encoding="latin1")
     else:
-        raise ValueError(
-            "Custom Error: This file extension is not currently supported."
-        )
+        flash("This file extension is currently not supported.", "danger")
+        return None
 
 
 def get_controller_filename(complete_name):
