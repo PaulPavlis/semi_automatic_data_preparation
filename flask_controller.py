@@ -19,11 +19,14 @@ app.register_blueprint(using_the_data, url_prefix="/using_the_data")
 UPLOAD_FOLDER = "stored_user_files"
 ALLOWED_EXTENSIONS = {"csv", "json"}
 ACTIVE_DATASET_FOLDER = os.path.join(UPLOAD_FOLDER, "active_dataset")
+USER_FILE_CONFIGS = os.path.join(UPLOAD_FOLDER, "user_file_configs")
 Path(UPLOAD_FOLDER).mkdir(parents=True, exist_ok=True)
 Path(ACTIVE_DATASET_FOLDER).mkdir(parents=True, exist_ok=True)
+Path(USER_FILE_CONFIGS).mkdir(parents=True, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["ALLOWED_EXTENSIONS"] = ALLOWED_EXTENSIONS
 app.config["ACTIVE_DATASET_FOLDER"] = ACTIVE_DATASET_FOLDER
+app.config["USER_FILE_CONFIGS"] = USER_FILE_CONFIGS
 
 
 @app.route("/")
