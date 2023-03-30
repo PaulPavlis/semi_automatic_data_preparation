@@ -4,6 +4,8 @@ from controller.data_preparation import data_preparation
 from controller.data_selection import data_selection
 from controller.using_the_data import using_the_data
 import os
+from pathlib import Path
+
 
 app = Flask(__name__)
 app.secret_key = "semi_automatic_data_preparation"
@@ -12,9 +14,12 @@ app.register_blueprint(data_preparation, url_prefix="/data_preparation")
 app.register_blueprint(data_selection, url_prefix="/data_selection")
 app.register_blueprint(using_the_data, url_prefix="/using_the_data")
 
+# Create reqired folders:
 UPLOAD_FOLDER = "stored_user_files"
 ALLOWED_EXTENSIONS = {"csv", "json"}
 ACTIVE_DATASET_FOLDER = os.path.join(UPLOAD_FOLDER, "active_dataset")
+Path(UPLOAD_FOLDER).mkdir(parents=True, exist_ok=True)
+Path(ACTIVE_DATASET_FOLDER).mkdir(parents=True, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["ALLOWED_EXTENSIONS"] = ALLOWED_EXTENSIONS
 app.config["ACTIVE_DATASET_FOLDER"] = ACTIVE_DATASET_FOLDER
