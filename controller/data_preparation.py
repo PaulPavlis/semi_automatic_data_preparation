@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, flash
 from controller.controller_helper import (
     get_controller_general_template_with_args,
     get_controller_filename,
@@ -28,7 +28,7 @@ method_preparation_list = [
 def get_controller_specific_template_with_args(
     template_name_arg="index_data_preparation.html",
     sub_navbar_active_arg="",
-    *additional_args
+    *additional_args,
 ):
     return get_controller_general_template_with_args(
         template_name_arg,
@@ -58,6 +58,11 @@ def manual_repairing():
     if request.method == "GET" or request.method == "POST":
         if request.method == "POST":
             n = 0
+
+            flash(
+                f"Depending on the amount of data, displaying it in a smart table might take a few seconds.",
+                "info",
+            )
 
         return get_controller_specific_template_with_args(
             "manual_repairing.html", manual_repairing.__name__, display_df_list_of_dicts
