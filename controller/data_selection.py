@@ -1,4 +1,4 @@
-from flask import Blueprint, request, current_app
+from flask import Blueprint, request, current_app, flash
 from controller.controller_helper import (
     get_controller_general_template_with_args,
     get_controller_filename,
@@ -125,17 +125,30 @@ def set_active_file(new_active_dataset_name):
             ),
         )
 
+    flash(
+        f"Successfully set {new_active_dataset_name} as the active dataset.",
+        "success",
+    )
+
 
 def delete_dataset_with_name(delete_dataset_name):
     if delete_dataset_name:
         if delete_dataset_name == "active_file":
             delete_all_active_files()
+            flash(
+                f"Successfully removed the active dataset.",
+                "success",
+            )
         else:
             os.remove(
                 os.path.join(
                     current_app.config["UPLOAD_FOLDER"],
                     delete_dataset_name,
                 )
+            )
+            flash(
+                f"Successfully removed the {delete_dataset_name} dataset.",
+                "success",
             )
 
 
@@ -177,8 +190,16 @@ def add_new_file(request):
                 os.path.join(current_app.config["UPLOAD_FOLDER"], file_name_final)
             )
 
+            additional_message = ""
             if "is_new_file_active" in request.form:
                 set_active_file(file_name_final)
+                additional_message = "Set the dataset as active."
+
+            flash(
+                f"Successfully imported the new dataset. {additional_message}",
+                "success",
+            )
+
         else:
             raise ValueError(
                 "Custom Error: This file extension is not currently supported."
