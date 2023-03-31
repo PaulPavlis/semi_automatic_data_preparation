@@ -4,6 +4,7 @@ from controller.controller_helper import (
     get_controller_filename,
     is_allowed_file,
     create_or_modify_user_config_file,
+    get_user_file_config_name,
 )
 import pandas as pd
 import os
@@ -21,7 +22,6 @@ method_usage_list = [
     "import_new_dataset",
     "select_dataset_as_active",
     "delete_dataset",
-    "delete_dataset_config",
 ]
 
 
@@ -83,29 +83,6 @@ def delete_dataset():
         )
     else:
         return "Use get or post to request this page"
-
-
-@data_selection.route("/delete_dataset_config", methods=["POST", "GET"])
-def delete_dataset_config():
-    dataset_list = get_all_datasets()
-
-    return get_controller_specific_template_with_args(
-        "delete_dataset_config.html",
-        delete_dataset_config.__name__,
-        dataset_list,
-    )
-
-    # if request.method == "GET" or request.method == "POST":
-    #     if request.method == "POST":
-    #         delete_dataset_with_name(request.form["delete_dataset_name"])
-
-    #     return get_controller_specific_template_with_args(
-    #         "delete_dataset.html",
-    #         delete_dataset.__name__,
-    #         dataset_list,
-    #     )
-    # else:
-    #     return "Use get or post to request this page"
 
 
 def get_controller_specific_template_with_args(
@@ -182,6 +159,22 @@ def delete_dataset_with_name(delete_dataset_name):
                 f"Successfully removed the {delete_dataset_name} dataset.",
                 "success",
             )
+
+            if (
+                "delete_file_config" in request.form
+                and request.form["delete_file_config"]
+            ):
+                config_file_name = get_user_file_config_name(delete_dataset_name)
+                os.remove(
+                    os.path.join(
+                        current_app.config["USER_FILE_CONFIGS"],
+                        config_file_name,
+                    )
+                )
+                flash(
+                    f"Successfully removed the {config_file_name} config file.",
+                    "success",
+                )
 
 
 def get_all_datasets():

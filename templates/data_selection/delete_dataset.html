@@ -11,6 +11,10 @@
             <option value="{{file}}">{{file}}</option>
         {% endfor %}
     </select>
+    <div class="form-check mt-3">
+      <input type="checkbox" class="form-check-input" name="delete_file_config" id="delete_file_config">
+      <label class="form-check-label" for="delete_file_config">Delete file config</label>
+    </div>
     <button type="submit" class="btn btn-warning mt-3 delete_dataset" title="Warning: This can not be undone">Delete Dataset</button>
 </form>
 
