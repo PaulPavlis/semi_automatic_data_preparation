@@ -87,9 +87,9 @@ def read_generic_input_file(file_location, file_name):
             else ","
         )
 
-    print(
-        f"{pd_read_function=}, {header_value=}, {file_separator=} {user_file_configs=}"
-    )
+    # print(
+    #     f"{pd_read_function=}, {header_value=}, {file_separator=} {user_file_configs=}"
+    # )
 
     return pd_read_function(
         file_path, encoding="latin1", header=header_value, sep=file_separator
@@ -169,8 +169,8 @@ def create_or_modify_user_config_file(user_file_name, config_dict={}):
 
     current_configs = get_user_file_config(get_user_file_config_name(user_file_name))
 
-    print(f"{current_configs=}")
-    print(f"{config_dict=}")
+    # print(f"{current_configs=}")
+    # print(f"{config_dict=}")
 
     if not current_configs:
         flash(
@@ -180,7 +180,7 @@ def create_or_modify_user_config_file(user_file_name, config_dict={}):
     else:
         current_configs.update(config_dict)
 
-    print(f"Updated dict: {current_configs}")
+    # print(f"Updated dict: {current_configs}")
 
     final_configs = {
         config_option: config_dict[config_option]
@@ -188,7 +188,7 @@ def create_or_modify_user_config_file(user_file_name, config_dict={}):
         if config_option in config_dict
     }
 
-    print(f"Updated dict after checking options: {final_configs}")
+    # print(f"Updated dict after checking options: {final_configs}")
 
     create_user_file_config(get_user_file_config_name(user_file_name), final_configs)
 
