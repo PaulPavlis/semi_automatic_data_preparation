@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, flash, request
-from controller.controller_helper import get_controller_general_template_with_args, get_controller_filename, get_active_dataframe_formatted, check_if_active_dataset_is_set, send_user_to_set_active_dataset
+from controller.controller_helper import get_controller_general_template_with_args, get_controller_filename, get_active_dataframe_formatted, check_if_active_dataset_is_set, send_user_to_set_active_dataset, get_active_dataframe
 
 
 data_exploration = Blueprint(
@@ -29,6 +29,16 @@ def get_controller_specific_template_with_args(
 def home():
     return get_controller_specific_template_with_args(
         "index_data_exploration.html"
+    )
+
+
+@data_exploration.route("/general_overview")
+def general_overview():
+    print(get_active_dataframe().describe(include="all"))
+    return get_controller_specific_template_with_args(
+        "general_overview.html",
+        general_overview.__name__,
+        get_active_dataframe().describe(include="all")
     )
 
 
