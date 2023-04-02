@@ -76,17 +76,20 @@ def read_generic_input_file(file_location, file_name):
     file_separator = None
     if user_file_configs:
         header_value = (
-            0
-            if "has_header" in user_file_configs and user_file_configs["has_header"]
+            user_file_configs["has_header"]["value"]
+            if "has_header" in user_file_configs
+            and isinstance(user_file_configs["has_header"]["value"], int)
             else None
         )
         file_separator = (
-            user_file_configs["file_separator"]
+            user_file_configs["file_separator"]["value"]
             if "file_separator" in user_file_configs
             else ","
         )
 
-    print(f"{pd_read_function=}, {header_value=}, {user_file_configs=}")
+    print(
+        f"{pd_read_function=}, {header_value=}, {file_separator=} {user_file_configs=}"
+    )
 
     return pd_read_function(
         file_path, encoding="latin1", header=header_value, sep=file_separator
@@ -123,6 +126,10 @@ def send_user_to_set_active_dataset():
 
 def get_user_file_config_name(user_file_name):
     return f"{str(get_filename_without_extension(user_file_name))}.yaml"
+
+
+def get_active_user_file_config():
+    return get_user_file_config(get_active_dataset_name())
 
 
 def create_user_file_config(user_file_name, config_dict={}):
@@ -184,3 +191,18 @@ def create_or_modify_user_config_file(user_file_name, config_dict={}):
     print(f"Updated dict after checking options: {final_configs}")
 
     create_user_file_config(get_user_file_config_name(user_file_name), final_configs)
+
+
+def create_config_dict(has_header, file_separator):
+    user_file_configs = {
+        "has_header": {"display_element": "checkbox"},
+        "file_separator": {"display_element": "text"},
+    }
+
+    user_file_configs["has_header"]["value"] = 0 if has_header else False
+
+    user_file_configs["file_separator"]["value"] = (
+        file_separator if file_separator else ","
+    )
+
+    return user_file_configs

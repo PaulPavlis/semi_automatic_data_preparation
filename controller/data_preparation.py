@@ -1,4 +1,4 @@
-from flask import Blueprint, request, flash
+from flask import Blueprint, request, flash, current_app
 from controller.controller_helper import (
     get_controller_general_template_with_args,
     get_controller_filename,
@@ -6,6 +6,7 @@ from controller.controller_helper import (
     get_active_dataframe_formatted,
     check_if_active_dataset_is_set,
     send_user_to_set_active_dataset,
+    get_active_user_file_config,
 )
 import numpy as np
 
@@ -82,7 +83,25 @@ def automatic_detection():
 
 @data_preparation.route("/adapt_file_configs", methods=["POST", "GET"])
 def adapt_file_configs():
-    return get_controller_specific_template_with_args(
-        "adapt_file_configs.html",
-        adapt_file_configs.__name__,
-    )
+    if not check_if_active_dataset_is_set():
+        return send_user_to_set_active_dataset()
+
+    active_user_file_configs = get_active_user_file_config()
+
+    if request.method == "GET" or request.method == "POST":
+        if request.method == "POST":
+            n = 0
+
+        # flash(
+        #     f"Depending on the amount of data, displaying it in a smart table might take a few seconds.",
+        #     "success",
+        # )
+
+        return get_controller_specific_template_with_args(
+            "adapt_file_configs.html",
+            adapt_file_configs.__name__,
+            current_app.config["USER_FILE_CONFIGS_OPTIONS"],
+            active_user_file_configs,
+        )
+    else:
+        return "Use get or post to request this page"

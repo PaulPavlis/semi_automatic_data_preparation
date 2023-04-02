@@ -5,6 +5,7 @@ from controller.controller_helper import (
     is_allowed_file,
     create_or_modify_user_config_file,
     get_user_file_config_name,
+    create_config_dict,
 )
 import pandas as pd
 import os
@@ -225,18 +226,12 @@ def add_new_file(request):
             if "is_new_file_active" in request.form:
                 set_active_file(file_name_final)
 
-            user_file_configs = {}
-
-            if "new_file_has_header" in request.form:
-                user_file_configs["has_header"] = True
-
-            if (
-                "new_file_separator" in request.form
-                and request.form["new_file_separator"]
-            ):
-                user_file_configs["file_separator"] = request.form["new_file_separator"]
-            else:
-                user_file_configs["file_separator"] = ","  # default csv separator
+            user_file_configs = create_config_dict(
+                "new_file_has_header" in request.form,
+                request.form["new_file_separator"]
+                if "new_file_separator" in request.form
+                else None,
+            )
 
             create_or_modify_user_config_file(file_name_final, user_file_configs)
 

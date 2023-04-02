@@ -3,6 +3,26 @@
 {% block title %}Data preparation{% endblock %}
 {% block main_content %}
 
-placeholder
+{{additional_args[0]}}
+
+{# 
+<form action="#" method="POST" enctype=multipart/form-data>
+
+  <div class="mb-3">
+    <label for="file_name_new" class="form-label">File name</label>
+    <input type="text" class="form-control" name="file_name_new" id="file_name_new" placeholder="Leave empty if you do not wish to change the name of the file. Add the file extension as well.">
+  </div>
+  <div class="mb-3">
+    <label for="file_input" class="form-label">File</label>
+    <input type="file" class="form-control" name="file_input" id="file_input" required>
+  </div>
+</form>  
+#}
+
+
+{# 
+{% for config_name, config_value in additional_args[0] %}
+
+{% endfor %} #}
 
 {% endblock %}
