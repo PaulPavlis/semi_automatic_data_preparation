@@ -73,7 +73,7 @@ def read_generic_input_file(file_location, file_name):
     user_file_configs = get_user_file_config(file_name)
 
     header_value = None
-    file_separator = None
+    file_separator = ","
     if user_file_configs:
         header_value = (
             user_file_configs["has_header"]["value"]

@@ -67,6 +67,10 @@ def visual_exploration():
 
 @data_exploration.route("/return_plot_active_ajax_data")
 def return_active_ajax_data():
+    flash(
+        f"Info: Some plots created here might not make sense, depending what column(s) you select.",
+        "info",
+        )
     # print(f"inside regturn ajax data. Value: {request.args.get('data')}")
     return gm(request.args.get('data'))
 
