@@ -81,6 +81,30 @@ def gm(column=''):
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
 
+@data_exploration.route("/return_empty_plot")
+def return_empty_plot():
+    return {
+    "layout": {
+        "xaxis": {
+            "visible": False
+            },
+        "yaxis": {
+            "visible": False
+            },
+        "annotations": [
+            {
+                "text": "No data selected",
+                "xref": "paper",
+                "yref": "paper",
+                "showarrow": False,
+                "font": {
+                    "size": 28
+                    }
+                }
+            ]
+        }
+    }
+
 @data_exploration.route("/manual_exploration")
 def manual_exploration():
     if not check_if_active_dataset_is_set():

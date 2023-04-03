@@ -21,6 +21,7 @@
     <div class="col-md-6">
         <label for="inputState" class="form-label">Column 1</label>
         <select id="inputState" class="form-select" onchange="cb(this.value)">
+            <option selected>None</option>
             {% for column_name in additional_args[0][0].keys() %}
             <option>{{column_name}}</option>
             {% endfor %}
