@@ -34,11 +34,23 @@ def home():
 
 @data_exploration.route("/general_overview")
 def general_overview():
-    print(get_active_dataframe().describe(include="all"))
+    active_dataframe_description = get_active_dataframe().describe(include="all").reset_index().rename(columns={"index": "Type"})
+    active_dataframe_description.fillna("-", inplace=True)
+    
+
+    # add the column type (categorical, numeric, ...) as a row to the df
+    # for index in range(active_dataframe_description.shape[1]):
+    #     print(active_dataframe_description.iloc[:, index])
+    #     break
+    
+    active_dataframe_description = active_dataframe_description.to_dict("records")
+
+
+    # print(get_active_dataframe().info())
     return get_controller_specific_template_with_args(
         "general_overview.html",
         general_overview.__name__,
-        get_active_dataframe().describe(include="all")
+        active_dataframe_description,
     )
 
 

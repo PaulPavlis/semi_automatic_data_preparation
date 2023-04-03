@@ -1,0 +1,19 @@
+<!-- Inspiration from: https://blog.miguelgrinberg.com/post/beautiful-interactive-tables-for-your-flask-templates -->
+<table id="data" class="table table-dark table-striped table-hover table-responsive">
+    <thead>
+        <tr>
+            {% for column_name in additional_args[0][0].keys() %}
+                <th>{{column_name}}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for entry in additional_args[0] %}
+        <tr>
+            {% for column_name in entry %}
+            <td>{{ entry[column_name] }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
