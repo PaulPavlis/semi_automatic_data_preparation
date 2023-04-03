@@ -1,6 +1,9 @@
 from flask import Blueprint, render_template, flash, request
 from controller.controller_helper import get_controller_general_template_with_args, get_controller_filename, get_active_dataframe_formatted, check_if_active_dataset_is_set, send_user_to_set_active_dataset, get_active_dataframe
-
+import pandas as pd
+import plotly
+import plotly.express as px
+import json
 
 data_exploration = Blueprint(
     "data_exploration",
@@ -57,9 +60,26 @@ def general_overview():
 @data_exploration.route("/visual_exploration")
 def visual_exploration():
     return get_controller_specific_template_with_args(
-        "index_data_exploration.html",
+        "visual_exploration.html",
         visual_exploration.__name__,
+        get_active_dataframe_formatted()
     )
+
+@data_exploration.route("/return_plot_active_ajax_data")
+def return_active_ajax_data():
+    print(f"inside regturn ajax data. Value: {request.args.get('data')}")
+    return gm(request.args.get('data'))
+
+def gm(column=''):
+    active_df = get_active_dataframe()
+
+    print(f"inside gm. Value: {column}")
+    print(f"inside gm. Value type: {type(column)}")
+
+    fig = px.histogram(active_df, x=int(column), title=f"Histogram of {column}")
+
+    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    return graphJSON
 
 @data_exploration.route("/manual_exploration")
 def manual_exploration():
