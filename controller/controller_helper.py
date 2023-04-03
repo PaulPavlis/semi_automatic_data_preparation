@@ -99,6 +99,13 @@ def read_generic_input_file(file_location, file_name):
         str
     )  # otherwise weird errors if columns are named with just numbers
 
+    df = df.rename(
+        columns=lambda x: x.lstrip()
+    )  # Remove whitespaces before and after the column names
+    df = df.rename(
+        columns=lambda x: x.rstrip()
+    )  # Remove whitespaces before and after the column names
+
     return df
 
 
