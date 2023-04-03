@@ -91,9 +91,15 @@ def read_generic_input_file(file_location, file_name):
     #     f"{pd_read_function=}, {header_value=}, {file_separator=} {user_file_configs=}"
     # )
 
-    return pd_read_function(
+    df = pd_read_function(
         file_path, encoding="latin1", header=header_value, sep=file_separator
     )
+
+    df.columns = df.columns.astype(
+        str
+    )  # otherwise weird errors if columns are named with just numbers
+
+    return df
 
 
 def get_controller_filename(complete_name):

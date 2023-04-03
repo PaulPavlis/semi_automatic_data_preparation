@@ -67,16 +67,16 @@ def visual_exploration():
 
 @data_exploration.route("/return_plot_active_ajax_data")
 def return_active_ajax_data():
-    print(f"inside regturn ajax data. Value: {request.args.get('data')}")
+    # print(f"inside regturn ajax data. Value: {request.args.get('data')}")
     return gm(request.args.get('data'))
 
 def gm(column=''):
     active_df = get_active_dataframe()
 
-    print(f"inside gm. Value: {column}")
-    print(f"inside gm. Value type: {type(column)}")
+    # print(f"inside gm. Value: {column}")
+    # print(f"inside gm. Value type: {type(column)}")
 
-    fig = px.histogram(active_df, x=int(column), title=f"Histogram of {column}")
+    fig = px.histogram(active_df, x=column, title=f"Histogram of {column}")
 
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
