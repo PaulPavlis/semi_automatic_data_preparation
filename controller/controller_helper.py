@@ -212,7 +212,7 @@ def create_config_dict(has_header, file_separator):
         "file_separator": {"display_element": "text"},
     }
 
-    user_file_configs["has_header"]["value"] = 0 if has_header else False
+    user_file_configs["has_header"]["value"] = 0 if has_header else None
 
     user_file_configs["file_separator"]["value"] = (
         file_separator if file_separator else ","
