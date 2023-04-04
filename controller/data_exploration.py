@@ -76,9 +76,9 @@ def visual_exploration():
 @data_exploration.route("/return_plot_active_ajax_data")
 def return_active_ajax_data():
     # print(f"inside regturn ajax data. Value: {request.args.get('data')}")
-    return gm(request.args.get('graph_type'), request.args.get('column_1'), request.args.get('column_2'))
+    return get_graph_json(request.args.get('graph_type'), request.args.get('column_1'), request.args.get('column_2'))
 
-def gm(graph_type='', column_1='', column_2=''):
+def get_graph_json(graph_type='', column_1='', column_2=''):
     active_df = get_active_dataframe()
 
     # print(f"inside gm. Value: {column}")
