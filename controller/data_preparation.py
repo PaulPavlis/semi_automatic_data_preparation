@@ -88,6 +88,8 @@ def adapt_file_configs():
 
     active_user_file_configs = get_active_user_file_config()
 
+    print(active_user_file_configs)
+
     if request.method == "GET" or request.method == "POST":
         if request.method == "POST":
             n = 0

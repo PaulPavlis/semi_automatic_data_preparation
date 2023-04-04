@@ -76,9 +76,9 @@ def read_generic_input_file(file_location, file_name):
     file_separator = ","
     if user_file_configs:
         header_value = (
-            user_file_configs["has_header"]["value"]
+            0
             if "has_header" in user_file_configs
-            and isinstance(user_file_configs["has_header"]["value"], int)
+            and user_file_configs["has_header"]["value"]
             else None
         )
         file_separator = (
@@ -87,26 +87,37 @@ def read_generic_input_file(file_location, file_name):
             else ","
         )
 
-    # print(
-    #     f"{pd_read_function=}, {header_value=}, {file_separator=} {user_file_configs=}"
-    # )
+    try:
+        df = pd_read_function(
+            file_path, encoding="latin1", header=header_value, sep=file_separator
+        )
+        df.columns = df.columns.astype(
+            str
+        )  # otherwise weird errors if columns are named with just numbers
 
-    df = pd_read_function(
-        file_path, encoding="latin1", header=header_value, sep=file_separator
-    )
+        df = df.rename(
+            columns=lambda x: x.lstrip()
+        )  # Remove whitespaces before and after the column names
+        df = df.rename(
+            columns=lambda x: x.rstrip()
+        )  # Remove whitespaces before and after the column names
 
-    df.columns = df.columns.astype(
-        str
-    )  # otherwise weird errors if columns are named with just numbers
-
-    df = df.rename(
-        columns=lambda x: x.lstrip()
-    )  # Remove whitespaces before and after the column names
-    df = df.rename(
-        columns=lambda x: x.rstrip()
-    )  # Remove whitespaces before and after the column names
-
-    return df
+        return df
+    except Exception as e:
+        print("Got exception reading generic input file. Printing variables: ")
+        print(
+            f"{pd_read_function=}, {header_value=}, {file_separator=} {user_file_configs=}"
+        )
+        print(f"Error message: {e}")
+        flash(
+            "Got exception reading generic input file. Printing variables: ", "warning"
+        )
+        flash(
+            f"{pd_read_function=}, {header_value=}, {file_separator=} {user_file_configs=}",
+            "warning",
+        )
+        flash(f"Error message: {e}", "danger")
+        return pd.DataFrame()
 
 
 def get_controller_filename(complete_name):
@@ -208,11 +219,14 @@ def create_or_modify_user_config_file(user_file_name, config_dict={}):
 
 def create_config_dict(has_header, file_separator):
     user_file_configs = {
-        "has_header": {"display_element": "checkbox"},
-        "file_separator": {"display_element": "text"},
+        "has_header": {
+            "bootstrap_input_type": "checkbox",
+            "bootstrap_class": "form-check-input",
+        },
+        "file_separator": {"bootstrap_input_type": "text", "bootstrap_class": ""},
     }
 
-    user_file_configs["has_header"]["value"] = 0 if has_header else None
+    user_file_configs["has_header"]["value"] = True if has_header else False
 
     user_file_configs["file_separator"]["value"] = (
         file_separator if file_separator else ","

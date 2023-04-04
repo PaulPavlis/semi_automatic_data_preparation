@@ -3,26 +3,27 @@
 {% block title %}Data preparation{% endblock %}
 {% block main_content %}
 
-{{additional_args[0]}}
-
-{# 
-<form action="#" method="POST" enctype=multipart/form-data>
-
-  <div class="mb-3">
-    <label for="file_name_new" class="form-label">File name</label>
-    <input type="text" class="form-control" name="file_name_new" id="file_name_new" placeholder="Leave empty if you do not wish to change the name of the file. Add the file extension as well.">
-  </div>
-  <div class="mb-3">
-    <label for="file_input" class="form-label">File</label>
-    <input type="file" class="form-control" name="file_input" id="file_input" required>
-  </div>
+<h3>Change configs of the current active file:</h3>
+<form action="#" method="POST">
+  {% for arg_option in additional_args[0] %}
+    <div class="row g-3 align-items-center mb-3">
+      <div class="col-1">
+        <label for="field_{{arg_option}}" class="col-form-label">{{arg_option}}</label>
+      </div>
+      <div class="col-auto">
+        <input type="{{additional_args[1][arg_option]['bootstrap_input_type']}}" id="field_{{arg_option}}" name="field_{{arg_option}}" class="form-control {{additional_args[1][arg_option]['bootstrap_class']}}"
+        {% if additional_args[1][arg_option]["bootstrap_input_type"] == "checkbox" %} 
+          {% if additional_args[1][arg_option]["value"] %}
+            checked
+          {% endif %}
+        {% else %} 
+          value="{{additional_args[1][arg_option]['value']}}"
+        {% endif %}
+        />
+      </div>
+    </div>
+  {% endfor %}
+  <button type="submit" class="btn btn-warning">Change configs</button>
 </form>  
-#}
-
-
-{# 
-{% for config_name, config_value in additional_args[0] %}
-
-{% endfor %} #}
 
 {% endblock %}
