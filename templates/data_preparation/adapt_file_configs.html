@@ -8,10 +8,10 @@
   {% for arg_option in additional_args[0] %}
     <div class="row g-3 align-items-center mb-3">
       <div class="col-1">
-        <label for="field_{{arg_option}}" class="col-form-label">{{arg_option}}</label>
+        <label for="{{arg_option}}" class="col-form-label">{{arg_option}}</label>
       </div>
       <div class="col-auto">
-        <input type="{{additional_args[1][arg_option]['bootstrap_input_type']}}" id="field_{{arg_option}}" name="field_{{arg_option}}" class="form-control {{additional_args[1][arg_option]['bootstrap_class']}}"
+        <input type="{{additional_args[1][arg_option]['bootstrap_input_type']}}" id="{{arg_option}}" name="{{arg_option}}" class="form-control {{additional_args[1][arg_option]['bootstrap_class']}}"
         {% if additional_args[1][arg_option]["bootstrap_input_type"] == "checkbox" %} 
           {% if additional_args[1][arg_option]["value"] %}
             checked
@@ -23,7 +23,7 @@
       </div>
     </div>
   {% endfor %}
-  <button type="submit" class="btn btn-warning">Change configs</button>
+  <button type="submit" class="btn btn-warning mt-1">Change configs</button>
 </form>  
 
 {% endblock %}

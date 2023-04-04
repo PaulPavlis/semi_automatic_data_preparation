@@ -217,7 +217,7 @@ def create_or_modify_user_config_file(user_file_name, config_dict={}):
     create_user_file_config(get_user_file_config_name(user_file_name), final_configs)
 
 
-def create_config_dict(has_header, file_separator):
+def create_config_dict(has_header=False, file_separator=","):
     user_file_configs = {
         "has_header": {
             "bootstrap_input_type": "checkbox",

@@ -7,6 +7,9 @@ from controller.controller_helper import (
     check_if_active_dataset_is_set,
     send_user_to_set_active_dataset,
     get_active_user_file_config,
+    create_config_dict,
+    create_or_modify_user_config_file,
+    get_active_dataset_name,
 )
 import numpy as np
 
@@ -88,11 +91,12 @@ def adapt_file_configs():
 
     active_user_file_configs = get_active_user_file_config()
 
-    print(active_user_file_configs)
+    # print(active_user_file_configs)
 
     if request.method == "GET" or request.method == "POST":
         if request.method == "POST":
-            n = 0
+            change_config_files(request.form)
+            # print(request.form)
 
         # flash(
         #     f"Depending on the amount of data, displaying it in a smart table might take a few seconds.",
@@ -107,3 +111,24 @@ def adapt_file_configs():
         )
     else:
         return "Use get or post to request this page"
+
+
+def change_config_files(new_config=None):
+    if not new_config:
+        flash("No changed configs received.", "warning")
+        return None
+    print(f"{new_config=}")
+
+    create_or_modify_user_config_file(
+        get_active_dataset_name(),
+        create_config_dict(
+            "has_header" in new_config,
+            new_config["file_separator"] if "file_separator" in new_config else "",
+        ),
+    )
+
+    # for config_option in current_app.config["USER_FILE_CONFIGS_OPTIONS"]:
+    #     if config_option in new_config:
+    #         print(config_option)
+    #         print(f"{new_config[config_option]}")
+    return 0
