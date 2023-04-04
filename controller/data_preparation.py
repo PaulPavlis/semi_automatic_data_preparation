@@ -89,8 +89,6 @@ def adapt_file_configs():
     if not check_if_active_dataset_is_set():
         return send_user_to_set_active_dataset()
 
-    active_user_file_configs = get_active_user_file_config()
-
     # print(active_user_file_configs)
 
     if request.method == "GET" or request.method == "POST":
@@ -102,6 +100,7 @@ def adapt_file_configs():
         #     f"Depending on the amount of data, displaying it in a smart table might take a few seconds.",
         #     "success",
         # )
+        active_user_file_configs = get_active_user_file_config()
 
         return get_controller_specific_template_with_args(
             "adapt_file_configs.html",

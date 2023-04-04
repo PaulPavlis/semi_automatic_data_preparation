@@ -71,11 +71,11 @@ def select_dataset_as_active():
 
 @data_selection.route("/delete_dataset", methods=["POST", "GET"])
 def delete_dataset():
-    dataset_list = get_all_datasets()
-
     if request.method == "GET" or request.method == "POST":
         if request.method == "POST":
             delete_dataset_with_name(request.form["delete_dataset_name"])
+
+        dataset_list = get_all_datasets()
 
         return get_controller_specific_template_with_args(
             "delete_dataset.html",
