@@ -59,8 +59,12 @@ def general_overview():
 
 @data_exploration.route("/visual_exploration")
 def visual_exploration():
+    # flash(
+    #     f"Info: Some plots created here might not make sense, depending on what column(s) you select.",
+    #     "info",
+    #     )
     flash(
-        f"Info: Some plots created here might not make sense, depending on what column(s) you select.",
+        f"The graph is interactive. You can hover over the entries, drag over a selection or click on the legend to select/deselect categories or get more infos.",
         "info",
         )
     return get_controller_specific_template_with_args(
@@ -72,16 +76,25 @@ def visual_exploration():
 @data_exploration.route("/return_plot_active_ajax_data")
 def return_active_ajax_data():
     # print(f"inside regturn ajax data. Value: {request.args.get('data')}")
-    return gm(request.args.get('data'))
+    return gm(request.args.get('graph_type'), request.args.get('column_1'), request.args.get('column_2'))
 
-def gm(column=''):
+def gm(graph_type='', column_1='', column_2=''):
     active_df = get_active_dataframe()
 
     # print(f"inside gm. Value: {column}")
     # print(f"inside gm. Value type: {type(column)}")
+    fig = None
+    if graph_type == "Histogram":
+        fig = px.histogram(active_df, x=column_1, title=f"Histogram of {column_1}")
+    elif graph_type == "Pie Chart":
+        fig = px.pie(active_df, names=column_1, title=f"Pie Chart of {column_1}")
+    else:
+        fig = None
 
-    fig = px.histogram(active_df, x=column, title=f"Histogram of {column}")
 
+    if not fig:
+        return return_empty_plot()
+    
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
 

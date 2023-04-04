@@ -11,16 +11,17 @@
 <!-- My js for visual_exploration -->
 <script src="{{ url_for('static', filename='js/visual_exploration.js')}}" type="text/javascript"></script>
 
-<form class="row g-2">
+<form id="graph_form" class="row g-2">
     <div class="col-md-12">
-        <label for="inputState" class="form-label">Graph type</label>
-        <select id="inputState" class="form-select">
+        <label for="graph_type" class="form-label">Graph type</label>
+        <select id="graph_type" class="form-select" onchange="cbb()">
             <option selected>Histogram</option>
+            <option>Pie Chart</option>
         </select>
     </div>
     <div class="col-md-6">
-        <label for="inputState" class="form-label">Column 1</label>
-        <select id="inputState" class="form-select" onchange="cb(this.value)">
+        <label for="column_1" class="form-label">Column 1</label>
+        <select id="column_1" class="form-select" onchange="cbb()">
             <option selected>None</option>
             {% for column_name in additional_args[0][0].keys() %}
             <option>{{column_name}}</option>
@@ -28,8 +29,8 @@
         </select>
     </div>
     <div class="col-md-6">
-        <label for="inputState" class="form-label">Column 2</label>
-        <select id="inputState" class="form-select" disabled>
+        <label for="column_2" class="form-label">Column 2</label>
+        <select id="column_2" class="form-select" onchange="cbb()" disabled>
             <option selected>Currently disabled</option>
         </select>
     </div>
