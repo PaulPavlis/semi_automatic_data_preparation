@@ -118,16 +118,10 @@ def change_config_files(new_config=None):
         return None
     print(f"{new_config=}")
 
-    create_or_modify_user_config_file(
+    return create_or_modify_user_config_file(
         get_active_dataset_name(),
         create_config_dict(
             "has_header" in new_config,
             new_config["file_separator"] if "file_separator" in new_config else "",
         ),
     )
-
-    # for config_option in current_app.config["USER_FILE_CONFIGS_OPTIONS"]:
-    #     if config_option in new_config:
-    #         print(config_option)
-    #         print(f"{new_config[config_option]}")
-    return 0
