@@ -19,8 +19,10 @@ function make_column_selects_available() {
         if (column_1.value == "Not available for this graph type") {
             column_1.value = "None";
         }
+        if (column_2.value == "Not available for this graph type") {
+            column_2.value = "None";
+        }
         column_2.disabled = false;
-        column_2.value = "None";
     } else {
         column_1.disabled = true;
         column_1.value = "Not available for this graph type";
