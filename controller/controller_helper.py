@@ -104,16 +104,13 @@ def read_generic_input_file(file_location, file_name):
 
         return df
     except Exception as e:
-        print("Got exception reading generic input file. Printing variables: ")
         print(
-            f"{pd_read_function=}, {header_value=}, {file_separator=} {user_file_configs=}"
+            f"Got exception reading generic input file. Printing variables: \n{pd_read_function=}, {header_value=}, {file_separator=} {user_file_configs=}",
+            "warning",
         )
         print(f"Error message: {e}")
         flash(
-            "Got exception reading generic input file. Printing variables: ", "warning"
-        )
-        flash(
-            f"{pd_read_function=}, {header_value=}, {file_separator=} {user_file_configs=}",
+            f"It seems like the configs of the active file are not suitable to read the file. Config values are: {header_value=} | {file_separator=}",
             "warning",
         )
         flash(f"Error message: {e}", "danger")
