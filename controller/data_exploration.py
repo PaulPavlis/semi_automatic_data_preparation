@@ -103,11 +103,11 @@ def get_graph_json(graph_type='', column_1='', column_2=''):
     elif graph_type == "Box Plot":
         if not column_1:
             return return_empty_plot("Please select a column variable.")
-        fig = px.box(active_df, y=column_1, title=f"Box Plot of {column_1}")
+        fig = px.box(active_df, y=column_1, points="all", title=f"Box Plot of {column_1}. Individual points (left), Box Plot (right)")
     elif graph_type == "Violin Plot":
         if not column_1:
             return return_empty_plot("Please select a column variable.")
-        fig = px.violin(active_df, y=column_1, title=f"Violin Plot of {column_1}")
+        fig = px.violin(active_df, y=column_1, points="all", title=f"Violin Plot of {column_1}. Individual points (left), Violin Plot (right)")
     else:
         fig = None
 
