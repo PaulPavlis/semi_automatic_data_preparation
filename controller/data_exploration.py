@@ -95,10 +95,11 @@ def get_graph_json(graph_type='', column_1='', column_2=''):
     elif graph_type == "Scatter Plot":
         if not column_1 or not column_2:
             return return_empty_plot("Please select both column variables.")
-        print(f"{column_1=} || {column_2=}")
         fig = px.line(active_df, x=column_1, y=column_2, markers=True)
-    # elif graph_type == "Pie Chart":
-    #     fig = px.pie(active_df, names=column_1, title=f"Pie Chart of {column_1}")
+    elif graph_type == "Bar Chart":
+        if not column_1 or not column_2:
+            return return_empty_plot("Please select both column variables.")
+        fig = px.bar(active_df, x=column_1, y=column_2)
     else:
         fig = None
 
