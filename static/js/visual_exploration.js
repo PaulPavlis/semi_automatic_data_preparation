@@ -1,5 +1,5 @@
 graphs_one_column = ["Histogram", "Pie Chart", "Box Plot", "Violin Plot"];
-graphs_two_column = ["Scatter Plot", "Bar Chart"];
+graphs_two_column = ["Scatter Plot", "Bar Chart", "Density Heatmap"];
 
 function make_column_selects_available() {
     graph_type_value = $("#graph_type")[0].value;

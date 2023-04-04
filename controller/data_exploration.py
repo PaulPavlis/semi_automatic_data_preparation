@@ -108,6 +108,10 @@ def get_graph_json(graph_type='', column_1='', column_2=''):
         if not column_1:
             return return_empty_plot("Please select a column variable.")
         fig = px.violin(active_df, y=column_1, points="all", title=f"Violin Plot of {column_1}. Individual points (left), Violin Plot (right)")
+    elif graph_type == "Density Heatmap":
+        if not column_1 or not column_2:
+            return return_empty_plot("Please select both column variables.")
+        fig = px.density_heatmap(active_df, x=column_1, y=column_2, title=f"Density Heatmap of {column_1} and {column_2}")
     else:
         fig = None
 
