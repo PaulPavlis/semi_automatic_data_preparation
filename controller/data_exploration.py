@@ -85,9 +85,20 @@ def get_graph_json(graph_type='', column_1='', column_2=''):
     # print(f"inside gm. Value type: {type(column)}")
     fig = None
     if graph_type == "Histogram":
+        if not column_1:
+            return return_empty_plot("Please select a column variable.")
         fig = px.histogram(active_df, x=column_1, title=f"Histogram of {column_1}")
     elif graph_type == "Pie Chart":
+        if not column_1:
+            return return_empty_plot("Please select a column variable.")
         fig = px.pie(active_df, names=column_1, title=f"Pie Chart of {column_1}")
+    elif graph_type == "Scatter Plot":
+        if not column_1 or not column_2:
+            return return_empty_plot("Please select both column variables.")
+        print(f"{column_1=} || {column_2=}")
+        fig = px.line(active_df, x=column_1, y=column_2, markers=True)
+    # elif graph_type == "Pie Chart":
+    #     fig = px.pie(active_df, names=column_1, title=f"Pie Chart of {column_1}")
     else:
         fig = None
 
@@ -99,7 +110,7 @@ def get_graph_json(graph_type='', column_1='', column_2=''):
     return graphJSON
 
 @data_exploration.route("/return_empty_plot")
-def return_empty_plot():
+def return_empty_plot(display_text = "No data selected"):
     return {
     "layout": {
         "xaxis": {
@@ -110,7 +121,7 @@ def return_empty_plot():
             },
         "annotations": [
             {
-                "text": "No data selected",
+                "text": display_text,
                 "xref": "paper",
                 "yref": "paper",
                 "showarrow": False,

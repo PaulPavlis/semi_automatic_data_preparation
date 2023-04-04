@@ -15,7 +15,8 @@
     <div class="col-md-12">
         <label for="graph_type" class="form-label">Graph type</label>
         <select id="graph_type" class="form-select" onchange="construct_new_graph(); make_column_selects_available();">
-            <option selected>Histogram</option>
+            <option selected>None</option>
+            <option>Histogram</option>
             <option>Pie Chart</option>
             <option>Scatter Plot</option>
         </select>
@@ -27,6 +28,7 @@
             {% for column_name in additional_args[0][0].keys() %}
             <option>{{column_name}}</option>
             {% endfor %}
+            <option hidden>Not available for this graph type</option> <!-- So that js can set it to this -->
         </select>
     </div>
     <div class="col-md-6">
