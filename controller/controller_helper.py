@@ -36,7 +36,7 @@ def get_active_dataset_name():
 
 def get_active_dataframe():
     if not get_active_dataset_name():
-        return None
+        return pd.DataFrame()
     return read_generic_input_file(
         current_app.config["ACTIVE_DATASET_FOLDER"], get_active_dataset_name()
     )
@@ -56,7 +56,7 @@ def get_dataset_basic_info_string(dataframe):
 
 def read_generic_input_file(file_location, file_name):
     if not file_name:
-        return None
+        return pd.DataFrame()
     file_extension = get_file_extension(file_name)
     file_path = os.path.join(file_location, file_name)
 

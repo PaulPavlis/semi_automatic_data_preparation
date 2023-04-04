@@ -2,18 +2,22 @@
 <table id="data" class="table table-dark table-striped table-hover table-responsive">
     <thead>
         <tr>
-            {% for column_name in additional_args[0][0].keys() %}
-                <th>{{column_name}}</th>
-            {% endfor %}
+            {% if additional_args[0] %}
+                {% for column_name in additional_args[0][0].keys() %}
+                    <th>{{column_name}}</th>
+                {% endfor %}
+            {% endif %}
         </tr>
     </thead>
     <tbody>
-        {% for entry in additional_args[0] %}
-        <tr>
-            {% for column_name in entry %}
-            <td>{{ entry[column_name] }}</td>
+        {% if additional_args[0] %}
+            {% for entry in additional_args[0] %}
+                <tr>
+                    {% for column_name in entry %}
+                    <td>{{ entry[column_name] }}</td>
+                    {% endfor %}
+                </tr>
             {% endfor %}
-        </tr>
-        {% endfor %}
+        {% endif %}
     </tbody>
 </table>

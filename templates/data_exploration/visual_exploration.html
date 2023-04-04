@@ -29,9 +29,11 @@
         <label for="column_1" class="form-label">Column 1</label>
         <select id="column_1" class="form-select" onchange="construct_new_graph()">
             <option selected>None</option>
-            {% for column_name in additional_args[0][0].keys() %}
-            <option>{{column_name}}</option>
-            {% endfor %}
+            {% if additional_args[0] %}
+                {% for column_name in additional_args[0][0].keys() %}
+                <option>{{column_name}}</option>
+                {% endfor %}
+            {% endif %}
             <option hidden>Not available for this graph type</option> <!-- So that js can set it to this -->
         </select>
     </div>
@@ -40,9 +42,11 @@
         <select id="column_2" class="form-select" onchange="construct_new_graph()">
             {# <option selected>Currently disabled</option> #}
             <option selected>None</option>
-            {% for column_name in additional_args[0][0].keys() %}
-            <option>{{column_name}}</option>
-            {% endfor %}
+            {% if additional_args[0] %}
+                {% for column_name in additional_args[0][0].keys() %}
+                <option>{{column_name}}</option>
+                {% endfor %}
+            {% endif %}
             <option hidden>Not available for this graph type</option> <!-- So that js can set it to this -->
         </select>
     </div>

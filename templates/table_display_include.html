@@ -8,9 +8,11 @@
 <table id="data" class="table table-dark table-striped display_table">
     <thead>
         <tr>
-            {% for column_name in additional_args[0][0].keys() %}
-            <th>{{column_name}}</th>
-            {% endfor %}
+            {% if additional_args[0] %}
+                {% for column_name in additional_args[0][0].keys() %}
+                <th>{{column_name}}</th>
+                {% endfor %}
+            {% endif %}
         </tr>
     </thead>
     <tbody>
