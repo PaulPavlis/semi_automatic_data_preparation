@@ -1,4 +1,4 @@
-graphs_one_column = ["Histogram", "Pie Chart"];
+graphs_one_column = ["Histogram", "Pie Chart", "Box Plot", "Violin Plot"];
 graphs_two_column = ["Scatter Plot", "Bar Chart"];
 
 function make_column_selects_available() {

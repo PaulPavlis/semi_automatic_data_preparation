@@ -95,11 +95,19 @@ def get_graph_json(graph_type='', column_1='', column_2=''):
     elif graph_type == "Scatter Plot":
         if not column_1 or not column_2:
             return return_empty_plot("Please select both column variables.")
-        fig = px.line(active_df, x=column_1, y=column_2, markers=True)
+        fig = px.line(active_df, x=column_1, y=column_2, markers=True, title=f"Scatter Plot of {column_1} and {column_2}")
     elif graph_type == "Bar Chart":
         if not column_1 or not column_2:
             return return_empty_plot("Please select both column variables.")
-        fig = px.bar(active_df, x=column_1, y=column_2)
+        fig = px.bar(active_df, x=column_1, y=column_2 , title=f"Bar Chart of {column_1} and {column_2}")
+    elif graph_type == "Box Plot":
+        if not column_1:
+            return return_empty_plot("Please select a column variable.")
+        fig = px.box(active_df, y=column_1, title=f"Box Plot of {column_1}")
+    elif graph_type == "Violin Plot":
+        if not column_1:
+            return return_empty_plot("Please select a column variable.")
+        fig = px.violin(active_df, y=column_1, title=f"Violin Plot of {column_1}")
     else:
         fig = None
 
