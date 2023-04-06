@@ -268,12 +268,24 @@ def create_or_modify_file(new_prepared_df=pd.DataFrame(), file_path="", file_nam
 
 
 def create_or_modify_active_prepared_file(new_prepared_df=pd.DataFrame()):
+    if os.path.isfile(
+        os.path.join(
+            current_app.config["ACTIVE_DATASET_TRANSFORMED_FOLDER"],
+            get_active_dataset_name(),
+        )
+    ):
+        os.remove(
+            os.path.join(
+                current_app.config["ACTIVE_DATASET_TRANSFORMED_FOLDER"],
+                get_active_dataset_name(),
+            )
+        )
     create_or_modify_file(
         new_prepared_df,
         current_app.config["ACTIVE_DATASET_TRANSFORMED_FOLDER"],
         get_active_dataset_name(),
     )
-    flash("Prepared file was saved successfully.", "success")
+    # flash("Prepared file was saved successfully.", "success")
 
 
 def create_or_modify_active_file(new_prepared_df=pd.DataFrame()):

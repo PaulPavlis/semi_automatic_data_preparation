@@ -5,7 +5,10 @@ from controller.data_selection import data_selection
 from controller.using_the_data import using_the_data
 import os
 from pathlib import Path
-from controller.controller_helper import get_active_dataframe
+from controller.controller_helper import (
+    get_active_dataframe,
+    get_active_dataframe_prepared,
+)
 from numpy import nan
 
 app = Flask(__name__)
@@ -44,13 +47,28 @@ def home():
     return render_template("index.html", main_navbar_active="home")
 
 
-@app.route("/return_active_ajax_data")
-def return_active_ajax_data():
+@app.route("/return_active_ajax_data/<get_prepared>")
+def return_active_ajax_data(get_prepared):
+    df = None
+    if get_prepared == "false":
+        df = get_active_dataframe()
+    elif get_prepared == "true":
+        df = get_active_dataframe_prepared()
+    else:
+        return "get prepared parameter is missing."
+
+    # df.columns = df.columns.astype(str)
+
+    # print(df.astype(object).replace(nan, "None").to_dict("records"))
+
+    # This is needed because the columns might get mixed in the ajax call on js side
+    column_order = ""
+    for column in df:
+        column_order = f"{column_order}|||{str(column)}"
+
     return {
-        "data": get_active_dataframe()
-        .astype(object)
-        .replace(nan, "None")
-        .to_dict("records")
+        "data": df.astype(object).replace(nan, "None").to_dict("records"),
+        "column_order": column_order,
     }
 
 

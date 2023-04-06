@@ -129,19 +129,53 @@ def transpose():
     # print(active_user_file_configs)
 
     if request.method == "GET" or request.method == "POST":
+        show_prepared_file = False
+        prepared_df = get_active_dataframe()
         if request.method == "POST":
             # change_config_files(request.form)
-            print(request.form)
+            prepared_df = (
+                prepared_df.transpose()
+                .reset_index()
+                .rename(columns={"index": "previous_header"})
+            )
+            print(prepared_df)
+            for column_iterator in range(prepared_df.shape[1] - 1):
+                prepared_df = prepared_df.rename(
+                    columns={column_iterator: f"column_{column_iterator+1}"}
+                )
 
-        # flash(
-        #     f"Depending on the amount of data, displaying it in a smart table might take a few seconds.",
-        #     "success",
-        # )
-        active_user_file_configs = get_active_user_file_config()
+            if "submit_preview" in request.form:
+                create_or_modify_active_prepared_file(prepared_df)
+                show_prepared_file = True
+                flash(
+                    f"Transposing (preview) was successfull. The results can be seen below.",
+                    "success",
+                )
+            elif "submit_permanent" in request.form:
+                create_or_modify_active_file(prepared_df)
+                show_prepared_file = False
+                flash(
+                    f"Transposing was made permanent successfully.",
+                    "success",
+                )
+            elif "submit_reset" in request.form:
+                prepared_df = get_active_dataframe()
+                show_prepared_file = False
+                flash(
+                    f"Current dataframe is shown.",
+                    "success",
+                )
+            else:
+                flash(
+                    f"Not recognised submit type.",
+                    "danger",
+                )
 
         return get_controller_specific_template_with_args(
             "transpose.html",
             transpose.__name__,
+            prepared_df.to_dict("records"),
+            show_prepared_file,
         )
     else:
         return "Use get or post to request this page"
