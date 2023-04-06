@@ -328,3 +328,24 @@ def get_active_dataset_prepared_name():
     ]
 
     return active_datasets_prepared[0] if active_datasets_prepared else None
+
+
+def add_row_to_active_df(add_row_dict):
+    for column in get_active_dataframe().columns:
+        if column in add_row_dict:
+            print(f"{column}={add_row_dict[column]}")
+    flash("Added row to df successfully", "success")
+    return None
+
+
+def remove_row_from_active_df(row_number):
+    create_or_modify_active_file(
+        get_active_dataframe().drop(index=[row_number], axis=0)
+    )
+    flash("Removed row from df successfully", "success")
+    return None
+
+
+def remove_column_from_active_df(column_name):
+    flash("Removed column from df successfully", "success")
+    return None

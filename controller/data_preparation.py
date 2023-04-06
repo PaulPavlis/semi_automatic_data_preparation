@@ -14,6 +14,9 @@ from controller.controller_helper import (
     create_or_modify_active_prepared_file,
     get_active_dataframe_prepared,
     create_or_modify_active_file,
+    add_row_to_active_df,
+    remove_row_from_active_df,
+    remove_column_from_active_df,
 )
 import numpy as np
 import plotly
@@ -67,17 +70,33 @@ def manual_repairing():
     if not check_if_active_dataset_is_set():
         return send_user_to_set_active_dataset()
 
-    display_df_list_of_dicts = get_active_dataframe_formatted()
-
     if request.method == "GET" or request.method == "POST":
         if request.method == "POST":
-            n = 0
+            print(request.form)
 
-        flash(
-            f"Depending on the amount of data, displaying it in a smart table might take a few seconds.",
-            "info",
-        )
+            if "submit_add_row" in request.form:
+                print("submit_add_row")
+                add_row_to_active_df(request.form)
+            elif "submit_remove_row" in request.form:
+                if (
+                    "remove_row" in request.form
+                    and request.form["remove_row"].isdigit()
+                ):
+                    remove_row_from_active_df(request.form["remove_row"])
+                else:
+                    flash("Please provide the row number to remove a row.", "info")
+            elif "submit_remove_column" in request.form:
+                if (
+                    "remove_column" in request.form
+                    and request.form["remove_column"] != "None"
+                ):
+                    remove_column_from_active_df(request.form["remove_column"])
+                else:
+                    flash("Please provide the column to remove it.", "info")
+            else:
+                return "No method like this."
 
+        display_df_list_of_dicts = get_active_dataframe_formatted()
         return get_controller_specific_template_with_args(
             "manual_repairing.html", manual_repairing.__name__, display_df_list_of_dicts
         )
