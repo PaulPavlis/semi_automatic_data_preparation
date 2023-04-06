@@ -230,3 +230,20 @@ def create_config_dict(has_header=False, file_separator=","):
     )
 
     return user_file_configs
+
+def return_empty_plot(display_text="No data selected"):
+    return {
+        "layout": {
+            "xaxis": {"visible": False},
+            "yaxis": {"visible": False},
+            "annotations": [
+                {
+                    "text": display_text,
+                    "xref": "paper",
+                    "yref": "paper",
+                    "showarrow": False,
+                    "font": {"size": 28},
+                }
+            ],
+        }
+    }
