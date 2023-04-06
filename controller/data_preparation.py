@@ -72,7 +72,7 @@ def manual_repairing():
 
     if request.method == "GET" or request.method == "POST":
         if request.method == "POST":
-            print(request.form)
+            # print(request.form)
 
             if "submit_add_row" in request.form:
                 print("submit_add_row")
@@ -325,13 +325,14 @@ def change_config_files(new_config=None):
     if not new_config:
         flash("No changed configs received.", "warning")
         return None
-    print(f"{new_config=}")
+    # print(f"{new_config=}")
 
     return create_or_modify_user_config_file(
         get_active_dataset_name(),
         create_config_dict(
             "has_header" in new_config,
-            new_config["file_separator"] if "file_separator" in new_config else "", "has_index" in new_config
+            new_config["file_separator"] if "file_separator" in new_config else "",
+            "has_index" in new_config,
         ),
     )
 

@@ -115,15 +115,16 @@ def read_generic_input_file(file_location, file_name, reset_index=True):
             columns=lambda x: x.rstrip()
         )  # Remove whitespaces before and after the column names
 
-        print(df)
+        # print(df)
         if reset_index:
             df = df.reset_index()  # to show the index value
             if index_value == None:
                 df.rename(columns={"index": "generated_index"}, inplace=True)
             # else:
             #     df = df.reset_index()  # to show the index value
-            print("------------")
-            print(df)
+            # print("------------")
+
+        # print(df)
 
         return df
     except Exception as e:
@@ -359,10 +360,48 @@ def get_active_dataset_prepared_name():
     return active_datasets_prepared[0] if active_datasets_prepared else None
 
 
+# This function consists of spaghetti code. I cannot be bother to rewrite it again for a poc
 def add_row_to_active_df(add_row_dict):
-    for column in get_active_dataframe().columns:
+    active_df = get_active_dataframe(reset_index=False)
+    index_name = active_df.index.name
+    new_row = {}
+    new_row_list = []
+    for column in active_df.columns:
         if column in add_row_dict:
+            new_row_list.append(add_row_dict[column])
+            new_row[column] = add_row_dict[column]
             print(f"{column}={add_row_dict[column]}")
+
+    if get_active_user_file_config()["has_index"]["value"] == True:
+        if not add_row_dict[index_name]:
+            flash(
+                f"Please specify the index variable to add to the df ({index_name}).",
+                "warning",
+            )
+            return None
+        new_row[index_name] = add_row_dict[index_name]
+        active_df = active_df.reset_index()
+
+    # print(active_df)
+    new_row_list = []
+    new_row_list.insert(0, new_row)
+    df_prepared = pd.concat([pd.DataFrame(new_row_list), active_df], ignore_index=True)
+
+    # print(df_prepared)
+
+    if get_active_user_file_config()["has_index"]["value"] == True:
+        df_prepared = df_prepared.set_index(index_name).reset_index()
+        # print(df_prepared)
+    # else:
+    #     new_row_list.insert(0, new_row)
+    #     df_prepared = pd.concat(
+    #         [pd.DataFrame(new_row_list), active_df], ignore_index=True
+    #     )
+
+    # print(df_prepared)
+
+    create_or_modify_active_file(df_prepared)
+
     flash("Added row to df successfully", "success")
     return None
 
@@ -387,5 +426,19 @@ def remove_row_from_active_df(row_number):
 
 
 def remove_column_from_active_df(column_name):
-    flash("Removed column from df successfully", "success")
-    return None
+    try:
+        df_prepared = get_active_dataframe(reset_index=False).drop(
+            [column_name], axis=1
+        )
+        if get_active_user_file_config()["has_index"]["value"] == True:
+            df_prepared = df_prepared.reset_index()
+        create_or_modify_active_file(df_prepared)
+        flash("Removed row from df successfully", "success")
+        return None
+    except Exception as e:
+        print(f"Error message: {e}")
+        flash(
+            f"It seems like you are trying to delete a column with a name that does not exist: {column_name=}",
+            "warning",
+        )
+        flash(f"Error message: {e}", "danger")

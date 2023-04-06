@@ -8,10 +8,12 @@
     <div class="row col-6">
         <h3>Add row:</h3>
         {% for column_name in additional_args[0][0].keys() %}
-            <div class="col-4 mt-2">
-                <label for="{{column_name}}" class="form-label">{{column_name}}</label>
-                <input type="text" class="form-control" name="{{column_name}}" id="{{column_name}}" value="{{ request.form[column_name] }}">
-            </div>
+            {% if column_name != "generated_index" %}
+                <div class="col-4 mt-2">
+                    <label for="{{column_name}}" class="form-label">{{column_name}}</label>
+                    <input type="text" class="form-control" name="{{column_name}}" id="{{column_name}}" value="{{ request.form[column_name] }}">
+                </div>
+            {% endif %}
         {% endfor %}
         <button type="submit" class="btn btn-success m-2 mt-3" name="submit_add_row" value="true">Add row</button>
     </div>
