@@ -158,6 +158,10 @@ def transpose():
                     f"Transposing was made permanent successfully.",
                     "success",
                 )
+                flash(
+                    f"Transposing normally needs manual repairing, since the header row is now not labeled and maybe a row or column got added.",
+                    "info",
+                )
             elif "submit_reset" in request.form:
                 prepared_df = get_active_dataframe()
                 show_prepared_file = False
