@@ -231,6 +231,7 @@ def create_config_dict(has_header=False, file_separator=","):
 
     return user_file_configs
 
+
 def return_empty_plot(display_text="No data selected"):
     return {
         "layout": {
@@ -247,3 +248,72 @@ def return_empty_plot(display_text="No data selected"):
             ],
         }
     }
+
+
+def create_or_modify_file(new_prepared_df=pd.DataFrame(), file_path="", file_name=""):
+    if new_prepared_df.empty:
+        return None
+
+    user_file_configs = get_active_user_file_config()
+
+    new_prepared_df.to_csv(
+        os.path.join(
+            file_path,
+            file_name,
+        ),
+        encoding="latin1",
+        index=False,
+        sep=user_file_configs["file_separator"]["value"],
+        header=user_file_configs["has_header"]["value"],
+    )
+
+
+def create_or_modify_active_prepared_file(new_prepared_df=pd.DataFrame()):
+    create_or_modify_file(
+        new_prepared_df,
+        current_app.config["ACTIVE_DATASET_TRANSFORMED_FOLDER"],
+        get_active_dataset_name(),
+    )
+    flash("Prepared file was saved successfully.", "success")
+
+
+def create_or_modify_active_file(new_prepared_df=pd.DataFrame()):
+    create_or_modify_file(
+        new_prepared_df,
+        current_app.config["ACTIVE_DATASET_FOLDER"],
+        get_active_dataset_name(),
+    )
+    if os.path.isfile(
+        os.path.join(
+            current_app.config["ACTIVE_DATASET_TRANSFORMED_FOLDER"],
+            get_active_dataset_name(),
+        )
+    ):
+        os.remove(
+            os.path.join(
+                current_app.config["ACTIVE_DATASET_TRANSFORMED_FOLDER"],
+                get_active_dataset_name(),
+            )
+        )
+    flash("Active file was saved successfully.", "success")
+
+
+def get_active_dataframe_prepared():
+    if not get_active_dataset_prepared_name():
+        return pd.DataFrame()
+    return read_generic_input_file(
+        current_app.config["ACTIVE_DATASET_TRANSFORMED_FOLDER"],
+        get_active_dataset_prepared_name(),
+    )
+
+
+def get_active_dataset_prepared_name():
+    active_datasets_prepared = [
+        f
+        for f in os.listdir(current_app.config["ACTIVE_DATASET_TRANSFORMED_FOLDER"])
+        if os.path.isfile(
+            os.path.join(current_app.config["ACTIVE_DATASET_TRANSFORMED_FOLDER"], f)
+        )
+    ]
+
+    return active_datasets_prepared[0] if active_datasets_prepared else None

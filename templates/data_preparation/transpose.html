@@ -1,0 +1,13 @@
+{% extends "base_template.html" %}
+
+{% block title %}Data preparation - Transpose{% endblock %}
+{% block main_content %}
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- My js for visual_exploration -->
+<script src="{{ url_for('static', filename='js/data_preparation_comparison_include.js')}}" type="text/javascript"></script>
+
+{% include "data_preparation_comparison_include.html" %}
+
+{% endblock %}

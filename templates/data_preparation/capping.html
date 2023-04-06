@@ -1,0 +1,30 @@
+{% extends "base_template.html" %}
+
+{% block title %}Data preparation - Capping{% endblock %}
+{% block main_content %}
+
+<h3>Input lower and upper limit for data</h3>
+<form action="#" method="POST" class="mb-3">
+  <div class="row mb-3">
+    <div class="col-5">
+        <label for="lower_limit" class="form-label">Lower limit to cap</label>
+        <input type="number" class="form-control" name="lower_limit" id="lower_limit" value="{{ request.form['lower_limit'] }}">
+    </div>
+    <div class="col-5">
+        <label for="upper_limit" class="form-label">Upper limit to cap</label>
+        <input type="number" class="form-control" name="upper_limit" id="upper_limit" value="{{ request.form['upper_limit'] }}">
+    </div>
+    <div class="col-2">
+        <label for="capping_type" class="form-label">Capping type</label>
+        <select id="capping_type" name="capping_type" class="form-select">
+            <option {% if request.form['capping_type'] == 'replace' %}selected{% endif %} value="replace">Replace value beyond the limit with the limit</option>
+            <option {% if request.form['capping_type'] == 'remove' %}selected{% endif %} value="remove">Remove values beyond the limit</option>
+        </select>
+    </div>
+  </div>
+    <button type="submit" class="btn btn-info" name="submit_preview" value="true">Change limits (preview)</button>
+    <button type="submit" class="btn btn-warning" name="submit_permanent" value="true">Change limits (permanent)</button>
+  {% include "data_preparation_comparison_include.html" %}
+</form>
+
+{% endblock %}
