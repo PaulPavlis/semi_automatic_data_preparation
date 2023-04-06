@@ -169,7 +169,7 @@ def get_graph_json(graph_type="", column_1="", column_2=""):
             return return_empty_plot("Please select a column variable.")
         fig = px.box(
             active_df,
-            y=column_1,
+            x=column_1,
             points="all",
             title=f"Box Plot of {column_1}. Individual points (left), Box Plot (right)",
         )
@@ -178,7 +178,7 @@ def get_graph_json(graph_type="", column_1="", column_2=""):
             return return_empty_plot("Please select a column variable.")
         fig = px.violin(
             active_df,
-            y=column_1,
+            x=column_1,
             points="all",
             title=f"Violin Plot of {column_1}. Individual points (left), Violin Plot (right)",
         )
