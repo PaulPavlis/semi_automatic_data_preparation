@@ -39,7 +39,7 @@ function construct_new_graph() {
     // console.log(graph_type_value);
 
     if (graph_type_value == "None") {
-        url_end = "return_empty_plot";
+        url_end = "return_empty_plot_ajax";
     } else {
         url_end = "return_plot_active_ajax_data";
     }

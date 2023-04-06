@@ -6,6 +6,7 @@ from controller.controller_helper import (
     check_if_active_dataset_is_set,
     send_user_to_set_active_dataset,
     get_active_dataframe,
+    return_empty_plot,
 )
 import pandas as pd
 import plotly
@@ -100,23 +101,9 @@ def return_active_ajax_data():
     )
 
 
-@data_exploration.route("/return_empty_plot")
-def return_empty_plot(display_text="No data selected"):
-    return {
-        "layout": {
-            "xaxis": {"visible": False},
-            "yaxis": {"visible": False},
-            "annotations": [
-                {
-                    "text": display_text,
-                    "xref": "paper",
-                    "yref": "paper",
-                    "showarrow": False,
-                    "font": {"size": 28},
-                }
-            ],
-        }
-    }
+@data_exploration.route("/return_empty_plot_ajax")
+def return_empty_plot_ajax(display_text="No data selected"):
+    return_empty_plot(display_text)
 
 
 @data_exploration.route("/manual_exploration")
