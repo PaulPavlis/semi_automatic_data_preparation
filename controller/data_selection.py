@@ -60,6 +60,7 @@ def select_dataset_as_active():
         if request.method == "POST":
             set_active_file(request.form["new_active_dataset"])
 
+        dataset_list = get_all_datasets()
         return get_controller_specific_template_with_args(
             "select_dataset_as_active.html",
             select_dataset_as_active.__name__,
