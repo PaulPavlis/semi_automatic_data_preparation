@@ -232,6 +232,7 @@ def add_new_file(request):
                 request.form["new_file_separator"]
                 if "new_file_separator" in request.form
                 else None,
+                "new_file_has_index" in request.form,
             )
 
             create_or_modify_user_config_file(file_name_final, user_file_configs)

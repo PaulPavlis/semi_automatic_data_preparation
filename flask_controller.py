@@ -25,7 +25,7 @@ ACTIVE_DATASET_TRANSFORMED_FOLDER = os.path.join(
     UPLOAD_FOLDER, "active_dataset_prepared"
 )
 USER_FILE_CONFIGS = os.path.join(UPLOAD_FOLDER, "user_file_configs")
-USER_FILE_CONFIGS_OPTIONS = ["has_header", "file_separator"]
+USER_FILE_CONFIGS_OPTIONS = ["has_header", "file_separator", "has_index"]
 
 # Create reqired folders:
 Path(UPLOAD_FOLDER).mkdir(parents=True, exist_ok=True)
@@ -60,6 +60,9 @@ def return_active_ajax_data(get_prepared):
     # df.columns = df.columns.astype(str)
 
     # print(df.astype(object).replace(nan, "None").to_dict("records"))
+
+    # This is needed because otherwise the index gets sent twice
+    print(df.columns)
 
     # This is needed because the columns might get mixed in the ajax call on js side
     column_order = ""

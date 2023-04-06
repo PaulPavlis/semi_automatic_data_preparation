@@ -34,11 +34,13 @@ def get_active_dataset_name():
     return active_datasets[0] if active_datasets else None
 
 
-def get_active_dataframe():
+def get_active_dataframe(reset_index=True):
     if not get_active_dataset_name():
         return pd.DataFrame()
     return read_generic_input_file(
-        current_app.config["ACTIVE_DATASET_FOLDER"], get_active_dataset_name()
+        current_app.config["ACTIVE_DATASET_FOLDER"],
+        get_active_dataset_name(),
+        reset_index,
     )
 
 
@@ -54,7 +56,7 @@ def get_dataset_basic_info_string(dataframe):
     )
 
 
-def read_generic_input_file(file_location, file_name):
+def read_generic_input_file(file_location, file_name, reset_index=True):
     if not file_name:
         return pd.DataFrame()
     file_extension = get_file_extension(file_name)
@@ -74,6 +76,7 @@ def read_generic_input_file(file_location, file_name):
 
     header_value = None
     file_separator = ","
+    index_value = None
     if user_file_configs:
         header_value = (
             0
@@ -86,10 +89,20 @@ def read_generic_input_file(file_location, file_name):
             if "file_separator" in user_file_configs
             else ","
         )
+        index_value = (
+            0
+            if "has_index" in user_file_configs
+            and user_file_configs["has_index"]["value"]
+            else None
+        )
 
     try:
         df = pd_read_function(
-            file_path, encoding="latin1", header=header_value, sep=file_separator
+            file_path,
+            encoding="latin1",
+            header=header_value,
+            sep=file_separator,
+            index_col=index_value,
         )
         df.columns = df.columns.astype(
             str
@@ -101,6 +114,16 @@ def read_generic_input_file(file_location, file_name):
         df = df.rename(
             columns=lambda x: x.rstrip()
         )  # Remove whitespaces before and after the column names
+
+        print(df)
+        if reset_index:
+            df = df.reset_index()  # to show the index value
+            if index_value == None:
+                df.rename(columns={"index": "generated_index"}, inplace=True)
+            # else:
+            #     df = df.reset_index()  # to show the index value
+            print("------------")
+            print(df)
 
         return df
     except Exception as e:
@@ -213,13 +236,17 @@ def create_or_modify_user_config_file(user_file_name, config_dict={}):
     create_user_file_config(get_user_file_config_name(user_file_name), final_configs)
 
 
-def create_config_dict(has_header=False, file_separator=","):
+def create_config_dict(has_header=False, file_separator=",", has_index=False):
     user_file_configs = {
         "has_header": {
             "bootstrap_input_type": "checkbox",
             "bootstrap_class": "form-check-input",
         },
         "file_separator": {"bootstrap_input_type": "text", "bootstrap_class": ""},
+        "has_index": {
+            "bootstrap_input_type": "checkbox",
+            "bootstrap_class": "form-check-input",
+        },
     }
 
     user_file_configs["has_header"]["value"] = True if has_header else False
@@ -227,6 +254,8 @@ def create_config_dict(has_header=False, file_separator=","):
     user_file_configs["file_separator"]["value"] = (
         file_separator if file_separator else ","
     )
+
+    user_file_configs["has_index"]["value"] = True if has_index else False
 
     return user_file_configs
 
@@ -339,11 +368,22 @@ def add_row_to_active_df(add_row_dict):
 
 
 def remove_row_from_active_df(row_number):
-    create_or_modify_active_file(
-        get_active_dataframe().drop(index=[row_number], axis=0)
-    )
-    flash("Removed row from df successfully", "success")
-    return None
+    try:
+        df_prepared = get_active_dataframe(reset_index=False).drop(
+            index=[int(row_number)], axis=0
+        )
+        if get_active_user_file_config()["has_index"]["value"] == True:
+            df_prepared = df_prepared.reset_index()
+        create_or_modify_active_file(df_prepared)
+        flash("Removed row from df successfully", "success")
+        return None
+    except Exception as e:
+        print(f"Error message: {e}")
+        flash(
+            f"It seems like you are trying to delete a row with an index that does not exist: {row_number=}",
+            "warning",
+        )
+        flash(f"Error message: {e}", "danger")
 
 
 def remove_column_from_active_df(column_name):

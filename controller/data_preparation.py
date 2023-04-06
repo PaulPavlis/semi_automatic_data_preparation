@@ -331,7 +331,7 @@ def change_config_files(new_config=None):
         get_active_dataset_name(),
         create_config_dict(
             "has_header" in new_config,
-            new_config["file_separator"] if "file_separator" in new_config else "",
+            new_config["file_separator"] if "file_separator" in new_config else "", "has_index" in new_config
         ),
     )
 
