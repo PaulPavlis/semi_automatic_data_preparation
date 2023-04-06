@@ -1,4 +1,4 @@
-from flask import Blueprint, request, flash, current_app
+from flask import Blueprint, request, flash, current_app, redirect, url_for
 from controller.controller_helper import (
     get_controller_general_template_with_args,
     get_controller_filename,
@@ -181,6 +181,9 @@ def transpose():
                     f"Transposing normally needs manual repairing, since the header row is now not labeled and maybe a row or column got added.",
                     "info",
                 )
+
+                # To load the site again. Otherwise it will not show the Display table
+                return redirect(url_for("data_preparation.transpose"))
             elif "submit_reset" in request.form:
                 prepared_df = get_active_dataframe()
                 show_prepared_file = False

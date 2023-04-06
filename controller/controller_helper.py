@@ -298,18 +298,8 @@ def create_or_modify_file(new_prepared_df=pd.DataFrame(), file_path="", file_nam
 
 
 def create_or_modify_active_prepared_file(new_prepared_df=pd.DataFrame()):
-    if os.path.isfile(
-        os.path.join(
-            current_app.config["ACTIVE_DATASET_TRANSFORMED_FOLDER"],
-            get_active_dataset_name(),
-        )
-    ):
-        os.remove(
-            os.path.join(
-                current_app.config["ACTIVE_DATASET_TRANSFORMED_FOLDER"],
-                get_active_dataset_name(),
-            )
-        )
+    delete_all_prepared_files()
+
     create_or_modify_file(
         new_prepared_df,
         current_app.config["ACTIVE_DATASET_TRANSFORMED_FOLDER"],
@@ -324,27 +314,17 @@ def create_or_modify_active_file(new_prepared_df=pd.DataFrame()):
         current_app.config["ACTIVE_DATASET_FOLDER"],
         get_active_dataset_name(),
     )
-    if os.path.isfile(
-        os.path.join(
-            current_app.config["ACTIVE_DATASET_TRANSFORMED_FOLDER"],
-            get_active_dataset_name(),
-        )
-    ):
-        os.remove(
-            os.path.join(
-                current_app.config["ACTIVE_DATASET_TRANSFORMED_FOLDER"],
-                get_active_dataset_name(),
-            )
-        )
+    delete_all_prepared_files()
     flash("Active file was saved successfully.", "success")
 
 
-def get_active_dataframe_prepared():
+def get_active_dataframe_prepared(reset_index=True):
     if not get_active_dataset_prepared_name():
         return pd.DataFrame()
     return read_generic_input_file(
         current_app.config["ACTIVE_DATASET_TRANSFORMED_FOLDER"],
         get_active_dataset_prepared_name(),
+        reset_index,
     )
 
 
@@ -442,3 +422,25 @@ def remove_column_from_active_df(column_name):
             "warning",
         )
         flash(f"Error message: {e}", "danger")
+
+
+def delete_all_prepared_files():
+    prepared_dataset_list = get_prepared_dataset_list()
+
+    for prepared_dataset in prepared_dataset_list:
+        os.remove(
+            os.path.join(
+                current_app.config["ACTIVE_DATASET_TRANSFORMED_FOLDER"],
+                prepared_dataset,
+            )
+        )
+
+
+def get_prepared_dataset_list():
+    return [
+        f
+        for f in os.listdir(current_app.config["ACTIVE_DATASET_TRANSFORMED_FOLDER"])
+        if os.path.isfile(
+            os.path.join(current_app.config["ACTIVE_DATASET_TRANSFORMED_FOLDER"], f)
+        )
+    ]

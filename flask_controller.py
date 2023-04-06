@@ -8,6 +8,7 @@ from pathlib import Path
 from controller.controller_helper import (
     get_active_dataframe,
     get_active_dataframe_prepared,
+    get_active_user_file_config,
 )
 from numpy import nan
 
@@ -53,16 +54,17 @@ def return_active_ajax_data(get_prepared):
     if get_prepared == "false":
         df = get_active_dataframe()
     elif get_prepared == "true":
-        df = get_active_dataframe_prepared()
+        if get_active_user_file_config()["has_index"]["value"] == True:
+            df = get_active_dataframe_prepared()
+        else:
+            df = get_active_dataframe_prepared(reset_index=False)
+            df = df[df["previous_header"] != "generated_index"]
     else:
         return "get prepared parameter is missing."
 
     # df.columns = df.columns.astype(str)
 
     # print(df.astype(object).replace(nan, "None").to_dict("records"))
-
-    # This is needed because otherwise the index gets sent twice
-    print(df.columns)
 
     # This is needed because the columns might get mixed in the ajax call on js side
     column_order = ""
