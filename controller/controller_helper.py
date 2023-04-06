@@ -175,7 +175,8 @@ def get_user_file_config(user_file_name):
     )
 
     if not os.path.exists(user_file_config_full_path):
-        return None
+        create_user_file_config(user_file_name, create_config_dict())
+        flash("No persisted user file configs found. Creating it for you.", "info")
 
     with open(user_file_config_full_path, "r") as fr:
         try:
@@ -194,9 +195,7 @@ def create_or_modify_user_config_file(user_file_name, config_dict={}):
     # print(f"{config_dict=}")
 
     if not current_configs:
-        flash(
-            "No persisted user file configs found. Trying to create it ...", "warning"
-        )
+        flash("No persisted user file configs found. Creating it for you.", "info")
         current_configs = config_dict
     else:
         current_configs.update(config_dict)
