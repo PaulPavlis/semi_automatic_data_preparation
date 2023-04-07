@@ -12,10 +12,10 @@ $(document).ready(function () {
     }).done(function (data) {
         column_order = data["column_order"].split("|||");
         column_order.shift();
-        console.log("Hi");
-        console.log("Sample of data:", data);
-        console.log(Object.keys(data["data"][0]));
-        console.log(column_order);
+        // console.log("Hi");
+        // console.log("Sample of data:", data);
+        // console.log(Object.keys(data["data"][0]));
+        // console.log(column_order);
         // table_keys_list = Object.keys(data["data"][0]);
         // table_keys_dict = table_keys_list.map((x) => {
         //     return { data: x };

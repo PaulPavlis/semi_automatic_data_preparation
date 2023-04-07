@@ -26,7 +26,12 @@ ACTIVE_DATASET_TRANSFORMED_FOLDER = os.path.join(
     UPLOAD_FOLDER, "active_dataset_prepared"
 )
 USER_FILE_CONFIGS = os.path.join(UPLOAD_FOLDER, "user_file_configs")
-USER_FILE_CONFIGS_OPTIONS = ["has_header", "file_separator", "has_index"]
+USER_FILE_CONFIGS_OPTIONS = [
+    "has_header",
+    "file_separator",
+    "has_index",
+    "column_types",
+]
 
 # Create reqired folders:
 Path(UPLOAD_FOLDER).mkdir(parents=True, exist_ok=True)
@@ -55,7 +60,7 @@ def return_active_ajax_data(get_prepared):
         df = get_active_dataframe()
     elif get_prepared == "true":
         if get_active_user_file_config()["has_index"]["value"] == True:
-            df = get_active_dataframe_prepared()
+            df = get_active_dataframe_prepared(reset_index=True)
         else:
             df = get_active_dataframe_prepared(reset_index=False)
             df = df[df["previous_header"] != "generated_index"]

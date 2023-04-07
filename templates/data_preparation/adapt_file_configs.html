@@ -6,6 +6,7 @@
 <h3>Change configs of the current active file:</h3>
 <form action="#" method="POST">
   {% for arg_option in additional_args[0] %}
+  {% if "value" in additional_args[1][arg_option] %}
     <div class="row g-3 align-items-center mb-3">
       <div class="col-1">
         <label for="{{arg_option}}" class="col-form-label">{{arg_option}}</label>
@@ -22,6 +23,7 @@
         />
       </div>
     </div>
+  {% endif%}
   {% endfor %}
   <button type="submit" class="btn btn-warning mt-1">Change configs</button>
 </form>  

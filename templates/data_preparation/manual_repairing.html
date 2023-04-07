@@ -3,10 +3,14 @@
 {% block title %}Data preparation - Manual repairing{% endblock %}
 {% block main_content %}
 
+<!-- My js for display_table -->
+<script src="{{ url_for('static', filename='js/manual_repairing.js')}}" type="text/javascript"></script>
+
 <form action="#" method="POST" class="mb-3">
   <div class="row mb-3 g-3 mt-1">
     <div class="row col-6">
         <h3>Add row:</h3>
+        {# {% if additional_args[0] %} #}
         {% for column_name in additional_args[0][0].keys() %}
             {% if column_name != "generated_index" %}
                 <div class="col-4 mt-2">
@@ -17,7 +21,7 @@
         {% endfor %}
         <button type="submit" class="btn btn-success m-2 mt-3" name="submit_add_row" value="true">Add row</button>
     </div>
-    <div class="row col-6">
+    <div class="row col-6 ">
         <div class="col-6">
             <h3>Remove row:</h3>
             <div class="mt-1">
@@ -29,7 +33,7 @@
         <div class="col-6">
             <h3>Remove column:</h3>
             <div class="mt-1">
-                <label for="remove_column" class="form-label">Capping type</label>
+                <label for="remove_column" class="form-label">Remove column name:</label>
                 <select id="remove_column" name="remove_column" class="form-select">
                     <option selected>None</option>
                     {% if additional_args[0] %}
@@ -41,6 +45,36 @@
             </div>
             <button type="submit" class="btn btn-warning mt-3" name="submit_remove_column" value="true">Remove column:</button>
         </div>
+        <div class="col-6">
+            <h3>Set column type:</h3>
+            <div class="mt-1">
+                <label for="change_column" class="form-label">Select column to change (not index)</label>
+                <select id="change_column" name="change_column" class="form-select" onchange="show_current_dtype_of_column();">
+                    <option selected>None</option>
+                    {% if additional_args[0] %}
+                        {% for column_name in additional_args[0][0].keys() %}
+                        <option {% if request.form['change_column'] == column_name %}selected{% endif %}>{{column_name}}</option>
+                        {% endfor %}
+                    {% endif %}
+                </select>
+            </div>
+        </div>
+        <div class="col-6">
+            <h3 style="visibility: hidden;">CSS go brrrrr</h3>
+            <div class="mt-1">
+                <label for="new_column_type" class="form-label">Select new type || Show current type: </label>
+                <select id="new_column_type" name="new_column_type" class="form-select">
+                    <option selected disabled value="None">None</option>
+                    <option value="string">text (if not sure, choose this)</option>
+                    <option value="datetime64">date</option>
+                    <option value="Int64">number (without flouting point)</option>
+                    <option value="Float64">number (with floating point)</option>
+                    <option value="category">category</option>
+                    <option value="object">object (default input type - change it)</option>
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-info m-2 mt-3" name="submit_change_column_type" value="true">Change column type:</button>
     </div>
   </div>
 </form>

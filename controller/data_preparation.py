@@ -17,6 +17,8 @@ from controller.controller_helper import (
     add_row_to_active_df,
     remove_row_from_active_df,
     remove_column_from_active_df,
+    change_column_type,
+    get_active_dataframe_column_type,
 )
 import numpy as np
 import plotly
@@ -93,10 +95,22 @@ def manual_repairing():
                     remove_column_from_active_df(request.form["remove_column"])
                 else:
                     flash("Please provide the column to remove it.", "info")
+            elif "submit_change_column_type" in request.form:
+                if (
+                    "new_column_type" in request.form
+                    and "change_column" in request.form
+                    and request.form["change_column"] != "None"
+                ):
+                    change_column_type(
+                        request.form["change_column"], request.form["new_column_type"]
+                    )
+                else:
+                    flash("Please provide the column and a type to change it.", "info")
             else:
                 return "No method like this."
 
         display_df_list_of_dicts = get_active_dataframe_formatted()
+        print(display_df_list_of_dicts)
         return get_controller_specific_template_with_args(
             "manual_repairing.html", manual_repairing.__name__, display_df_list_of_dicts
         )
@@ -322,6 +336,12 @@ def return_ajax_construct_after():
     return get_graph_json(
         get_active_dataframe_prepared(), request.args.get("column_prepare")
     )
+
+
+@data_preparation.route("/return_ajax_dtype_value_of_column")
+def return_ajax_dtype_value_of_column():
+    # print(f"inside regturn ajax data. Value: {request.args.get('data')}")
+    return get_active_dataframe_column_type(request.args.get("column_name"))
 
 
 def change_config_files(new_config=None):
