@@ -45,7 +45,7 @@
 {% if additional_args[1] %}
     <script>
     $(document).ready(function () {
-        construct_before_and_after("{{additional_args[1]}}");
+        construct_before_and_after("{{additional_args[1]}}", "{{additional_args[2]}}");
     });
     </script>
 {% endif %}

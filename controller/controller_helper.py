@@ -578,3 +578,49 @@ def get_active_dataframe_column_type_dict():
     if not "column_types" in config_dict:
         return "No column_types in config dictionary"
     return config_dict["column_types"]
+
+
+def filter_active_dataframe_string_column(
+    prepare_column, match_string, has_to_be_complete_match, delete_matches, is_preview
+):
+    if prepare_column == "None":
+        flash("No column selected.", "info")
+        return
+
+    active_df = get_active_dataframe(reset_index=False)
+    df_prepared = pd.DataFrame()
+
+    if has_to_be_complete_match:
+        df_prepared = active_df[
+            active_df[str(prepare_column)].str.contains(str(match_string))
+            != delete_matches
+        ]
+    else:
+        if delete_matches:
+            df_prepared = active_df[
+                ~active_df[str(prepare_column)].str.contains(
+                    "|".join([str(match_string)])
+                )
+            ]
+        else:
+            df_prepared = active_df[
+                active_df[str(prepare_column)].str.contains(
+                    "|".join([str(match_string)])
+                )
+            ]
+
+    print(active_df)
+    print(df_prepared)
+
+    if is_preview:
+        create_or_modify_active_prepared_file(df_prepared)
+    else:
+        create_or_modify_active_file(df_prepared)
+
+
+def filter_active_dataframe_category_column(
+    prepare_column, match_string, delete_matches, is_preview
+):
+    filter_active_dataframe_string_column(
+        prepare_column, match_string, True, delete_matches, is_preview
+    )

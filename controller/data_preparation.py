@@ -20,6 +20,8 @@ from controller.controller_helper import (
     change_column_type,
     get_active_dataframe_column_type,
     get_active_dataframe_column_type_dict,
+    filter_active_dataframe_string_column,
+    filter_active_dataframe_category_column,
 )
 import numpy as np
 import plotly
@@ -128,51 +130,95 @@ def filtering():
     show_prepared_file = False
 
     if request.method == "GET" or request.method == "POST":
+        plot_to_show = "violin"
         if request.method == "POST":
+            method = None
+            is_preview = False
+
+            for key, value in request.form.items():
+                if "submit_filter" in key:
+                    method = key
+                    if "preview" in key:
+                        is_preview = True
+                    break
+
+            # print(method)
+            # print(is_preview)
             print(request.form)
 
             show_prepared_file = True
 
-            # if "submit_add_row" in request.form:
-            #     print("submit_add_row")
-            #     add_row_to_active_df(request.form)
-            # elif "submit_remove_row" in request.form:
-            #     if (
-            #         "remove_row" in request.form
-            #         and request.form["remove_row"].isdigit()
-            #     ):
-            #         remove_row_from_active_df(request.form["remove_row"])
-            #     else:
-            #         flash("Please provide the row number to remove a row.", "info")
-            # elif "submit_remove_column" in request.form:
-            #     if (
-            #         "remove_column" in request.form
-            #         and request.form["remove_column"] != "None"
-            #     ):
-            #         remove_column_from_active_df(request.form["remove_column"])
-            #     else:
-            #         flash("Please provide the column to remove it.", "info")
-            # elif "submit_change_column_type" in request.form:
-            #     if (
-            #         "new_column_type" in request.form
-            #         and "change_column" in request.form
-            #         and request.form["change_column"] != "None"
-            #     ):
-            #         change_column_type(
-            #             request.form["change_column"], request.form["new_column_type"]
-            #         )
-            #     else:
-            #         flash("Please provide the column and a type to change it.", "info")
-            # else:
-            #     return "No method like this."
+            if "submit_filter_string" in method:
+                print("string")
+                prepare_column = request.form["filter_column_string"]
+                match_string = request.form["string_match"]
+                has_to_be_complete_match = (
+                    True if "has_to_be_complete_match" in request.form else False
+                )
+                delete_matches = (
+                    True if "delete_matches_string" in request.form else False
+                )
 
-        display_df_list_of_dicts = get_active_dataframe_formatted()
-        # print(display_df_list_of_dicts)
+                print(prepare_column)
+                print(match_string)
+                print(has_to_be_complete_match)
+                print(delete_matches)
+
+                filter_active_dataframe_string_column(
+                    prepare_column,
+                    match_string,
+                    has_to_be_complete_match,
+                    delete_matches,
+                    is_preview,
+                )
+
+                show_prepared_file = prepare_column
+                plot_to_show = "histogram"
+            # elif "submit_filter_date" in method:
+            #     print("date")
+            #     prepare_column = request.form["filter_column_date"]
+            #     show_prepared_file = prepare_column
+            # elif "submit_filter_int" in method:
+            #     print("int")
+            #     prepare_column = request.form["filter_column_int"]
+            #     show_prepared_file = prepare_column
+            # elif "submit_filter_float" in method:
+            #     print("float")
+            #     prepare_column = request.form["filter_column_float"]
+            #     show_prepared_file = prepare_column
+            elif "submit_filter_category" in method:
+                print("category")
+                prepare_column = request.form["filter_column_category"]
+                category_match = request.form["category_match"]
+                delete_matches = (
+                    True if "delete_matches_category" in request.form else False
+                )
+
+                print(prepare_column)
+                print(category_match)
+                print(delete_matches)
+
+                filter_active_dataframe_category_column(
+                    prepare_column,
+                    category_match,
+                    delete_matches,
+                    is_preview,
+                )
+
+                show_prepared_file = prepare_column
+                plot_to_show = "histogram"
+            else:
+                return "No method like this."
+
+        # if not show_prepared_file:
+        #     show_prepared_file = "None"
+
         return get_controller_specific_template_with_args(
             "filtering.html",
             filtering.__name__,
-            display_df_list_of_dicts,
+            get_active_dataframe_formatted(),
             show_prepared_file,
+            plot_to_show,
             get_active_dataframe_column_type_dict(),
         )
     else:
@@ -319,6 +365,7 @@ def capping():
                     capping.__name__,
                     get_active_dataframe_formatted(),
                     show_prepared_file,
+                    "violin",
                 )
 
             prepared_df = get_active_dataframe()
@@ -389,14 +436,20 @@ def capping():
 @data_preparation.route("/return_ajax_construct_before")
 def return_ajax_construct_before():
     # print(f"inside regturn ajax data. Value: {request.args.get('data')}")
-    return get_graph_json(get_active_dataframe(), request.args.get("column_prepare"), request.args.get("graph_type"))
+    return get_graph_json(
+        get_active_dataframe(),
+        request.args.get("column_prepare"),
+        request.args.get("graph_type"),
+    )
 
 
 @data_preparation.route("/return_ajax_construct_after")
 def return_ajax_construct_after():
     # print(f"inside regturn ajax data. Value: {request.args.get('data')}")
     return get_graph_json(
-        get_active_dataframe_prepared(), request.args.get("column_prepare"), request.args.get("graph_type")
+        get_active_dataframe_prepared(),
+        request.args.get("column_prepare"),
+        request.args.get("graph_type"),
     )
 
 
