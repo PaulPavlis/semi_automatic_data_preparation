@@ -389,14 +389,14 @@ def capping():
 @data_preparation.route("/return_ajax_construct_before")
 def return_ajax_construct_before():
     # print(f"inside regturn ajax data. Value: {request.args.get('data')}")
-    return get_graph_json(get_active_dataframe(), request.args.get("column_prepare"))
+    return get_graph_json(get_active_dataframe(), request.args.get("column_prepare"), request.args.get("graph_type"))
 
 
 @data_preparation.route("/return_ajax_construct_after")
 def return_ajax_construct_after():
     # print(f"inside regturn ajax data. Value: {request.args.get('data')}")
     return get_graph_json(
-        get_active_dataframe_prepared(), request.args.get("column_prepare")
+        get_active_dataframe_prepared(), request.args.get("column_prepare"), request.args.get("graph_type")
     )
 
 
@@ -422,16 +422,21 @@ def change_config_files(new_config=None):
     )
 
 
-def get_graph_json(df, column):
+def get_graph_json(df, column, graph_type="violin"):
     if not column or column == "None":
         return return_empty_plot()
 
     # print(f"inside gm. Value: {column}")
     # print(f"inside gm. Value type: {type(column)}")
-    fig = px.violin(df, x=column, points="all", title=f"Violin Plot of {column}")
+    if not graph_type or graph_type == "violin":
+        fig = px.violin(df, x=column, points="all", title=f"Violin Plot of {column}")
+    elif graph_type == "histogram":
+        fig = px.histogram(df, x=column, title=f"Histogram of {column}")
+    else:
+        fig = None
 
     if not fig:
-        return return_empty_plot()
+        return return_empty_plot("No graph type like this availabe.")
 
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
