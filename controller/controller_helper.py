@@ -564,10 +564,15 @@ def change_column_type(column_name, new_column_type):
 
 
 def get_active_dataframe_column_type(column_name):
-    config_dict = get_user_file_config(get_active_dataset_name())
-    if not "column_types" in config_dict:
-        return "No column_types in config dictionary"
+    config_dict = get_active_dataframe_column_type_dict
     if not column_name in config_dict["column_types"]:
         return "None"
 
     return config_dict["column_types"][column_name]
+
+
+def get_active_dataframe_column_type_dict():
+    config_dict = get_user_file_config(get_active_dataset_name())
+    if not "column_types" in config_dict:
+        return "No column_types in config dictionary"
+    return config_dict

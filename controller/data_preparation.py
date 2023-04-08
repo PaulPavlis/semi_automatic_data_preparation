@@ -37,9 +37,10 @@ data_preparation = Blueprint(
 # Just demonstration TODO: Fill me in correctly
 method_preparation_list = [
     "adapt_file_configs",
+    "manual_repairing",
     "capping",
     "transpose",
-    "manual_repairing",
+    "filtering",
     "automatic_detection",
     "anomaly_detection",
     "normalisation",
@@ -113,6 +114,57 @@ def manual_repairing():
         print(display_df_list_of_dicts)
         return get_controller_specific_template_with_args(
             "manual_repairing.html", manual_repairing.__name__, display_df_list_of_dicts
+        )
+    else:
+        return "Use get or post to request this page"
+
+
+@data_preparation.route("/filtering", methods=["POST", "GET"])
+def filtering():
+    if not check_if_active_dataset_is_set():
+        return send_user_to_set_active_dataset()
+
+    if request.method == "GET" or request.method == "POST":
+        if request.method == "POST":
+            print(request.form)
+
+            # if "submit_add_row" in request.form:
+            #     print("submit_add_row")
+            #     add_row_to_active_df(request.form)
+            # elif "submit_remove_row" in request.form:
+            #     if (
+            #         "remove_row" in request.form
+            #         and request.form["remove_row"].isdigit()
+            #     ):
+            #         remove_row_from_active_df(request.form["remove_row"])
+            #     else:
+            #         flash("Please provide the row number to remove a row.", "info")
+            # elif "submit_remove_column" in request.form:
+            #     if (
+            #         "remove_column" in request.form
+            #         and request.form["remove_column"] != "None"
+            #     ):
+            #         remove_column_from_active_df(request.form["remove_column"])
+            #     else:
+            #         flash("Please provide the column to remove it.", "info")
+            # elif "submit_change_column_type" in request.form:
+            #     if (
+            #         "new_column_type" in request.form
+            #         and "change_column" in request.form
+            #         and request.form["change_column"] != "None"
+            #     ):
+            #         change_column_type(
+            #             request.form["change_column"], request.form["new_column_type"]
+            #         )
+            #     else:
+            #         flash("Please provide the column and a type to change it.", "info")
+            # else:
+            #     return "No method like this."
+
+        display_df_list_of_dicts = get_active_dataframe_formatted()
+        print(display_df_list_of_dicts)
+        return get_controller_specific_template_with_args(
+            "filtering.html", filtering.__name__, display_df_list_of_dicts
         )
     else:
         return "Use get or post to request this page"
