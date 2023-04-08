@@ -30,9 +30,19 @@
         <label for="column_prepare" class="form-label">Column to prepare:</label>
         <select id="column_prepare" class="form-select" name="column_prepare" onchange="construct_new_graph(this.value)">
             <option>None</option>
-            {% if additional_args[0] %}
-                {% for column_name in additional_args[0][0].keys() %}
-                <option {% if request.form['column_prepare'] == column_name %}selected{% endif %}>{{column_name}}</option>
+            {# {% if additional_args[3] %}
+                {% for key, value in additional_args[3].items() %}
+                    {% if value == "string" %}
+                        <option {% if request.form['filter_column_string'] == key %}selected{% endif %} value="{{key}}">{{key}}</option>
+                    {% endif %}
+                {% endfor %}
+            {% endif %} #}
+
+            {% if additional_args[3] %}
+                {% for column_name in additional_args[3].keys() %}
+                    {% if additional_args[3][column_name] in ["Int64", "Float64"] %}
+                        <option {% if request.form['column_prepare'] == column_name %}selected{% endif %}>{{column_name}}</option>
+                    {% endif %}
                 {% endfor %}
             {% endif %}
             <option hidden>Not available for this graph type</option> <!-- So that js can set it to this -->

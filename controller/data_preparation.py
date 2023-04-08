@@ -428,6 +428,8 @@ def capping():
             capping.__name__,
             get_active_dataframe_formatted(),
             show_prepared_file,
+            "violin",
+            get_active_dataframe_column_type_dict(),
         )
     else:
         return "Use get or post to request this page"
