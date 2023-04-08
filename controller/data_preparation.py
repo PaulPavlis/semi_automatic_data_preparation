@@ -19,6 +19,7 @@ from controller.controller_helper import (
     remove_column_from_active_df,
     change_column_type,
     get_active_dataframe_column_type,
+    get_active_dataframe_column_type_dict,
 )
 import numpy as np
 import plotly
@@ -124,9 +125,13 @@ def filtering():
     if not check_if_active_dataset_is_set():
         return send_user_to_set_active_dataset()
 
+    show_prepared_file = False
+
     if request.method == "GET" or request.method == "POST":
         if request.method == "POST":
             print(request.form)
+
+            show_prepared_file = True
 
             # if "submit_add_row" in request.form:
             #     print("submit_add_row")
@@ -162,9 +167,13 @@ def filtering():
             #     return "No method like this."
 
         display_df_list_of_dicts = get_active_dataframe_formatted()
-        print(display_df_list_of_dicts)
+        # print(display_df_list_of_dicts)
         return get_controller_specific_template_with_args(
-            "filtering.html", filtering.__name__, display_df_list_of_dicts
+            "filtering.html",
+            filtering.__name__,
+            display_df_list_of_dicts,
+            show_prepared_file,
+            get_active_dataframe_column_type_dict(),
         )
     else:
         return "Use get or post to request this page"
@@ -278,8 +287,6 @@ def capping():
     if not check_if_active_dataset_is_set():
         return send_user_to_set_active_dataset()
 
-    # print(active_user_file_configs)
-
     if request.method == "GET" or request.method == "POST":
         show_prepared_file = False
         if request.method == "POST":
@@ -316,12 +323,12 @@ def capping():
 
             prepared_df = get_active_dataframe()
 
-            print(
-                prepared_df[column_prepare]
-                .describe(include="all")
-                .reset_index()
-                .rename(columns={"index": "Type"})
-            )
+            # print(
+            #     prepared_df[column_prepare]
+            #     .describe(include="all")
+            #     .reset_index()
+            #     .rename(columns={"index": "Type"})
+            # )
 
             if capping_type == "replace":
                 prepared_df[column_prepare] = prepared_df[column_prepare].mask(
@@ -339,12 +346,12 @@ def capping():
                     "warning",
                 )
 
-            print(
-                prepared_df[column_prepare]
-                .describe(include="all")
-                .reset_index()
-                .rename(columns={"index": "Type"})
-            )
+            # print(
+            #     prepared_df[column_prepare]
+            #     .describe(include="all")
+            #     .reset_index()
+            #     .rename(columns={"index": "Type"})
+            # )
 
             if "submit_preview" in request.form:
                 create_or_modify_active_prepared_file(prepared_df)
@@ -365,6 +372,9 @@ def capping():
                     f"Not recognised submit type.",
                     "danger",
                 )
+
+        if show_prepared_file:
+            show_prepared_file = str(request.form["column_prepare"])
 
         return get_controller_specific_template_with_args(
             "capping.html",

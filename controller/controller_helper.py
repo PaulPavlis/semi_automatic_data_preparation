@@ -191,16 +191,16 @@ def pd_read(
         columns=lambda x: x.rstrip()
     )  # Remove whitespaces before and after the column names
 
-    print(df)
+    # print(df)
     if reset_index:
         df = df.reset_index()  # to show the index value
         if index_value == None:
             df.rename(columns={"index": "generated_index"}, inplace=True)
         # else:
         #     df = df.reset_index()  # to show the index value
-        print("------------")
+        # print("------------")
 
-    print(df)
+    # print(df)
 
     return df
 
@@ -564,7 +564,9 @@ def change_column_type(column_name, new_column_type):
 
 
 def get_active_dataframe_column_type(column_name):
-    config_dict = get_active_dataframe_column_type_dict
+    config_dict = get_user_file_config(get_active_dataset_name())
+    if not "column_types" in config_dict:
+        return "No column_types in config dictionary"
     if not column_name in config_dict["column_types"]:
         return "None"
 
@@ -575,4 +577,4 @@ def get_active_dataframe_column_type_dict():
     config_dict = get_user_file_config(get_active_dataset_name())
     if not "column_types" in config_dict:
         return "No column_types in config dictionary"
-    return config_dict
+    return config_dict["column_types"]

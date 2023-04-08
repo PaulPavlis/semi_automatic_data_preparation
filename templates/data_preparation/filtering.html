@@ -3,32 +3,100 @@
 {% block title %}Data preparation - Manual repairing{% endblock %}
 {% block main_content %}
 
-<!-- My js for display_table -->
-<script src="{{ url_for('static', filename='js/filtering.js')}}" type="text/javascript"></script>
+<!-- My js for filtering -->
+{# <script src="{{ url_for('static', filename='js/filtering.js')}}" type="text/javascript"></script> #}
 
-{{additional_args}}
+{{additional_args[2]}}
 
-<h3>Input lower and upper limit for data</h3>
+<h3>Filtering per data type column</h3>
 <form action="#" method="POST" class="mb-3">
   <div class="row mb-3">
-    <div class="col-5">
-        <label for="lower_limit" class="form-label">Lower limit to cap</label>
-        <input type="number" class="form-control" name="lower_limit" id="lower_limit" value="{{ request.form['lower_limit'] }}">
-    </div>
-    <div class="col-5">
-        <label for="upper_limit" class="form-label">Upper limit to cap</label>
-        <input type="number" class="form-control" name="upper_limit" id="upper_limit" value="{{ request.form['upper_limit'] }}">
-    </div>
-    <div class="col-2">
-        <label for="capping_type" class="form-label">Capping type</label>
-        <select id="capping_type" name="capping_type" class="form-select">
-            <option {% if request.form['capping_type'] == 'replace' %}selected{% endif %} value="replace">Replace value beyond the limit with the limit</option>
-            <option {% if request.form['capping_type'] == 'remove' %}selected{% endif %} value="remove">Remove values beyond the limit</option>
+    <div class="row col-4">
+        <h3>Filter text:</h3>
+        <select id="filter_column_category" name="filter_column_category" class="form-select m-2"  onchange="construct_new_graph(this.value)">
+            <option selected value="None">None</option>
+            {% if additional_args[2] %}
+                {% for key, value in additional_args[2].items() %}
+                    {% if value == "string" %}
+                        <option value="{{key}}">{{key}}</option>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
         </select>
+        <div class="row">
+            <button type="submit" class="btn btn-info col-5 m-2" name="submit_filter_string_preview" value="true">Filter (preview)</button>
+            <button type="submit" class="btn btn-warning col-5 m-2" name="submit_filter_string" value="true">Filter (permanent)</button>
+        </div>
     </div>
-  </div>
-    <button type="submit" class="btn btn-info" name="submit_preview" value="true">Change limits (preview)</button>
-    <button type="submit" class="btn btn-warning" name="submit_permanent" value="true">Change limits (permanent)</button>
+    <div class="row col-4">
+        <h3>Filter date:</h3>
+        <select id="filter_column_date" name="filter_column_date" class="form-select m-2"  onchange="construct_new_graph(this.value)">
+            <option selected value="None">None</option>
+            {% if additional_args[2] %}
+                {% for key, value in additional_args[2].items() %}
+                    {% if value == "datetime64" %}
+                        <option value="{{key}}">{{key}}</option>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </select>
+        <div class="row">
+            <button type="submit" class="btn btn-info col-5 m-2" name="submit_filter_date_preview" value="true">Filter (preview)</button>
+            <button type="submit" class="btn btn-warning col-5 m-2" name="submit_filter_date" value="true">Filter (permanent)</button>
+        </div>
+    </div>
+    <div class="row col-4">
+        <h3>Filter number whole:</h3>
+        <select id="filter_column_int" name="filter_column_int" class="form-select m-2"  onchange="construct_new_graph(this.value)">
+            <option selected value="None">None</option>
+            {% if additional_args[2] %}
+                {% for key, value in additional_args[2].items() %}
+                    {% if value == "Int64" %}
+                        <option value="{{key}}">{{key}}</option>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </select>
+        <div class="row">
+            <button type="submit" class="btn btn-info col-5 m-2" name="submit_filter_int_preview" value="true">Filter (preview)</button>
+            <button type="submit" class="btn btn-warning col-5 m-2" name="submit_filter_int" value="true">Filter (permanent)</button>
+        </div>
+    </div>
+    <div class="row col-4">
+        <h3>Filter number decimal:</h3>
+        <select id="filter_column_float" name="filter_column_float" class="form-select m-2"  onchange="construct_new_graph(this.value)">
+            <option selected value="None">None</option>
+            {% if additional_args[2] %}
+                {% for key, value in additional_args[2].items() %}
+                    {% if value == "Float64" %}
+                        <option value="{{key}}">{{key}}</option>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </select>
+        <div class="row">
+            <button type="submit" class="btn btn-info col-5 m-2" name="submit_filter_float_preview" value="true">Filter (preview)</button>
+            <button type="submit" class="btn btn-warning col-5 m-2" name="submit_filter_float" value="true">Filter (permanent)</button>
+        </div>
+    </div>
+    <div class="row col-4">
+        <h3>Filter category:</h3>
+        <select id="filter_column_category" name="filter_column_category" class="form-select m-2"  onchange="construct_new_graph(this.value)">
+            <option selected value="None">None</option>
+            {% if additional_args[2] %}
+                {% for key, value in additional_args[2].items() %}
+                    {% if value == "category" %}
+                        <option value="{{key}}">{{key}}</option>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </select>
+        <div class="row">
+            <button type="submit" class="btn btn-info col-5 m-2" name="submit_filter_category_preview" value="true">Filter (preview)</button>
+            <button type="submit" class="btn btn-warning col-5 m-2" name="submit_filter_category" value="true">Filter (permanent)</button>
+        </div>
+    </div>
+
   {% include "data_preparation_comparison_include.html" %}
 </form>
 

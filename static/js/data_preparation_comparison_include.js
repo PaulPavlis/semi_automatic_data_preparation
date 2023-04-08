@@ -1,24 +1,25 @@
-function construct_before_and_after() {
+function construct_before_and_after(column_prepare_value) {
+    console.log(column_prepare_value);
     $.getJSON({
         url: "/data_preparation/return_ajax_construct_before",
-        data: { column_prepare: $("#column_prepare")[0].value },
+        data: { column_prepare: column_prepare_value },
         success: function (result) {
             Plotly.react("chart_before", result, {});
         },
     });
     $.getJSON({
         url: "/data_preparation/return_ajax_construct_after",
-        data: { column_prepare: $("#column_prepare")[0].value },
+        data: { column_prepare: column_prepare_value },
         success: function (result) {
             Plotly.react("chart_after", result, {});
         },
     });
 }
 
-function construct_new_graph() {
+function construct_new_graph(column_prepare_value) {
     $.getJSON({
         url: "/data_preparation/return_ajax_construct_before",
-        data: { column_prepare: $("#column_prepare")[0].value },
+        data: { column_prepare: column_prepare_value },
         success: function (result) {
             Plotly.react("chart_before", result, {});
         },
@@ -27,5 +28,5 @@ function construct_new_graph() {
 
 // Initialise the empty graph
 $(document).ready(function () {
-    construct_new_graph();
+    construct_new_graph("None");
 });

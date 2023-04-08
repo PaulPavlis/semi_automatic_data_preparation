@@ -22,8 +22,22 @@
         </select>
     </div>
   </div>
-    <button type="submit" class="btn btn-info" name="submit_preview" value="true">Change limits (preview)</button>
-    <button type="submit" class="btn btn-warning" name="submit_permanent" value="true">Change limits (permanent)</button>
+  
+  <button type="submit" class="btn btn-info" name="submit_preview" value="true">Change limits (preview)</button>
+  <button type="submit" class="btn btn-warning" name="submit_permanent" value="true">Change limits (permanent)</button>
+  
+  <div class="col-12 mb-3 mt-3">
+        <label for="column_prepare" class="form-label">Column to prepare:</label>
+        <select id="column_prepare" class="form-select" name="column_prepare" onchange="construct_new_graph(this.value)">
+            <option>None</option>
+            {% if additional_args[0] %}
+                {% for column_name in additional_args[0][0].keys() %}
+                <option {% if request.form['column_prepare'] == column_name %}selected{% endif %}>{{column_name}}</option>
+                {% endfor %}
+            {% endif %}
+            <option hidden>Not available for this graph type</option> <!-- So that js can set it to this -->
+        </select>
+    </div>
   {% include "data_preparation_comparison_include.html" %}
 </form>
 

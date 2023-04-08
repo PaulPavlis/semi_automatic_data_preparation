@@ -4,7 +4,7 @@
 <script src="{{ url_for('static', filename='js/data_preparation_comparison_include.js')}}" type="text/javascript"></script>
 
 <div class="row align-items-center">
-    <div class="col-12 mb-3 mt-3">
+    {# <div class="col-12 mb-3 mt-3">
         <label for="column_prepare" class="form-label">Column to prepare:</label>
         <select id="column_prepare" class="form-select" name="column_prepare" onchange="construct_new_graph()">
             <option>None</option>
@@ -15,7 +15,7 @@
             {% endif %}
             <option hidden>Not available for this graph type</option> <!-- So that js can set it to this -->
         </select>
-    </div>
+    </div> #}
     {# <div class="col-2">
         <p class="text-center">count</p>
     </div>
@@ -45,7 +45,7 @@
 {% if additional_args[1] %}
     <script>
     $(document).ready(function () {
-        construct_before_and_after();
+        construct_before_and_after("{{additional_args[1]}}");
     });
     </script>
 {% endif %}
