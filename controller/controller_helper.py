@@ -672,6 +672,9 @@ def filter_active_dataframe_string_column(
 
     print(active_df)
     print(df_prepared)
+    
+    if get_active_user_file_config()["has_index"]["value"] == True:
+        df_prepared = df_prepared.reset_index()
 
     if is_preview:
         create_or_modify_active_prepared_file(df_prepared)
