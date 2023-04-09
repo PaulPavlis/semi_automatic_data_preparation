@@ -43,8 +43,8 @@ data_preparation = Blueprint(
 method_preparation_list = [
     "adapt_file_configs",
     "manual_repairing",
-    "capping",
     "transpose",
+    "capping",
     "filtering",
     "automatic_detection",
     "anomaly_detection",
@@ -151,7 +151,10 @@ def manual_repairing():
         display_df_list_of_dicts = get_active_dataframe_formatted()
         # print(display_df_list_of_dicts)
         return get_controller_specific_template_with_args(
-            "manual_repairing.html", manual_repairing.__name__, display_df_list_of_dicts, get_active_dataframe_column_type_dict()
+            "manual_repairing.html",
+            manual_repairing.__name__,
+            display_df_list_of_dicts,
+            get_active_dataframe_column_type_dict(),
         )
     else:
         return "Use get or post to request this page"
