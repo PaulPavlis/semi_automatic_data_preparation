@@ -107,9 +107,11 @@
                 <label for="change_category_column_name" class="form-label">Column name</label>
                 <select id="change_category_column_name" name="change_category_column_name" class="form-select">
                     <option selected>None</option>
-                    {% if additional_args[0] %}
-                        {% for column_name in additional_args[0][0].keys() %}
-                            <option {% if request.form['change_column_name']==column_name %}selected{% endif %}>{{column_name}}</option>
+                    {% if additional_args[1] %}
+                        {% for column_name in additional_args[1].keys() %}
+                            {% if additional_args[1][column_name] in ["category"] %}
+                                <option {% if request.form['change_category_column_name'] == column_name %}selected{% endif %}>{{column_name}}</option>
+                            {% endif %}
                         {% endfor %}
                     {% endif %}
                 </select>
