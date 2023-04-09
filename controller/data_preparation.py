@@ -22,6 +22,7 @@ from controller.controller_helper import (
     get_active_dataframe_column_type_dict,
     filter_active_dataframe_string_column,
     filter_active_dataframe_category_column,
+    change_column_name,
 )
 import numpy as np
 import plotly
@@ -110,11 +111,26 @@ def manual_repairing():
                     )
                 else:
                     flash("Please provide the column and a type to change it.", "info")
+            elif "submit_change_column_name" in request.form:
+                if (
+                    "change_column_name" in request.form
+                    and request.form["change_column_name"] != "None"
+                    and "new_column_name" in request.form
+                    and request.form["new_column_name"] != ""
+                ):
+                    change_column_name(
+                        request.form["change_column_name"],
+                        request.form["new_column_name"],
+                    )
+                else:
+                    flash(
+                        "Please provide the column and a new name to change it.", "info"
+                    )
             else:
                 return "No method like this."
 
         display_df_list_of_dicts = get_active_dataframe_formatted()
-        print(display_df_list_of_dicts)
+        # print(display_df_list_of_dicts)
         return get_controller_specific_template_with_args(
             "manual_repairing.html", manual_repairing.__name__, display_df_list_of_dicts
         )

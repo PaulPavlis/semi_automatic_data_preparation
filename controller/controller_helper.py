@@ -330,7 +330,7 @@ def create_config_dict(
 
     # This is so that the types are nullables
     if "column_types" in user_file_configs:
-        print(user_file_configs["column_types"])
+        # print(user_file_configs["column_types"])
         for key, value in user_file_configs["column_types"].items():
             if not str(value).find("int"):
                 user_file_configs["column_types"][key] = str(value).replace(
@@ -340,9 +340,9 @@ def create_config_dict(
                 user_file_configs["column_types"][key] = str(value).replace(
                     "float", "Float"
                 )
-            print(user_file_configs["column_types"])
+            # print(user_file_configs["column_types"])
 
-    print(user_file_configs["column_types"])
+    # print(user_file_configs["column_types"])
     return user_file_configs
 
 
@@ -536,11 +536,11 @@ def get_prepared_dataset_list():
 
 def change_column_type(column_name, new_column_type):
     try:
-        print(get_active_dataframe(reset_index=False).dtypes)
+        # print(get_active_dataframe(reset_index=False).dtypes)
         df_prepared = get_active_dataframe(reset_index=False).astype(
             {column_name: new_column_type}
         )
-        print(df_prepared.dtypes)
+        # print(df_prepared.dtypes)
 
         config_dict = get_active_user_file_config()
         config_dict["column_types"][column_name] = str(new_column_type)
@@ -558,6 +558,39 @@ def change_column_type(column_name, new_column_type):
         print(f"Error message: {e}")
         flash(
             f"It seems like you are trying to change a column type with a name or new_colum_type that does not exist: {column_name=} {new_column_type=}",
+            "warning",
+        )
+        flash(f"Error message: {e}", "danger")
+
+
+def change_column_name(column_name, new_column_name):
+    try:
+        # print(get_active_dataframe(reset_index=False).dtypes)
+        # print(df_prepared.dtypes)
+
+        config_dict = get_active_user_file_config()
+        config_dict["column_types"][new_column_name] = config_dict["column_types"][
+            column_name
+        ]
+        del config_dict["column_types"][column_name]
+        create_or_modify_user_config_file(get_active_dataset_name(), config_dict)
+
+        df_prepared = get_active_dataframe(reset_index=False).rename(
+            columns={column_name: new_column_name}
+        )
+        if get_active_user_file_config()["has_index"]["value"] == True:
+            df_prepared = df_prepared.reset_index()
+        create_or_modify_active_file(df_prepared)
+
+        flash(
+            f"Changed {column_name} to {new_column_name} successfully",
+            "success",
+        )
+        return None
+    except Exception as e:
+        print(f"Error message: {e}")
+        flash(
+            f"It seems like you are trying to change a column name. This did not work correctly: {column_name=} {new_column_name=}",
             "warning",
         )
         flash(f"Error message: {e}", "danger")
