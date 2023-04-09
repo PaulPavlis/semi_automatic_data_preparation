@@ -596,6 +596,34 @@ def change_column_name(column_name, new_column_name):
         flash(f"Error message: {e}", "danger")
 
 
+def change_category_name(column_name, category_name, new_category_name):
+    try:
+        # print(get_active_dataframe(reset_index=False).dtypes)
+        # print(df_prepared.dtypes)
+
+        df_prepared = get_active_dataframe(reset_index=False)
+        df_prepared[column_name] = df_prepared[column_name].cat.rename_categories(
+            {category_name: new_category_name}
+        )
+
+        if get_active_user_file_config()["has_index"]["value"] == True:
+            df_prepared = df_prepared.reset_index()
+        create_or_modify_active_file(df_prepared)
+
+        flash(
+            f"Changed category {category_name} in {column_name} to {new_category_name} successfully",
+            "success",
+        )
+        return None
+    except Exception as e:
+        print(f"Error message: {e}")
+        flash(
+            f"It seems like you are trying to change the name of a category of column {column_name}. This did not work correctly: {column_name=} {category_name=} {new_category_name=}",
+            "warning",
+        )
+        flash(f"Error message: {e}", "danger")
+
+
 def get_active_dataframe_column_type(column_name):
     config_dict = get_user_file_config(get_active_dataset_name())
     if not "column_types" in config_dict:

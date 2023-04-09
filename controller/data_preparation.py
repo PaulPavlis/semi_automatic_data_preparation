@@ -23,6 +23,7 @@ from controller.controller_helper import (
     filter_active_dataframe_string_column,
     filter_active_dataframe_category_column,
     change_column_name,
+    change_category_name,
 )
 import numpy as np
 import plotly
@@ -121,6 +122,24 @@ def manual_repairing():
                     change_column_name(
                         request.form["change_column_name"],
                         request.form["new_column_name"],
+                    )
+                else:
+                    flash(
+                        "Please provide the column and a new name to change it.", "info"
+                    )
+            elif "submit_change_category_name" in request.form:
+                if (
+                    "change_category_column_name" in request.form
+                    and request.form["change_category_column_name"] != "None"
+                    and "change_category_occurence_before" in request.form
+                    and request.form["change_category_occurence_before"] != ""
+                    and "change_category_occurence_after" in request.form
+                    and request.form["change_category_occurence_after"] != ""
+                ):
+                    change_category_name(
+                        request.form["change_category_column_name"],
+                        request.form["change_category_occurence_before"],
+                        request.form["change_category_occurence_after"],
                     )
                 else:
                     flash(

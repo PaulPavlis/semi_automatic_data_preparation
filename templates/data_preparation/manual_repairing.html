@@ -100,6 +100,35 @@
         </div>
         <button type="submit" class="btn btn-info m-2 mt-3" name="submit_change_column_name" value="true">Change column name</button>
     </div>
+    <div class="col-6 row">
+        <h3>Change category:</h3>
+        <div class="col-4">
+            <div class="mt-1">
+                <label for="change_category_column_name" class="form-label">Column name</label>
+                <select id="change_category_column_name" name="change_category_column_name" class="form-select">
+                    <option selected>None</option>
+                    {% if additional_args[0] %}
+                        {% for column_name in additional_args[0][0].keys() %}
+                            <option {% if request.form['change_column_name']==column_name %}selected{% endif %}>{{column_name}}</option>
+                        {% endfor %}
+                    {% endif %}
+                </select>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="mt-1">
+                <label for="change_category_occurence_before" class="form-label">Current category name:</label>
+                <input type="text" class="form-control" name="change_category_occurence_before" id="change_category_occurence_before">
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="mt-1">
+                <label for="change_category_occurence_after" class="form-label">New name:</label>
+                <input type="text" class="form-control" name="change_category_occurence_after" id="change_category_occurence_after">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-info m-2 mt-3" name="submit_change_category_name" value="true">Change category name</button>
+    </div>
   </div>
 </form>
 
