@@ -42,14 +42,7 @@ function make_get_json_ajax(url_used, data_sent, div_id) {
         url: url_used,
         data: data_sent,
         success: function (result) {
-            console.log("Result:");
-            console.log(result);
-            if (result == "display_picture") {
-                console.log("Display picture should be rendered");
-            } else {
-                console.log("Normal plotly render");
-                Plotly.react(div_id, result, {});
-            }
+            Plotly.react(div_id, result, {});
         },
     });
 }

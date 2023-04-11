@@ -30,11 +30,6 @@ import plotly
 import plotly.express as px
 import json
 import pandas as pd
-import matplotlib
-
-matplotlib.use("Agg")
-import missingno as msno
-import os
 
 data_preparation = Blueprint(
     "data_preparation",
@@ -553,34 +548,16 @@ def get_graph_json(df, column, graph_type="violin"):
     # print(f"inside gm. Value: {column}")
     # print(f"inside gm. Value type: {type(column)}")
     fig = None
-    display_picture = False
     if not graph_type or graph_type == "violin":
         fig = px.violin(df, x=column, points="all", title=f"Violin Plot of {column}")
     elif graph_type == "histogram":
         fig = px.histogram(df, x=column, title=f"Histogram of {column}")
     elif graph_type == "missing_bar_chart":
-        msno.bar(df).get_figure().savefig(
-            os.path.join(
-                current_app.config["ACTIVE_DATASET_PICTURE_FOLDER"],
-                "missing_values.png",
-            ),
-            bbox_inches="tight",
-        )
-        display_picture = True
+        fig = px.histogram(df, x=column, title=f"Histogram of {column}")
     elif graph_type == "missing_matrix":
-        msno.matrix(df).get_figure().savefig(
-            os.path.join(
-                current_app.config["ACTIVE_DATASET_PICTURE_FOLDER"],
-                "missing_values.png",
-            ),
-            bbox_inches="tight",
-        )
-        display_picture = True
+        fig = px.histogram(df, x=column, title=f"Histogram of {column}")
     else:
         fig = None
-
-    if display_picture:
-        return "display_picture"
 
     if not fig:
         return return_empty_plot("No graph type like this availabe.")
