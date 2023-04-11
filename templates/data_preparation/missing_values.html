@@ -3,13 +3,12 @@
 {% block title %}Data preparation - Manual repairing{% endblock %}
 {% block main_content %}
 
-<!-- My js for filtering -->
-{# <script src="{{ url_for('static', filename='js/filtering.js')}}" type="text/javascript"></script> #}
+<h3>Handle missing value configs of the dataframe:</h3>
 
 <form action="#" method="POST" class="mb-3">
     <div class="row">
         <div class="row col-6 mb-5">
-            <div class="mb-1">
+            <div class="mb-1 mt-2">
                 <label for="new_missing_value_string" class="form-label">Add text to missing values (e.g. 'Not available' could then be classified as None)</label>
                 <input type="text" class="form-control" name="new_missing_value_string" id="new_missing_value_string" placeholder="">
             </div>
@@ -18,7 +17,7 @@
         {# <div class="col-2">
         </div> #}
         <div class="col-4">
-            <h3>Current additional missing values:</h3>
+            <label class="form-label">Current additional missing values:</label>
             <select class="form-select m-2">
                 {% for na_value in additional_args[3] %}
                     <option>{{na_value}}</li>
@@ -26,8 +25,9 @@
             </select>
         </div>
         <div class="row mb-3">
-            <div class="row col-4">
-                <label for="missing_value_handling_option" class="form-label">Missing values handling options:</label>
+            <h3>Handle missing values:</h3>
+            <div class="row col-12">
+                <label for="missing_value_handling_option" class="form-label">Missing values handling options: (some options might not always work, depending on your dataset)</label>
                 <select id="missing_value_handling_option" name="missing_value_handling_option" class="form-select m-2">
                     <option selected value="None">None</option>
                     <option {% if request.form['missing_value_handling_option'] == 'delete' %}selected{% endif %} value="delete">Delete</option>
@@ -41,7 +41,7 @@
                 </div>
                 <div class="form-check col-auto">
                     <input checked type="checkbox" class="form-check-input" name="handle_categories" id="handle_categories">
-                    <label class="form-check-label" for="handle_categories">Handle categories</label>
+                    <label class="form-check-label" for="handle_categories">Handle categories and text</label>
                 </div>
             </div>
             <div class="row">
