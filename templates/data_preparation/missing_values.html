@@ -1,0 +1,36 @@
+{% extends "base_template.html" %}
+
+{% block title %}Data preparation - Manual repairing{% endblock %}
+{% block main_content %}
+
+<!-- My js for filtering -->
+{# <script src="{{ url_for('static', filename='js/filtering.js')}}" type="text/javascript"></script> #}
+
+{# {{additional_args[0]}}
+{{additional_args[3]}} #}
+
+{# <h1>Filtering per data type column</h3> #}
+<form action="#" method="POST" class="mb-3">
+  <div class="row mb-3">
+    <div class="row col-4">
+        <h3>Visualise missing values:</h3>
+        {# <select id="filter_column_string" name="filter_column_string" class="form-select m-2"  onchange="construct_new_graph(this.value, 'histogram')">
+            <option selected value="None">None</option>
+            {% if additional_args[0] %}
+                {% for column_name in additional_args[0][0].keys() %}
+                    <option {% if request.form['filter_column_string']==column_name %}selected{% endif %}>{{column_name}}</option>
+                {% endfor %}
+            {% endif %}
+        </select> #}
+        <label for="display_na_type" class="form-label">Visualisation options:</label>
+        <select id="display_na_type" name="display_na_type" class="form-select m-2" onchange="construct_new_graph('select_all', this.value)">
+            <option selected value="None">None</option>
+            <option value="missing_bar_chart">bar chart</option>
+            <option value="missing_matrix">matrix</option>
+        </select>
+    </div>
+</form>
+
+{% include "data_preparation_comparison_include.html" %}
+
+{% endblock %}

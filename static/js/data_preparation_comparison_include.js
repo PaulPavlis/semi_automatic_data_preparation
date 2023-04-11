@@ -3,40 +3,53 @@ function construct_before_and_after(
     graph_type_value = "violin"
 ) {
     console.log(column_prepare_value);
-    $.getJSON({
-        url: "/data_preparation/return_ajax_construct_before",
-        data: {
+    make_get_json_ajax(
+        "/data_preparation/return_ajax_construct_before",
+        {
             column_prepare: column_prepare_value,
             graph_type: graph_type_value,
         },
-        success: function (result) {
-            Plotly.react("chart_before", result, {});
-        },
-    });
-    $.getJSON({
-        url: "/data_preparation/return_ajax_construct_after",
-        data: {
+        "chart_before"
+    );
+    make_get_json_ajax(
+        "/data_preparation/return_ajax_construct_after",
+        {
             column_prepare: column_prepare_value,
             graph_type: graph_type_value,
         },
-        success: function (result) {
-            Plotly.react("chart_after", result, {});
-        },
-    });
+        "chart_after"
+    );
 }
 
 function construct_new_graph(
     column_prepare_value,
     graph_type_value = "violin"
 ) {
-    $.getJSON({
-        url: "/data_preparation/return_ajax_construct_before",
-        data: {
+    console.log(column_prepare_value);
+    console.log(graph_type_value);
+    make_get_json_ajax(
+        "/data_preparation/return_ajax_construct_before",
+        {
             column_prepare: column_prepare_value,
             graph_type: graph_type_value,
         },
+        "chart_before"
+    );
+}
+
+function make_get_json_ajax(url_used, data_sent, div_id) {
+    $.getJSON({
+        url: url_used,
+        data: data_sent,
         success: function (result) {
-            Plotly.react("chart_before", result, {});
+            console.log("Result:");
+            console.log(result);
+            if (result == "display_picture") {
+                console.log("Display picture should be rendered");
+            } else {
+                console.log("Normal plotly render");
+                Plotly.react(div_id, result, {});
+            }
         },
     });
 }

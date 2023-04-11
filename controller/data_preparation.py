@@ -30,6 +30,11 @@ import plotly
 import plotly.express as px
 import json
 import pandas as pd
+import matplotlib
+
+matplotlib.use("Agg")
+import missingno as msno
+import os
 
 data_preparation = Blueprint(
     "data_preparation",
@@ -46,6 +51,7 @@ method_preparation_list = [
     "transpose",
     "capping",
     "filtering",
+    "missing_values",
     "automatic_detection",
     "anomaly_detection",
     "normalisation",
@@ -473,6 +479,31 @@ def capping():
         return "Use get or post to request this page"
 
 
+@data_preparation.route("/missing_values", methods=["POST", "GET"])
+def missing_values():
+    if not check_if_active_dataset_is_set():
+        return send_user_to_set_active_dataset()
+
+    # print(active_user_file_configs)
+
+    if request.method == "GET" or request.method == "POST":
+        if request.method == "POST":
+            print(request.form)
+
+        # flash(
+        #     f"Depending on the amount of data, displaying it in a smart table might take a few seconds.",
+        #     "success",
+        # )
+
+        return get_controller_specific_template_with_args(
+            "missing_values.html",
+            missing_values.__name__,
+            get_active_dataframe_formatted(),
+        )
+    else:
+        return "Use get or post to request this page"
+
+
 @data_preparation.route("/return_ajax_construct_before")
 def return_ajax_construct_before():
     # print(f"inside regturn ajax data. Value: {request.args.get('data')}")
@@ -521,12 +552,35 @@ def get_graph_json(df, column, graph_type="violin"):
 
     # print(f"inside gm. Value: {column}")
     # print(f"inside gm. Value type: {type(column)}")
+    fig = None
+    display_picture = False
     if not graph_type or graph_type == "violin":
         fig = px.violin(df, x=column, points="all", title=f"Violin Plot of {column}")
     elif graph_type == "histogram":
         fig = px.histogram(df, x=column, title=f"Histogram of {column}")
+    elif graph_type == "missing_bar_chart":
+        msno.bar(df).get_figure().savefig(
+            os.path.join(
+                current_app.config["ACTIVE_DATASET_PICTURE_FOLDER"],
+                "missing_values.png",
+            ),
+            bbox_inches="tight",
+        )
+        display_picture = True
+    elif graph_type == "missing_matrix":
+        msno.matrix(df).get_figure().savefig(
+            os.path.join(
+                current_app.config["ACTIVE_DATASET_PICTURE_FOLDER"],
+                "missing_values.png",
+            ),
+            bbox_inches="tight",
+        )
+        display_picture = True
     else:
         fig = None
+
+    if display_picture:
+        return "display_picture"
 
     if not fig:
         return return_empty_plot("No graph type like this availabe.")
