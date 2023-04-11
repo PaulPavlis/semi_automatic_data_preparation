@@ -80,6 +80,7 @@ def read_generic_input_file(file_location, file_name, reset_index=True):
     file_separator = ","
     index_value = None
     column_types = {}
+    na_value_list = []
     if user_file_configs:
         header_value = (
             0
@@ -103,6 +104,12 @@ def read_generic_input_file(file_location, file_name, reset_index=True):
             if "column_types" in user_file_configs and user_file_configs["column_types"]
             else {}
         )
+        na_value_list = (
+            user_file_configs["na_values_list"]
+            if "na_values_list" in user_file_configs
+            and user_file_configs["na_values_list"]
+            else []
+        )
 
     try:
         if not column_types:
@@ -113,6 +120,8 @@ def read_generic_input_file(file_location, file_name, reset_index=True):
                 index_value,
                 reset_index,
                 pd_read_function,
+                {},
+                na_value_list,
             )
             # print(df)
             # print(df.dtypes)
@@ -145,6 +154,7 @@ def read_generic_input_file(file_location, file_name, reset_index=True):
             reset_index,
             pd_read_function,
             column_types=column_types,
+            na_value_list=na_value_list,
         )
 
         # print(f"{df.dtypes=}")
@@ -172,6 +182,7 @@ def pd_read(
     reset_index,
     pd_read_function,
     column_types={},
+    na_value_list=[],
 ):
     df = pd_read_function(
         file_path,
@@ -180,6 +191,8 @@ def pd_read(
         sep=file_separator,
         index_col=index_value,
         dtype=column_types,
+        na_values=na_value_list,
+        keep_default_na=True,
     )
 
     df.columns = df.columns.astype(
@@ -307,7 +320,11 @@ def create_or_modify_user_config_file(user_file_name, config_dict={}):
 
 
 def create_config_dict(
-    has_header=False, file_separator=",", has_index=False, column_types={}
+    has_header=False,
+    file_separator=",",
+    has_index=False,
+    column_types={},
+    na_values_list=[],
 ):
     user_file_configs = {
         "has_header": {
@@ -320,6 +337,7 @@ def create_config_dict(
             "bootstrap_class": "form-check-input",
         },
         "column_types": column_types,
+        "na_values_list": na_values_list,
     }
 
     user_file_configs["has_header"]["value"] = True if has_header else False
@@ -539,9 +557,9 @@ def get_prepared_dataset_list():
 def change_column_type(column_name, new_column_type):
     try:
         # print(get_active_dataframe(reset_index=False).dtypes)
-        df_prepared = get_active_dataframe(reset_index=False).astype(
-            {column_name: new_column_type}
-        )
+        # df_prepared = get_active_dataframe(reset_index=False).astype(
+        #     {column_name: new_column_type}
+        # )
         # print(df_prepared.dtypes)
 
         config_dict = get_active_user_file_config()
@@ -739,3 +757,17 @@ def handle_missing_values(
         create_or_modify_active_prepared_file(df_prepared)
     else:
         create_or_modify_active_file(df_prepared)
+
+
+def add_na_value_type(new_na_value):
+    config_dict = get_active_user_file_config()
+    config_dict["na_values_list"].append(new_na_value)
+
+    create_or_modify_user_config_file(get_active_dataset_name(), config_dict)
+
+    # This is of no use since it gets read newly everytime. Must change configs.
+    # create_or_modify_active_file(df_prepared)
+    flash(
+        f"Added new na value: {new_na_value} successfully",
+        "success",
+    )

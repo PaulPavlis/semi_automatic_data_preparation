@@ -25,6 +25,7 @@ from controller.controller_helper import (
     change_column_name,
     change_category_name,
     handle_missing_values,
+    add_na_value_type,
 )
 import numpy as np
 import plotly
@@ -489,30 +490,42 @@ def missing_values():
             print(request.form)
             is_preview = False
 
-            if "submit_handle_missing_values_preview" in request.form:
-                is_preview = True
-
-            if (
-                "missing_value_handling_option" in request.form
-                and request.form["missing_value_handling_option"] != "None"
-            ):
-                handle_missing_values(
-                    request.form["missing_value_handling_option"],
-                    "handle_numbers" in request.form,
-                    "handle_categories" in request.form,
-                    is_preview,
-                )
-
-                if "submit_handle_missing_values" in request.form:
-                    show_prepared = False
+            if "submit_add_na_value_type" in request.form:
+                if (
+                    "new_missing_value_string" in request.form
+                    and request.form["new_missing_value_string"] != ""
+                ):
+                    add_na_value_type(request.form["new_missing_value_string"])
                 else:
-                    show_prepared = True
-
+                    flash(
+                        f"Please select a new missing values text.",
+                        "info",
+                    )
             else:
-                flash(
-                    f"Please select a missing values handling option.",
-                    "info",
-                )
+                if "submit_handle_missing_values_preview" in request.form:
+                    is_preview = True
+
+                if (
+                    "missing_value_handling_option" in request.form
+                    and request.form["missing_value_handling_option"] != "None"
+                ):
+                    handle_missing_values(
+                        request.form["missing_value_handling_option"],
+                        "handle_numbers" in request.form,
+                        "handle_categories" in request.form,
+                        is_preview,
+                    )
+
+                    if "submit_handle_missing_values" in request.form:
+                        show_prepared = False
+                    else:
+                        show_prepared = True
+
+                else:
+                    flash(
+                        f"Please select a missing values handling option.",
+                        "info",
+                    )
 
         # flash(
         #     f"Depending on the amount of data, displaying it in a smart table might take a few seconds.",
@@ -525,6 +538,7 @@ def missing_values():
             get_active_dataframe_formatted(),
             show_prepared,
             "missing_bar_chart",
+            get_active_user_file_config()["na_values_list"]
         )
     else:
         return "Use get or post to request this page"

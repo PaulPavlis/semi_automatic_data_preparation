@@ -31,6 +31,7 @@ USER_FILE_CONFIGS_OPTIONS = [
     "file_separator",
     "has_index",
     "column_types",
+    "na_values_list",
 ]
 
 # Create reqired folders:
