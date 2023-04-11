@@ -2,6 +2,7 @@ from flask import render_template, current_app, redirect, url_for, flash
 import os
 import pandas as pd
 import yaml
+
 from AutoClean import AutoClean
 
 
@@ -705,8 +706,8 @@ def handle_missing_values(
         handle_numbers = "mean"
         handle_categories = "most_frequent"
     elif handling_option == "predict":
-        handle_numbers = "linereg"
-        handle_categories = "logreg"
+        handle_numbers = "auto"
+        handle_categories = "auto"
     elif handling_option == "impute":
         handle_numbers = "knn"
         handle_categories = "knn"
@@ -717,19 +718,19 @@ def handle_missing_values(
     if not handle_categories_received:
         handle_categories = False
 
-    df_pipeline = AutoClean(
-        active_df, mode="manual", missing_num="auto", missing_categ="auto", logfile=True
-    )
     # df_pipeline = AutoClean(
-    #     active_df,
-    #     mode="manual",
-    #     missing_num=handle_numbers,
-    #     missing_categ=handle_categories,
-    #     logfile=True
+    #     active_df, mode="manual", missing_num="auto", missing_categ="auto", logfile=True
     # )
+    df_pipeline = AutoClean(
+        active_df,
+        mode="manual",
+        missing_num=handle_numbers,
+        missing_categ=handle_categories,
+        logfile=True,
+    )
 
     df_prepared = df_pipeline.output
-    print(df_prepared)
+    # print(df_prepared)
 
     if get_active_user_file_config()["has_index"]["value"] == True:
         df_prepared = df_prepared.reset_index()
