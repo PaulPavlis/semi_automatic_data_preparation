@@ -2,7 +2,7 @@ function construct_before_and_after(
     column_prepare_value,
     graph_type_value = "violin"
 ) {
-    console.log(column_prepare_value);
+    // console.log(column_prepare_value);
     make_get_json_ajax(
         "/data_preparation/return_ajax_construct_before",
         {
@@ -25,8 +25,8 @@ function construct_new_graph(
     column_prepare_value,
     graph_type_value = "violin"
 ) {
-    console.log(column_prepare_value);
-    console.log(graph_type_value);
+    // console.log(column_prepare_value);
+    // console.log(graph_type_value);
     make_get_json_ajax(
         "/data_preparation/return_ajax_construct_before",
         {

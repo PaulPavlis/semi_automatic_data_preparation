@@ -13,24 +13,38 @@
 <form action="#" method="POST" class="mb-3">
   <div class="row mb-3">
     <div class="row col-4">
-        <h3>Visualise missing values:</h3>
-        {# <select id="filter_column_string" name="filter_column_string" class="form-select m-2"  onchange="construct_new_graph(this.value, 'histogram')">
+        <label for="missing_value_handling_option" class="form-label">Missing values handling options:</label>
+        <select id="missing_value_handling_option" name="missing_value_handling_option" class="form-select m-2">
             <option selected value="None">None</option>
-            {% if additional_args[0] %}
-                {% for column_name in additional_args[0][0].keys() %}
-                    <option {% if request.form['filter_column_string']==column_name %}selected{% endif %}>{{column_name}}</option>
-                {% endfor %}
-            {% endif %}
-        </select> #}
-        <label for="display_na_type" class="form-label">Visualisation options:</label>
-        <select id="display_na_type" name="display_na_type" class="form-select m-2" onchange="construct_new_graph('select_all', this.value)">
-            <option selected value="None">None</option>
-            <option value="missing_bar_chart">bar chart</option>
-            <option value="missing_matrix">matrix</option>
+            <option {% if request.form['missing_value_handling_option'] == 'delete' %}selected{% endif %} value="delete">Delete</option>
+            <option {% if request.form['missing_value_handling_option'] == 'substitute' %}selected{% endif %} value="substitute">Substitute with mean/most frequent</option>
+            <option {% if request.form['missing_value_handling_option'] == 'predict' %}selected{% endif %} value="predict">Predict (with machine learning model)</option>
+            <option {% if request.form['missing_value_handling_option'] == 'impute' %}selected{% endif %} value="impute">Impute (with nearest similiar datasets)</option>
         </select>
+        <div class="form-check col-auto">
+            <input checked type="checkbox" class="form-check-input" name="handle_numbers" id="handle_numbers">
+            <label class="form-check-label" for="handle_numbers">Handle numbers</label>
+        </div>
+        <div class="form-check col-auto">
+            <input checked type="checkbox" class="form-check-input" name="handle_categories" id="handle_categories">
+            <label class="form-check-label" for="handle_categories">Handle categories</label>
+        </div>
+    </div>
+    <div class="row col-4">
+    </div>
+    <div class="row">
+        <button type="submit" class="btn btn-info col-5 m-2" name="submit_handle_missing_values_preview" value="true">Use settings on missing values (preview)</button>
+        <button type="submit" class="btn btn-warning col-5 m-2" name="submit_handle_missing_values" value="true">Use settings on missing values</button>
     </div>
 </form>
 
+
 {% include "data_preparation_comparison_include.html" %}
+
+<script>
+$(document).ready(function () {
+    construct_new_graph("select_all", "missing_bar_chart");
+});
+</script>
 
 {% endblock %}

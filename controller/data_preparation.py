@@ -24,12 +24,14 @@ from controller.controller_helper import (
     filter_active_dataframe_category_column,
     change_column_name,
     change_category_name,
+    handle_missing_values,
 )
 import numpy as np
 import plotly
 import plotly.express as px
 import json
 import pandas as pd
+
 
 data_preparation = Blueprint(
     "data_preparation",
@@ -482,8 +484,35 @@ def missing_values():
     # print(active_user_file_configs)
 
     if request.method == "GET" or request.method == "POST":
+        show_prepared = False
         if request.method == "POST":
             print(request.form)
+            is_preview = False
+
+            if "submit_handle_missing_values_preview" in request.form:
+                is_preview = True
+
+            if (
+                "missing_value_handling_option" in request.form
+                and request.form["missing_value_handling_option"] != "None"
+            ):
+                handle_missing_values(
+                    request.form["missing_value_handling_option"],
+                    "handle_numbers" in request.form,
+                    "handle_categories" in request.form,
+                    is_preview,
+                )
+
+                if "submit_handle_missing_values" in request.form:
+                    show_prepared = False
+                else:
+                    show_prepared = True
+
+            else:
+                flash(
+                    f"Please select a missing values handling option.",
+                    "info",
+                )
 
         # flash(
         #     f"Depending on the amount of data, displaying it in a smart table might take a few seconds.",
@@ -494,6 +523,8 @@ def missing_values():
             "missing_values.html",
             missing_values.__name__,
             get_active_dataframe_formatted(),
+            show_prepared,
+            "missing_bar_chart",
         )
     else:
         return "Use get or post to request this page"
@@ -553,9 +584,12 @@ def get_graph_json(df, column, graph_type="violin"):
     elif graph_type == "histogram":
         fig = px.histogram(df, x=column, title=f"Histogram of {column}")
     elif graph_type == "missing_bar_chart":
-        fig = px.histogram(df, x=column, title=f"Histogram of {column}")
-    elif graph_type == "missing_matrix":
-        fig = px.histogram(df, x=column, title=f"Histogram of {column}")
+        na_df = df.notnull().sum().to_frame("row_count")
+        fig = px.bar(
+            na_df,
+            y="row_count",
+            title=f"Count of rows without missing values. Total count: {df.shape[0]}",
+        )
     else:
         fig = None
 

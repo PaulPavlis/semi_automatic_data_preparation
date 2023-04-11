@@ -2,6 +2,7 @@ from flask import render_template, current_app, redirect, url_for, flash
 import os
 import pandas as pd
 import yaml
+from AutoClean import AutoClean
 
 
 def get_controller_general_template_with_args(
@@ -672,7 +673,7 @@ def filter_active_dataframe_string_column(
 
     print(active_df)
     print(df_prepared)
-    
+
     if get_active_user_file_config()["has_index"]["value"] == True:
         df_prepared = df_prepared.reset_index()
 
@@ -688,3 +689,52 @@ def filter_active_dataframe_category_column(
     filter_active_dataframe_string_column(
         prepare_column, match_string, True, delete_matches, is_preview
     )
+
+
+def handle_missing_values(
+    handling_option, handle_numbers_received, handle_categories_received, is_preview
+):
+    active_df = get_active_dataframe(reset_index=False)
+    handle_numbers = True
+    handle_categories = True
+
+    if handling_option == "delete":
+        handle_numbers = "delete"
+        handle_categories = "delete"
+    elif handling_option == "substitute":
+        handle_numbers = "mean"
+        handle_categories = "most_frequent"
+    elif handling_option == "predict":
+        handle_numbers = "linereg"
+        handle_categories = "logreg"
+    elif handling_option == "impute":
+        handle_numbers = "knn"
+        handle_categories = "knn"
+
+    if not handle_numbers_received:
+        handle_numbers = False
+
+    if not handle_categories_received:
+        handle_categories = False
+
+    df_pipeline = AutoClean(
+        active_df, mode="manual", missing_num="auto", missing_categ="auto", logfile=True
+    )
+    # df_pipeline = AutoClean(
+    #     active_df,
+    #     mode="manual",
+    #     missing_num=handle_numbers,
+    #     missing_categ=handle_categories,
+    #     logfile=True
+    # )
+
+    df_prepared = df_pipeline.output
+    print(df_prepared)
+
+    if get_active_user_file_config()["has_index"]["value"] == True:
+        df_prepared = df_prepared.reset_index()
+
+    if is_preview:
+        create_or_modify_active_prepared_file(df_prepared)
+    else:
+        create_or_modify_active_file(df_prepared)
