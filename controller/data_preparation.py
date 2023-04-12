@@ -30,6 +30,7 @@ from controller.controller_helper import (
     one_hot_encode_column,
     get_active_dataframe_prepared_formatted,
     extract_dates_and_add,
+    return_automatically_removed_outliers_df,
 )
 import numpy as np
 import plotly
@@ -385,60 +386,70 @@ def capping():
         if request.method == "POST":
             # change_config_files(request.form)
             print(request.form)
-            if (
-                not request.form["lower_limit"]
-                or not request.form["upper_limit"]
-                or request.form["column_prepare"] == "None"
-            ):
-                return get_controller_specific_template_with_args(
-                    "capping.html",
-                    capping.__name__,
-                    get_active_dataframe_formatted(),
-                    show_prepared_file,
-                )
 
-            lower_limit = float(request.form["lower_limit"])
-            upper_limit = float(request.form["upper_limit"])
-            column_prepare = request.form["column_prepare"]
-            capping_type = request.form["capping_type"]
-
-            if lower_limit >= upper_limit:
-                flash(
-                    f"Lower limit was higher or euqal to the upper limit. Nothing was done.",
-                    "warning",
-                )
-                return get_controller_specific_template_with_args(
-                    "capping.html",
-                    capping.__name__,
-                    get_active_dataframe_formatted(),
-                    show_prepared_file,
-                    "violin",
-                )
-
+            if not "automatically_remove_outliers" in request.form:
+                if (
+                    not request.form["lower_limit"]
+                    or not request.form["upper_limit"]
+                    or request.form["column_prepare"] == "None"
+                ):
+                    flash(
+                        "Please use the parameters to use the functionality. Nothing was done",
+                        "info",
+                    )
+                    return get_controller_specific_template_with_args(
+                        "capping.html",
+                        capping.__name__,
+                        get_active_dataframe_formatted(),
+                        show_prepared_file,
+                        "violin",
+                        get_active_dataframe_column_type_dict(),
+                    )
             prepared_df = get_active_dataframe()
+            if not "automatically_remove_outliers" in request.form:
+                lower_limit = float(request.form["lower_limit"])
+                upper_limit = float(request.form["upper_limit"])
+                column_prepare = request.form["column_prepare"]
+                capping_type = request.form["capping_type"]
 
-            # print(
-            #     prepared_df[column_prepare]
-            #     .describe(include="all")
-            #     .reset_index()
-            #     .rename(columns={"index": "Type"})
-            # )
+                if lower_limit >= upper_limit:
+                    flash(
+                        f"Lower limit was higher or euqal to the upper limit. Nothing was done.",
+                        "warning",
+                    )
+                    return get_controller_specific_template_with_args(
+                        "capping.html",
+                        capping.__name__,
+                        get_active_dataframe_formatted(),
+                        show_prepared_file,
+                        "violin",
+                        get_active_dataframe_column_type_dict(),
+                    )
 
-            if capping_type == "replace":
-                prepared_df[column_prepare] = prepared_df[column_prepare].mask(
-                    prepared_df[column_prepare] < lower_limit, lower_limit
-                )
-                prepared_df[column_prepare] = prepared_df[column_prepare].mask(
-                    prepared_df[column_prepare] > upper_limit, upper_limit
-                )
-            elif capping_type == "remove":
-                prepared_df = prepared_df[prepared_df[column_prepare] > lower_limit]
-                prepared_df = prepared_df[prepared_df[column_prepare] < upper_limit]
+                # print(
+                #     prepared_df[column_prepare]
+                #     .describe(include="all")
+                #     .reset_index()
+                #     .rename(columns={"index": "Type"})
+                # )
+
+                if capping_type == "replace":
+                    prepared_df[column_prepare] = prepared_df[column_prepare].mask(
+                        prepared_df[column_prepare] < lower_limit, lower_limit
+                    )
+                    prepared_df[column_prepare] = prepared_df[column_prepare].mask(
+                        prepared_df[column_prepare] > upper_limit, upper_limit
+                    )
+                elif capping_type == "remove":
+                    prepared_df = prepared_df[prepared_df[column_prepare] > lower_limit]
+                    prepared_df = prepared_df[prepared_df[column_prepare] < upper_limit]
+                else:
+                    flash(
+                        f"Capping type option was not recognised. Nothing was done.",
+                        "warning",
+                    )
             else:
-                flash(
-                    f"Capping type option was not recognised. Nothing was done.",
-                    "warning",
-                )
+                prepared_df = return_automatically_removed_outliers_df()
 
             # print(
             #     prepared_df[column_prepare]

@@ -21,6 +21,10 @@
             <option {% if request.form['capping_type'] == 'remove' %}selected{% endif %} value="remove">Remove values beyond the limit</option>
         </select>
     </div>
+    {# <div class="form-check col-auto m-3 mb-1">
+        <input type="checkbox" class="form-check-input" name="automatically_remove_outliers" id="automatically_remove_outliers">
+        <label class="form-check-label" for="automatically_remove_outliers">Automatically remove outliers (overrides the options above)</label>
+    </div> #}
   </div>
   
   <button type="submit" class="btn btn-info" name="submit_preview" value="true">Change limits (preview)</button>

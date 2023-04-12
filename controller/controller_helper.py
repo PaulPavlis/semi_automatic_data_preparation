@@ -914,3 +914,21 @@ def remove_complete_duplicates(is_preview):
             f"Removed {active_df.shape[0] - df_prepared.shape[0]} duplicates succesfully.",
             "success",
         )
+
+
+def return_automatically_removed_outliers_df():
+    active_df = get_active_dataframe(reset_index=False)
+
+    df_pipeline = AutoClean(
+        active_df,
+        mode="manual",
+        outliers="auto",
+    )
+
+    df_prepared = df_pipeline.output
+    # print(df_prepared)
+
+    if get_active_user_file_config()["has_index"]["value"] == True:
+        df_prepared = df_prepared.reset_index()
+
+    return df_prepared
