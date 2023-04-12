@@ -25,8 +25,8 @@
                     {% endif %}
                 </select>
                 <div class="form-check col-auto mt-1">
-                    <input checked type="checkbox" class="form-check-input" name="remove_old_column" id="remove_old_column">
-                    <label class="form-check-label" for="remove_old_column">Remove old column</label>
+                    <input checked type="checkbox" class="form-check-input" name="remove_old_column_encode" id="remove_old_column_encode">
+                    <label class="form-check-label" for="remove_old_column_encode">Remove old column</label>
                 </div>
             </div>
             <button type="submit" class="btn btn-info mt-3" name="submit_encode_column_preview" value="true">Encode column (preview)</button>
@@ -34,6 +34,10 @@
         </div>
         <div class="col-6">
             <h3>Extract dates:</h3>
+            <div class="form-check col-auto mt-1">
+                <input checked type="checkbox" class="form-check-input" name="remove_old_column_dates" id="remove_old_column_dates">
+                <label class="form-check-label" for="remove_old_column_dates">Remove old column</label>
+            </div>
             <button type="submit" class="btn btn-info mt-3" name="submit_extract_dates_preview" value="true">Extract dates (preview)</button>
             <button type="submit" class="btn btn-warning mt-3" name="submit_extract_dates" value="true">Extract dates</button>
         </div>

@@ -29,6 +29,7 @@ from controller.controller_helper import (
     remove_complete_duplicates,
     one_hot_encode_column,
     get_active_dataframe_prepared_formatted,
+    extract_dates_and_add,
 )
 import numpy as np
 import plotly
@@ -210,10 +211,10 @@ def filtering():
                     True if "delete_matches_string" in request.form else False
                 )
 
-                print(prepare_column)
-                print(match_string)
-                print(has_to_be_complete_match)
-                print(delete_matches)
+                # print(prepare_column)
+                # print(match_string)
+                # print(has_to_be_complete_match)
+                # print(delete_matches)
 
                 filter_active_dataframe_string_column(
                     prepare_column,
@@ -577,16 +578,26 @@ def encoding_and_extracting():
                     one_hot_encode_column(
                         request.form["encode_column_name"],
                         is_preview,
-                        "remove_old_column" in request.form,
+                        "remove_old_column_encode" in request.form,
                     )
                 else:
                     flash(
                         f"Please select a column to encode.",
                         "info",
                     )
-            # else:
-            #     if "submit_handle_missing_values_preview" in request.form:
-            #         is_preview = True
+            elif (
+                "submit_extract_dates_preview" in request.form
+                or "submit_extract_dates" in request.form
+            ):
+                is_preview = "submit_extract_dates_preview" in request.form
+                extract_dates_and_add(
+                    is_preview, "remove_old_column_dates" in request.form
+                )
+            else:
+                flash(
+                    f"No viable submit option given.",
+                    "warning",
+                )
 
             #     if (
             #         "missing_value_handling_option" in request.form
