@@ -9,7 +9,7 @@
 
 <form action="#" method="POST" class="mb-3">
     <div class="row mb-3 g-3">
-        <div class="col-6">
+        <div class="col-5">
             <h3>Encode category:</h3>
             <div class="mt-1">
                 <label class="form-label">This creates a column for every category type in the category. Beware of using it with a column that has a lot:</label>
@@ -32,7 +32,7 @@
             <button type="submit" class="btn btn-info mt-3" name="submit_encode_column_preview" value="true">Encode column (preview)</button>
             <button type="submit" class="btn btn-warning mt-3" name="submit_encode_column" value="true">Encode column</button>
         </div>
-        <div class="col-6">
+        <div class="col-3">
             <h3>Extract dates:</h3>
             {# <div class="form-check col-auto mt-1">
                 <input checked type="checkbox" class="form-check-input" name="remove_old_column_dates" id="remove_old_column_dates">
@@ -41,6 +41,12 @@
             <button type="submit" class="btn btn-info mt-3" name="submit_extract_dates_preview" value="true">Extract dates (preview)</button>
             <button type="submit" class="btn btn-warning mt-3" name="submit_extract_dates" value="true">Extract dates</button>
         </div>
+        <div class="col-4">
+        <h3>Remove complete duplicates:</h3>
+        <button type="submit" class="btn btn-info mt-3" name="submit_remove_duplicates_preview" value="true">Remove duplicates (preview)</button>
+        <button type="submit" class="btn btn-warning mt-3" name="submit_remove_duplicates" value="true">Remove duplicates</button>
+    </div>
+
     </div>
 </form>
 

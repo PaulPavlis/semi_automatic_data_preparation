@@ -54,7 +54,7 @@ method_preparation_list = [
     "capping",
     "filtering",
     "missing_values",
-    "encoding_and_extracting",
+    "encoding_extracting_duplicates",
     "automatic_detection",
     # "anomaly_detection",
     # "normalisation",
@@ -154,11 +154,6 @@ def manual_repairing():
                     flash(
                         "Please provide the column and a new name to change it.", "info"
                     )
-            elif "submit_remove_duplicates" in request.form:
-                if request.form["submit_remove_duplicates"]:
-                    remove_complete_duplicates()
-                else:
-                    flash("Set remove duplicates to true.", "info")
             else:
                 return "No method like this."
 
@@ -554,8 +549,8 @@ def missing_values():
         return "Use get or post to request this page"
 
 
-@data_preparation.route("/encoding_and_extracting", methods=["POST", "GET"])
-def encoding_and_extracting():
+@data_preparation.route("/encoding_extracting_duplicates", methods=["POST", "GET"])
+def encoding_extracting_duplicates():
     if not check_if_active_dataset_is_set():
         return send_user_to_set_active_dataset()
 
@@ -593,6 +588,12 @@ def encoding_and_extracting():
                 extract_dates_and_add(
                     is_preview, "remove_old_column_dates" in request.form
                 )
+            elif (
+                "submit_remove_duplicates_preview" in request.form
+                or "submit_remove_duplicates" in request.form
+            ):
+                is_preview = "submit_remove_duplicates_preview" in request.form
+                remove_complete_duplicates(is_preview)
             else:
                 flash(
                     f"No viable submit option given.",
@@ -627,8 +628,8 @@ def encoding_and_extracting():
         # )
 
         return get_controller_specific_template_with_args(
-            "encoding_and_extracting.html",
-            encoding_and_extracting.__name__,
+            "encoding_extracting_duplicates.html",
+            encoding_extracting_duplicates.__name__,
             get_active_dataframe_prepared_formatted()
             if is_preview
             else get_active_dataframe_formatted(),
