@@ -873,9 +873,6 @@ def extract_dates_and_add(is_preview, remove_old_column):
 
         df_prepared = df_pipeline.output
 
-        if get_active_user_file_config()["has_index"]["value"] == True:
-            df_prepared = df_prepared.reset_index()
-
         print(df_prepared)
 
         config_dict = get_active_user_file_config()
@@ -884,9 +881,13 @@ def extract_dates_and_add(is_preview, remove_old_column):
         #     df_prepared = df_prepared.drop([column_name], axis=1)
         #     config_dict["column_types"].pop(column_name)
 
-        # for df_column_name in df_prepared:
-        #     if column_name in df_column_name and column_name != df_column_name:
-        #         config_dict["column_types"][df_column_name] = "Int64"
+        for df_column_name in df_prepared:
+            if df_column_name not in active_df:
+                # print(df_column_name)
+                config_dict["column_types"][df_column_name] = "Int64"
+
+        if get_active_user_file_config()["has_index"]["value"] == True:
+            df_prepared = df_prepared.reset_index()
 
         if is_preview:
             create_or_modify_active_prepared_file(df_prepared)
@@ -903,7 +904,7 @@ def extract_dates_and_add(is_preview, remove_old_column):
     except Exception as e:
         print(f"Error message: {e}")
         flash(
-            f"It seems like you are trying to encode column {column_name}. This did not work correctly: {column_name=} {is_preview=}",
+            f"It seems like you are trying to extract dates. This did not work correctly: {is_preview=}",
             "warning",
         )
         flash(f"Error message: {e}", "danger")
