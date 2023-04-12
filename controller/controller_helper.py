@@ -188,6 +188,15 @@ def pd_read(
     column_types={},
     na_value_list=[],
 ):
+    datetime_column_list = []
+
+    for key, value in column_types.items():
+        if value == "datetime64":
+            datetime_column_list.append(key)
+
+    for entry in datetime_column_list:
+        column_types.pop(entry)
+
     df = pd_read_function(
         file_path,
         encoding="latin1",
@@ -197,6 +206,8 @@ def pd_read(
         dtype=column_types,
         na_values=na_value_list,
         keep_default_na=True,
+        parse_dates=datetime_column_list,
+        dayfirst=True,
     )
 
     df.columns = df.columns.astype(
