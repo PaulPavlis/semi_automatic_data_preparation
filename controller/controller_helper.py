@@ -50,6 +50,10 @@ def get_active_dataframe_formatted():
     return get_active_dataframe().to_dict("records")
 
 
+def get_active_dataframe_prepared_formatted():
+    return get_active_dataframe_prepared().to_dict("records")
+
+
 def get_dataset_basic_info_string(dataframe):
     if dataframe.empty:
         return "No dataframe given."
@@ -794,3 +798,51 @@ def add_na_value_type(new_na_value):
         f"Added new na value: {new_na_value} successfully",
         "success",
     )
+
+
+def one_hot_encode_column(column_name, is_preview, remove_old_column):
+    try:
+        # print(get_active_dataframe(reset_index=False).dtypes)
+        # print(df_prepared.dtypes)
+
+        active_df = get_active_dataframe(reset_index=False)
+        df_pipeline = AutoClean(
+            active_df,
+            mode="manual",
+            encode_categ=["auto", [column_name]],
+        )
+
+        df_prepared = df_pipeline.output
+
+        if get_active_user_file_config()["has_index"]["value"] == True:
+            df_prepared = df_prepared.reset_index()
+
+        config_dict = get_active_user_file_config()
+
+        if remove_old_column:
+            df_prepared = df_prepared.drop([column_name], axis=1)
+            config_dict["column_types"].pop(column_name)
+
+        for df_column_name in df_prepared:
+            if column_name in df_column_name and column_name != df_column_name:
+                config_dict["column_types"][df_column_name] = "Int64"
+
+        if is_preview:
+            create_or_modify_active_prepared_file(df_prepared)
+        else:
+            create_or_modify_active_file(df_prepared)
+            # only change config file if it is permament
+            create_or_modify_user_config_file(get_active_dataset_name(), config_dict)
+
+        flash(
+            f"Encoded column {column_name} successfully",
+            "success",
+        )
+        return None
+    except Exception as e:
+        print(f"Error message: {e}")
+        flash(
+            f"It seems like you are trying to encode column {column_name}. This did not work correctly: {column_name=} {is_preview=}",
+            "warning",
+        )
+        flash(f"Error message: {e}", "danger")

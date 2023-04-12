@@ -27,6 +27,8 @@ from controller.controller_helper import (
     handle_missing_values,
     add_na_value_type,
     remove_complete_duplicates,
+    one_hot_encode_column,
+    get_active_dataframe_prepared_formatted,
 )
 import numpy as np
 import plotly
@@ -51,9 +53,10 @@ method_preparation_list = [
     "capping",
     "filtering",
     "missing_values",
+    "encoding_and_extracting",
     "automatic_detection",
-    "anomaly_detection",
-    "normalisation",
+    # "anomaly_detection",
+    # "normalisation",
 ]
 
 
@@ -545,6 +548,81 @@ def missing_values():
             show_prepared,
             "missing_bar_chart",
             get_active_user_file_config()["na_values_list"],
+        )
+    else:
+        return "Use get or post to request this page"
+
+
+@data_preparation.route("/encoding_and_extracting", methods=["POST", "GET"])
+def encoding_and_extracting():
+    if not check_if_active_dataset_is_set():
+        return send_user_to_set_active_dataset()
+
+    # print(active_user_file_configs)
+
+    if request.method == "GET" or request.method == "POST":
+        is_preview = False
+        if request.method == "POST":
+            print(request.form)
+
+            if (
+                "submit_encode_column_preview" in request.form
+                or "submit_encode_column" in request.form
+            ):
+                if (
+                    "encode_column_name" in request.form
+                    and request.form["encode_column_name"] != "None"
+                ):
+                    is_preview = "submit_encode_column_preview" in request.form
+                    one_hot_encode_column(
+                        request.form["encode_column_name"],
+                        is_preview,
+                        "remove_old_column" in request.form,
+                    )
+                else:
+                    flash(
+                        f"Please select a column to encode.",
+                        "info",
+                    )
+            # else:
+            #     if "submit_handle_missing_values_preview" in request.form:
+            #         is_preview = True
+
+            #     if (
+            #         "missing_value_handling_option" in request.form
+            #         and request.form["missing_value_handling_option"] != "None"
+            #     ):
+            #         handle_missing_values(
+            #             request.form["missing_value_handling_option"],
+            #             "handle_numbers" in request.form,
+            #             "handle_categories" in request.form,
+            #             is_preview,
+            #         )
+
+            #         if "submit_handle_missing_values" in request.form:
+            #             show_prepared = False
+            #         else:
+            #             show_prepared = True
+
+            #     else:
+            #         flash(
+            #             f"Please select a missing values handling option.",
+            #             "info",
+            #         )
+
+        # flash(
+        #     f"Depending on the amount of data, displaying it in a smart table might take a few seconds.",
+        #     "success",
+        # )
+
+        return get_controller_specific_template_with_args(
+            "encoding_and_extracting.html",
+            encoding_and_extracting.__name__,
+            get_active_dataframe_prepared_formatted()
+            if is_preview
+            else get_active_dataframe_formatted(),
+            get_active_dataframe_column_type_dict(),
+            is_preview,
         )
     else:
         return "Use get or post to request this page"

@@ -64,7 +64,13 @@ def return_active_ajax_data(get_prepared):
             df = get_active_dataframe_prepared(reset_index=True)
         else:
             df = get_active_dataframe_prepared(reset_index=False)
-            df = df[df["previous_header"] != "generated_index"]
+            print(df)
+            if "previous_header" in df:
+                df = df[df["previous_header"] != "generated_index"]
+            else:
+                # dirty fix. This is only here, because the transpose logic above does not need the generated index in it
+                df = df.reset_index()
+                print(df)
     else:
         return "get prepared parameter is missing."
 

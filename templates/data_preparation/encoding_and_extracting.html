@@ -1,0 +1,49 @@
+{% extends "base_template.html" %}
+
+{% block title %}Data preparation - Encoding and Extracting{% endblock %}
+{% block main_content %}
+
+<!-- My js for display_table -->
+{#
+<script src="{{ url_for('static', filename='js/manual_repairing.js')}}" type="text/javascript"></script> #}
+
+<form action="#" method="POST" class="mb-3">
+    <div class="row mb-3 g-3">
+        <div class="col-6">
+            <h3>Encode category:</h3>
+            <div class="mt-1">
+                <label class="form-label">This creates a column for every category type in the category. Beware of using it with a column that has a lot:</label>
+                <label for="encode_column_name" class="form-label">Column name:</label>
+                <select id="encode_column_name" name="encode_column_name" class="form-select">
+                    <option selected>None</option>
+                    {% if additional_args[1] %}
+                        {% for column_name in additional_args[1].keys() %}
+                            {% if additional_args[1][column_name] in ["category"] %}
+                                <option {% if request.form['encode_column_name'] == column_name %}selected{% endif %}>{{column_name}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </select>
+                <div class="form-check col-auto mt-1">
+                    <input checked type="checkbox" class="form-check-input" name="remove_old_column" id="remove_old_column">
+                    <label class="form-check-label" for="remove_old_column">Remove old column</label>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-info mt-3" name="submit_encode_column_preview" value="true">Encode column (preview)</button>
+            <button type="submit" class="btn btn-warning mt-3" name="submit_encode_column" value="true">Encode column</button>
+        </div>
+        <div class="col-6">
+            <h3>Extract dates:</h3>
+            <button type="submit" class="btn btn-info mt-3" name="submit_extract_dates_preview" value="true">Extract dates (preview)</button>
+            <button type="submit" class="btn btn-warning mt-3" name="submit_extract_dates" value="true">Extract dates</button>
+        </div>
+    </div>
+</form>
+
+{% if additional_args[2] %}
+    <div id="get_prepared_table" style="visibility: hidden;"></div>
+{% endif %}
+
+{% include "table_display_include.html" %}
+
+{% endblock %}
