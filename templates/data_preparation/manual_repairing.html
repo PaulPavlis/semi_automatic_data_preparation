@@ -76,9 +76,9 @@
         </div>
         <button type="submit" class="btn btn-info m-2 mt-3" name="submit_change_column_type" value="true">Change column type</button>
     </div>
-    <div class="col-6 row">
+    <div class="col-4 row">
+        <h3>Change column name:</h3>
         <div class="col-6">
-            <h3>Change column name:</h3>
             <div class="mt-1">
                 <label for="change_column_name" class="form-label">Current column name</label>
                 <select id="change_column_name" name="change_column_name" class="form-select">
@@ -92,7 +92,7 @@
             </div>
         </div>
         <div class="col-6">
-            <h3 style="visibility: hidden;">CSS go brrrrr</h3>
+            {# <h3 style="visibility: hidden;">CSS go brrrrr</h3> #}
             <div class="mt-1">
                 <label for="new_column_name" class="form-label">New column name:</label>
                 <input type="text" class="form-control" name="new_column_name" id="new_column_name">
@@ -131,6 +131,12 @@
         </div>
         <button type="submit" class="btn btn-info m-2 mt-3" name="submit_change_category_name" value="true">Change category name</button>
     </div>
+
+    <div class="col-2 row">
+        <h3>Remove complete duplicates:</h3>
+        <button type="submit" class="btn btn-warning m-2 mt-4" name="submit_remove_duplicates" value="true">Remove duplicates</button>
+    </div>
+
   </div>
 </form>
 

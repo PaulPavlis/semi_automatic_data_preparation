@@ -26,6 +26,7 @@ from controller.controller_helper import (
     change_category_name,
     handle_missing_values,
     add_na_value_type,
+    remove_complete_duplicates,
 )
 import numpy as np
 import plotly
@@ -149,6 +150,11 @@ def manual_repairing():
                     flash(
                         "Please provide the column and a new name to change it.", "info"
                     )
+            elif "submit_remove_duplicates" in request.form:
+                if request.form["submit_remove_duplicates"]:
+                    remove_complete_duplicates()
+                else:
+                    flash("Set remove duplicates to true.", "info")
             else:
                 return "No method like this."
 
@@ -538,7 +544,7 @@ def missing_values():
             get_active_dataframe_formatted(),
             show_prepared,
             "missing_bar_chart",
-            get_active_user_file_config()["na_values_list"]
+            get_active_user_file_config()["na_values_list"],
         )
     else:
         return "Use get or post to request this page"

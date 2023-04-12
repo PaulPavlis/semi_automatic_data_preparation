@@ -759,6 +759,29 @@ def handle_missing_values(
         create_or_modify_active_file(df_prepared)
 
 
+def remove_complete_duplicates():
+    active_df = get_active_dataframe(reset_index=False)
+
+    df_pipeline = AutoClean(
+        active_df,
+        mode="manual",
+        duplicates="auto",
+    )
+
+    df_prepared = df_pipeline.output
+    # print(df_prepared)
+
+    if get_active_user_file_config()["has_index"]["value"] == True:
+        df_prepared = df_prepared.reset_index()
+
+    create_or_modify_active_file(df_prepared)
+
+    flash(
+        f"Removed {active_df.shape[0] - df_prepared.shape[0]} duplicates succesfully.",
+        "success",
+    )
+
+
 def add_na_value_type(new_na_value):
     config_dict = get_active_user_file_config()
     config_dict["na_values_list"].append(new_na_value)
