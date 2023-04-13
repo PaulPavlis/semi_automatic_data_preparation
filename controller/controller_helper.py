@@ -1193,5 +1193,5 @@ def download_file(file_name, type_of_file):
     full_path = os.path.join(current_app.root_path, folder_name, file_name)
     print(full_path)
 
-    flash("File was sent to your browser", "success")
+    # flash("File was sent to your browser", "success")
     return send_file(full_path, as_attachment=True)

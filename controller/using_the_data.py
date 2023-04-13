@@ -19,7 +19,7 @@ using_the_data = Blueprint(
 method_usage_list = [
     "output_to_file",
     "h2o_automl",
-    "automl_solution_2",
+    "make_predictions",
 ]
 
 
@@ -96,6 +96,30 @@ def output_to_file():
             output_to_file.__name__,
             get_all_datasets(),
             get_all_ml_models(),
+        )
+    else:
+        return "Use get or post to request this page"
+
+
+@using_the_data.route("/make_predictions", methods=["POST", "GET"])
+def make_predictions():
+    if request.method == "GET" or request.method == "POST":
+        if request.method == "POST":
+            if (
+                "submit_predict_using_h2o" in request.form
+                and "column_to_predict" in request.form
+                and request.form["column_to_predict"] != "None"
+            ):
+                # print(request.form["column_to_predict"])
+                print(generate_h2o_model(request.form["column_to_predict"]))
+            else:
+                flash(
+                    "Please choose a dataset and a column to predict to use this functionality",
+                    "info",
+                )
+
+        return get_controller_specific_template_with_args(
+            "make_predictions.html", h2o_automl.__name__, get_all_ml_models()
         )
     else:
         return "Use get or post to request this page"
