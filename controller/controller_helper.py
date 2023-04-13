@@ -1056,15 +1056,24 @@ def return_df_AutoClean_outliers(df, selected_mode):
     for column_name in df.select_dtypes(include=["Int64"]):
         df[column_name] = df[column_name].astype("Float64")
 
-    df_prepared = return_df_AutoClean(
-        AutoClean(df, mode="manual", outliers=selected_mode)
-    )
+    try:
+        df_prepared = return_df_AutoClean(
+            AutoClean(df, mode="manual", outliers=selected_mode)
+        )
+
+        flash(
+            f"Dealt with outliers.",
+            "success",
+        )
+
+        return df_prepared
+    except Exception as e:
+        print(f"Error message: {e}")
+        flash(
+            f"It seems like the removing of outliers did not work.",
+            "warning",
+        )
+        # flash(f"Error message: {e}", "warning")
+        return df
 
     # print(df_prepared)
-
-    flash(
-        f"Dealt with outliers.",
-        "success",
-    )
-
-    return df_prepared
