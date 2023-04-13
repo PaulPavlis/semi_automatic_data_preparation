@@ -17,7 +17,7 @@
             <button type="submit" class="btn btn-info mt-3" name="submit_automatically_prepare_preview" value="true">Automatically prepare (preview)</button>
             <button type="submit" class="btn btn-warning mt-3" name="submit_automatically_prepare" value="true">Automatically prepare</button>
         </div>
-        <div class="col-6">
+        <div class="col-6 row">
             <h3>Semi automated data preparation approach:</h3>
             <div class="form-check col-auto mt-1">
                 <input checked type="checkbox" class="form-check-input" name="semi_automated_option_duplicates" id="semi_automated_option_duplicates">
@@ -43,12 +43,17 @@
                 <input checked type="checkbox" class="form-check-input" name="semi_automated_option_outliers" id="semi_automated_option_outliers">
                 <label class="form-check-label" for="semi_automated_option_outliers">Handle outliers</label>
             </div>
-            <button type="submit" class="btn btn-info mt-3" name="submit_semi_automated_prepare_preview" value="true">Semi automatically prepare (preview)</button>
-            <button type="submit" class="btn btn-warning mt-3" name="submit_semi_automated_prepare" value="true">Semi automatically prepare</button>
+            <div class="col-12">
+                <button type="submit" class="btn btn-info mt-3 col-6" name="submit_semi_automated_prepare_preview" value="true">Semi automatically prepare (preview)</button>
+                <button type="submit" class="btn btn-warning mt-3 col-5" name="submit_semi_automated_prepare" value="true">Semi automatically prepare</button>
+            </div>
         </div>
 
     </div>
 </form>
+
+<label class="form-check-label mb-2 text-info">Depending on your data, it might be beneficial to run the algorithm two times: If you still see 'None' values (missing values) than the algorthm did not catch them. Try re-running it.</label>
+
 
 {% if additional_args[1] %}
     <div id="get_prepared_table" style="visibility: hidden;"></div>

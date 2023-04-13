@@ -309,6 +309,10 @@ def automatic_preparation():
                     f"No viable submit option given.",
                     "warning",
                 )
+            flash(
+                f"Depending on your data, it might be beneficial to run the algorithm two times: If you still see 'None' values (missing values) than the algorthm did not catch them. Try re-running it.",
+                "info",
+            )
         return get_controller_specific_template_with_args(
             "automatic_preparation.html",
             automatic_preparation.__name__,

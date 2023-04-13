@@ -947,16 +947,16 @@ def automatically_prepare_active_df(
 
     if duplicates:
         df_prepared = return_df_AutoClean_duplicates(df_prepared, "auto")
-    if missing_num:
-        df_prepared = return_df_AutoClean_missing_num(df_prepared, "auto")
-    if missing_categ:
-        df_prepared = return_df_AutoClean_missing_categ(df_prepared, "auto")
+    if outliers:
+        df_prepared = return_df_AutoClean_outliers(df_prepared, "auto")
     if encode_categ:
         df_prepared = return_df_AutoClean_encode_categ(df_prepared, "auto")
     if extract_datetime:
         df_prepared = return_df_AutoClean_extract_datetime(df_prepared, "auto")
-    if outliers:
-        df_prepared = return_df_AutoClean_outliers(df_prepared, "auto")
+    if missing_categ:
+        df_prepared = return_df_AutoClean_missing_categ(df_prepared, "auto")
+    if missing_num:
+        df_prepared = return_df_AutoClean_missing_num(df_prepared, "auto")
 
     if get_active_user_file_config()["has_index"]["value"] == True:
         df_prepared = df_prepared.reset_index()
