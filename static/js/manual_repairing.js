@@ -23,4 +23,8 @@ function show_current_dtype_of_column() {
 
 $(document).ready(function () {
     show_current_dtype_of_column();
+    $("#add_row_div").toggle();
+    $("#show_add_row").click(function () {
+        $("#add_row_div").toggle();
+    });
 });
