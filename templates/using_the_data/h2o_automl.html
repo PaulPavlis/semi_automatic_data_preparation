@@ -3,7 +3,7 @@
 {% block title %}Using the data - H2o Automl{% endblock %}
 {% block main_content %}
 
-<form action="#" method="POST">
+<form action="#" method="POST" id="h2o_form">
     <label class="form-check-label" for="column_to_predict">Column to predict:</label>
     <select class="form-select" name="column_to_predict">
         <option selected value="None">None</option>
@@ -14,5 +14,12 @@
     <button type="submit" class="btn btn-primary mt-3" name="submit_predict_using_h2o">Predict using h2o</button>
 </form>
 
+<script>
+    $("#h2o_form").submit(function( event ) {
+        setTimeout(function() {
+            alert("Creation of ml model was started in the background. Depending on your data and the settings this can take minutes to hours. You do not have to stay on this site for it to work (altough the app might be slower due to the training of multiple ml models)")
+        }, 3000)
+    })
+</script>
 
 {% endblock %}

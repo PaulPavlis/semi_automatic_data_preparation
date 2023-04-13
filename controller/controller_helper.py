@@ -3,6 +3,7 @@ import os
 import pandas as pd
 import yaml
 import shutil
+from concurrent.futures import ThreadPoolExecutor
 
 from AutoClean import AutoClean
 
@@ -1134,7 +1135,15 @@ def return_df_AutoClean_outliers(df, selected_mode):
     # print(df_prepared)
 
 
+executor = ThreadPoolExecutor()
+
+
 def generate_h2o_model(column_name_to_predict):
+    executor.submit(generate_h2o_model_instance(column_name_to_predict))
+    # return None
+
+
+def generate_h2o_model_instance(column_name_to_predict):
     # Start the H2O cluster (locally)
     h2o.init()
 
@@ -1172,6 +1181,11 @@ def generate_h2o_model(column_name_to_predict):
     # View the AutoML Leaderboard
     lb = aml.leaderboard
     print(lb.head(rows=lb.nrows))  # Print all rows instead of default (10 rows)
+    
+    # flash(
+    #     "Model creation was successful and the ML model can now be used.",
+    #     "success",
+    # )
 
     return None
 
