@@ -20,16 +20,28 @@
         <div class="col-6">
             <h3>Semi automated data preparation approach:</h3>
             <div class="form-check col-auto mt-1">
-                <input checked type="checkbox" class="form-check-input" name="semi_automated_option1" id="semi_automated_option1">
-                <label class="form-check-label" for="semi_automated_option1">Option 1</label>
+                <input checked type="checkbox" class="form-check-input" name="semi_automated_option_duplicates" id="semi_automated_option_duplicates">
+                <label class="form-check-label" for="semi_automated_option_duplicates">Remove duplicates</label>
             </div>
             <div class="form-check col-auto mt-1">
-                <input checked type="checkbox" class="form-check-input" name="semi_automated_option2" id="semi_automated_option2">
-                <label class="form-check-label" for="semi_automated_option2">Option 2</label>
+                <input checked type="checkbox" class="form-check-input" name="semi_automated_option_missing_num" id="semi_automated_option_missing_num">
+                <label class="form-check-label" for="semi_automated_option_missing_num">Impute missing numbers</label>
             </div>
             <div class="form-check col-auto mt-1">
-                <input checked type="checkbox" class="form-check-input" name="semi_automated_option3" id="semi_automated_option3">
-                <label class="form-check-label" for="semi_automated_option3">Option 3</label>
+                <input checked type="checkbox" class="form-check-input" name="semi_automated_option_missing_categ" id="semi_automated_option_missing_categ">
+                <label class="form-check-label" for="semi_automated_option_missing_categ">Impute missing categories (and text)</label>
+            </div>
+            <div class="form-check col-auto mt-1">
+                <input checked type="checkbox" class="form-check-input" name="semi_automated_option_encode_categ" id="semi_automated_option_encode_categ">
+                <label class="form-check-label" for="semi_automated_option_encode_categ">Encode categories (and text)</label>
+            </div>
+            <div class="form-check col-auto mt-1">
+                <input checked type="checkbox" class="form-check-input" name="semi_automated_option_extract_datetime" id="semi_automated_option_extract_datetime">
+                <label class="form-check-label" for="semi_automated_option_extract_datetime">Extract dates</label>
+            </div>
+            <div class="form-check col-auto mt-1">
+                <input checked type="checkbox" class="form-check-input" name="semi_automated_option_outliers" id="semi_automated_option_outliers">
+                <label class="form-check-label" for="semi_automated_option_outliers">Handle outliers</label>
             </div>
             <button type="submit" class="btn btn-info mt-3" name="submit_semi_automated_prepare_preview" value="true">Semi automatically prepare (preview)</button>
             <button type="submit" class="btn btn-warning mt-3" name="submit_semi_automated_prepare" value="true">Semi automatically prepare</button>

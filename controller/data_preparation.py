@@ -291,12 +291,18 @@ def automatic_preparation():
                 is_preview = "submit_automatically_prepare_preview" in request.form
                 automatically_prepare_active_df(is_preview)
             elif (
-                "submit_extract_dates_preview" in request.form
-                or "submit_extract_dates" in request.form
+                "submit_semi_automated_prepare_preview" in request.form
+                or "submit_semi_automated_prepare" in request.form
             ):
-                is_preview = "submit_extract_dates_preview" in request.form
-                extract_dates_and_add(
-                    is_preview, "remove_old_column_dates" in request.form
+                is_preview = "submit_semi_automated_prepare_preview" in request.form
+                automatically_prepare_active_df(
+                    is_preview,
+                    "semi_automated_option_duplicates" in request.form,
+                    "semi_automated_option_missing_num" in request.form,
+                    "semi_automated_option_missing_categ" in request.form,
+                    "semi_automated_option_encode_categ" in request.form,
+                    "semi_automated_option_extract_datetime" in request.form,
+                    "semi_automated_option_outliers" in request.form,
                 )
             else:
                 flash(
