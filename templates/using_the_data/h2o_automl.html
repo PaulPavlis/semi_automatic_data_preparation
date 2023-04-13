@@ -1,0 +1,18 @@
+{% extends "base_template.html" %}
+
+{% block title %}Data selection - Select dataset as active{% endblock %}
+{% block main_content %}
+
+<form action="#" method="POST">
+    <label class="form-check-label" for="column_to_predict">Column to predict:</label>
+    <select class="form-select" name="column_to_predict">
+        <option selected value="None">None</option>
+        {% for column_name in additional_args[0] %}
+            <option {% if column_name == request.form["column_to_predict"] %}selected{% endif %} value="{{column_name}}">{{column_name}}</option>
+        {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary mt-3" name="submit_predict_using_h2o">Predict using h2o</button>
+</form>
+
+
+{% endblock %}

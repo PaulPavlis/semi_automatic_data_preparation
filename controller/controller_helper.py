@@ -5,6 +5,9 @@ import yaml
 
 from AutoClean import AutoClean
 
+import h2o
+from h2o.automl import H2OAutoML
+
 
 def get_controller_general_template_with_args(
     template_name="index.html",
@@ -23,6 +26,14 @@ def get_controller_general_template_with_args(
         else "No active dataframe selected. Please choose one under data_selection --> select_dataset_as_active",
         additional_args=additional_args,
     )
+
+
+def get_all_datasets():
+    return [
+        f
+        for f in os.listdir(current_app.config["UPLOAD_FOLDER"])
+        if os.path.isfile(os.path.join(current_app.config["UPLOAD_FOLDER"], f))
+    ]
 
 
 def get_active_dataset_name():
@@ -1077,3 +1088,44 @@ def return_df_AutoClean_outliers(df, selected_mode):
         return df
 
     # print(df_prepared)
+
+
+def generate_h2o_model(column_name_to_predict):
+    # Start the H2O cluster (locally)
+    h2o.init()
+
+    # Import a sample binary outcome train/test set into H2O
+    train = h2o.import_file(
+        "https://s3.amazonaws.com/erin-data/higgs/higgs_train_10k.csv"
+    )
+    test = h2o.import_file("https://s3.amazonaws.com/erin-data/higgs/higgs_test_5k.csv")
+
+    # Identify predictors and response
+    x = train.columns
+    y = "response"
+    x.remove(y)
+
+    # For binary classification, response should be a factor
+    train[y] = train[y].asfactor()
+    test[y] = test[y].asfactor()
+
+    # Run AutoML for 20 base models
+    aml = H2OAutoML(max_models=5, seed=1)
+    aml.train(x=x, y=y, training_frame=train)
+
+    # save the model
+    model_path = h2o.save_model(
+        model=aml.leader, path=current_app.config["STORED_ML_MODELS_FOLDER"], force=True
+    )
+    print(str(model_path))
+
+    # download the model built above to your local machine
+    my_local_model = h2o.download_model(
+        aml.leader, path="E:\OneDrive\Dokumente\FH-Technikum\Masterarbeit"
+    )
+
+    # View the AutoML Leaderboard
+    lb = aml.leaderboard
+    print(lb.head(rows=lb.nrows))  # Print all rows instead of default (10 rows)
+
+    return None

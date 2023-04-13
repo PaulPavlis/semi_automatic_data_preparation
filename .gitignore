@@ -3,6 +3,7 @@
 *.json
 *.yaml
 *.mp4
+stored_user_files/saved_models/*
 
 # Created by https://www.toptal.com/developers/gitignore/api/python,flask,git,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,flask,git,visualstudiocode

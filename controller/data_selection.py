@@ -6,6 +6,7 @@ from controller.controller_helper import (
     create_or_modify_user_config_file,
     get_user_file_config_name,
     create_config_dict,
+    get_all_datasets,
 )
 import pandas as pd
 import os
@@ -177,14 +178,6 @@ def delete_dataset_with_name(delete_dataset_name):
                     f"Successfully removed the {config_file_name} config file.",
                     "success",
                 )
-
-
-def get_all_datasets():
-    return [
-        f
-        for f in os.listdir(current_app.config["UPLOAD_FOLDER"])
-        if os.path.isfile(os.path.join(current_app.config["UPLOAD_FOLDER"], f))
-    ]
 
 
 def add_new_file(request):

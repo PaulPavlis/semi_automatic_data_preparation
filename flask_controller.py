@@ -25,6 +25,7 @@ ACTIVE_DATASET_FOLDER = os.path.join(UPLOAD_FOLDER, "active_dataset")
 ACTIVE_DATASET_TRANSFORMED_FOLDER = os.path.join(
     UPLOAD_FOLDER, "active_dataset_prepared"
 )
+STORED_ML_MODELS_FOLDER = os.path.join(UPLOAD_FOLDER, "saved_models")
 USER_FILE_CONFIGS = os.path.join(UPLOAD_FOLDER, "user_file_configs")
 USER_FILE_CONFIGS_OPTIONS = [
     "has_header",
@@ -39,6 +40,7 @@ Path(UPLOAD_FOLDER).mkdir(parents=True, exist_ok=True)
 Path(ACTIVE_DATASET_FOLDER).mkdir(parents=True, exist_ok=True)
 Path(ACTIVE_DATASET_TRANSFORMED_FOLDER).mkdir(parents=True, exist_ok=True)
 Path(USER_FILE_CONFIGS).mkdir(parents=True, exist_ok=True)
+Path(STORED_ML_MODELS_FOLDER).mkdir(parents=True, exist_ok=True)
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["ALLOWED_EXTENSIONS"] = ALLOWED_EXTENSIONS
@@ -46,6 +48,7 @@ app.config["ACTIVE_DATASET_FOLDER"] = ACTIVE_DATASET_FOLDER
 app.config["ACTIVE_DATASET_TRANSFORMED_FOLDER"] = ACTIVE_DATASET_TRANSFORMED_FOLDER
 app.config["USER_FILE_CONFIGS"] = USER_FILE_CONFIGS
 app.config["USER_FILE_CONFIGS_OPTIONS"] = USER_FILE_CONFIGS_OPTIONS
+app.config["STORED_ML_MODELS_FOLDER"] = STORED_ML_MODELS_FOLDER
 
 
 @app.route("/")
