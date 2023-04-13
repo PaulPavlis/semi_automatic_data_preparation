@@ -7,6 +7,8 @@ from controller.controller_helper import (
     get_user_file_config_name,
     create_config_dict,
     get_all_datasets,
+    get_active_dataset_list,
+    set_active_file,
 )
 import pandas as pd
 import os
@@ -109,38 +111,6 @@ def delete_all_active_files():
         os.remove(
             os.path.join(current_app.config["ACTIVE_DATASET_FOLDER"], active_dataset)
         )
-
-
-def get_active_dataset_list():
-    return [
-        f
-        for f in os.listdir(current_app.config["ACTIVE_DATASET_FOLDER"])
-        if os.path.isfile(os.path.join(current_app.config["ACTIVE_DATASET_FOLDER"], f))
-    ]
-
-
-def set_active_file(new_active_dataset_name):
-    active_dataset_list = get_active_dataset_list()
-
-    for active_dataset in active_dataset_list:
-        shutil.move(
-            os.path.join(current_app.config["ACTIVE_DATASET_FOLDER"], active_dataset),
-            os.path.join(current_app.config["UPLOAD_FOLDER"], active_dataset),
-        )
-
-    # Move new active dataset to active folder
-    if new_active_dataset_name:
-        shutil.copyfile(
-            os.path.join(current_app.config["UPLOAD_FOLDER"], new_active_dataset_name),
-            os.path.join(
-                current_app.config["ACTIVE_DATASET_FOLDER"], new_active_dataset_name
-            ),
-        )
-
-    flash(
-        f"Successfully set {new_active_dataset_name} as the active dataset.",
-        "success",
-    )
 
 
 def delete_dataset_with_name(delete_dataset_name):

@@ -5,6 +5,8 @@ from controller.controller_helper import (
     get_all_datasets,
     get_active_dataframe_prepared,
     generate_h2o_model,
+    get_all_ml_models,
+    download_file,
 )
 
 using_the_data = Blueprint(
@@ -60,6 +62,40 @@ def h2o_automl():
 
         return get_controller_specific_template_with_args(
             "h2o_automl.html", h2o_automl.__name__, get_active_dataframe_prepared()
+        )
+    else:
+        return "Use get or post to request this page"
+
+
+@using_the_data.route("/output_to_file", methods=["POST", "GET"])
+def output_to_file():
+    if request.method == "GET" or request.method == "POST":
+        if request.method == "POST":
+            if (
+                "submit_export_file" in request.form
+                and "file_to_export" in request.form
+                and request.form["file_to_export"] != "None"
+            ):
+                return download_file(request.form["file_to_export"], "dataset")
+                # print(request.form["file_to_export"])
+            elif (
+                "submit_ml_model_to_export" in request.form
+                and "ml_model_to_export" in request.form
+                and request.form["ml_model_to_export"] != "None"
+            ):
+                # print(request.form["ml_model_to_export"])
+                return download_file(request.form["ml_model_to_export"], "ml_model")
+            else:
+                flash(
+                    "Please choose a file or machine learning model.",
+                    "info",
+                )
+
+        return get_controller_specific_template_with_args(
+            "output_to_file.html",
+            output_to_file.__name__,
+            get_all_datasets(),
+            get_all_ml_models(),
         )
     else:
         return "Use get or post to request this page"

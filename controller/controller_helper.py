@@ -1,7 +1,8 @@
-from flask import render_template, current_app, redirect, url_for, flash
+from flask import render_template, current_app, redirect, url_for, flash, send_file
 import os
 import pandas as pd
 import yaml
+import shutil
 
 from AutoClean import AutoClean
 
@@ -34,6 +35,49 @@ def get_all_datasets():
         for f in os.listdir(current_app.config["UPLOAD_FOLDER"])
         if os.path.isfile(os.path.join(current_app.config["UPLOAD_FOLDER"], f))
     ]
+
+
+def get_all_ml_models():
+    return [
+        f
+        for f in os.listdir(current_app.config["STORED_ML_MODELS_FOLDER"])
+        if os.path.isfile(
+            os.path.join(current_app.config["STORED_ML_MODELS_FOLDER"], f)
+        )
+    ]
+
+
+def get_active_dataset_list():
+    return [
+        f
+        for f in os.listdir(current_app.config["ACTIVE_DATASET_FOLDER"])
+        if os.path.isfile(os.path.join(current_app.config["ACTIVE_DATASET_FOLDER"], f))
+    ]
+
+
+def set_active_file(new_active_dataset_name, omit_flash_message=False):
+    active_dataset_list = get_active_dataset_list()
+
+    for active_dataset in active_dataset_list:
+        shutil.move(
+            os.path.join(current_app.config["ACTIVE_DATASET_FOLDER"], active_dataset),
+            os.path.join(current_app.config["UPLOAD_FOLDER"], active_dataset),
+        )
+
+    # Move new active dataset to active folder
+    if new_active_dataset_name:
+        shutil.copyfile(
+            os.path.join(current_app.config["UPLOAD_FOLDER"], new_active_dataset_name),
+            os.path.join(
+                current_app.config["ACTIVE_DATASET_FOLDER"], new_active_dataset_name
+            ),
+        )
+
+    if not omit_flash_message:
+        flash(
+            f"Successfully set {new_active_dataset_name} as the active dataset.",
+            "success",
+        )
 
 
 def get_active_dataset_name():
@@ -1117,15 +1161,37 @@ def generate_h2o_model(column_name_to_predict):
     model_path = h2o.save_model(
         model=aml.leader, path=current_app.config["STORED_ML_MODELS_FOLDER"], force=True
     )
+
     print(str(model_path))
 
-    # download the model built above to your local machine
-    my_local_model = h2o.download_model(
-        aml.leader, path="E:\OneDrive\Dokumente\FH-Technikum\Masterarbeit"
-    )
+    # # download the model built above to your local machine
+    # my_local_model = h2o.download_model(
+    #     aml.leader, path="E:\OneDrive\Dokumente\FH-Technikum\Masterarbeit"
+    # )
 
     # View the AutoML Leaderboard
     lb = aml.leaderboard
     print(lb.head(rows=lb.nrows))  # Print all rows instead of default (10 rows)
 
     return None
+
+
+def download_file(file_name, type_of_file):
+    # This is done so that if the user wants to export the active file,
+    # it will always get updated in the normal upload directory (not effifcient, but works)
+    set_active_file(get_active_dataset_name(), omit_flash_message=True)
+
+    folder_name = ""
+    if type_of_file == "dataset":
+        folder_name = current_app.config["UPLOAD_FOLDER"]
+    elif type_of_file == "ml_model":
+        folder_name = current_app.config["STORED_ML_MODELS_FOLDER"]
+    else:
+        flash("No suitable type_of_file option given for downloading files", "warning")
+        return None
+
+    full_path = os.path.join(current_app.root_path, folder_name, file_name)
+    print(full_path)
+
+    flash("File was sent to your browser", "success")
+    return send_file(full_path, as_attachment=True)
