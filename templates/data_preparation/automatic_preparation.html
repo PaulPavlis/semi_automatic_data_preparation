@@ -1,0 +1,47 @@
+{% extends "base_template.html" %}
+
+{% block title %}Data preparation - Automatic preparation{% endblock %}
+{% block main_content %}
+
+<!-- My js for display_table -->
+{#
+<script src="{{ url_for('static', filename='js/manual_repairing.js')}}" type="text/javascript"></script> #}
+
+<form action="#" method="POST" class="mb-3">
+    <div class="row mb-3 g-3">
+        <div class="col-6">
+            <h3>Fully automated data preparation approach:</h3>
+            <div class="mt-1">
+                <label class="form-label">This automatically prepares, selects and uses data preparation techniques on its own:</label>
+            </div>
+            <button type="submit" class="btn btn-info mt-3" name="submit_automatically_prepare_preview" value="true">Automatically prepare (preview)</button>
+            <button type="submit" class="btn btn-warning mt-3" name="submit_automatically_prepare" value="true">Automatically prepare</button>
+        </div>
+        <div class="col-6">
+            <h3>Semi automated data preparation approach:</h3>
+            <div class="form-check col-auto mt-1">
+                <input checked type="checkbox" class="form-check-input" name="semi_automated_option1" id="semi_automated_option1">
+                <label class="form-check-label" for="semi_automated_option1">Option 1</label>
+            </div>
+            <div class="form-check col-auto mt-1">
+                <input checked type="checkbox" class="form-check-input" name="semi_automated_option2" id="semi_automated_option2">
+                <label class="form-check-label" for="semi_automated_option2">Option 2</label>
+            </div>
+            <div class="form-check col-auto mt-1">
+                <input checked type="checkbox" class="form-check-input" name="semi_automated_option3" id="semi_automated_option3">
+                <label class="form-check-label" for="semi_automated_option3">Option 3</label>
+            </div>
+            <button type="submit" class="btn btn-info mt-3" name="submit_semi_automated_prepare_preview" value="true">Semi automatically prepare (preview)</button>
+            <button type="submit" class="btn btn-warning mt-3" name="submit_semi_automated_prepare" value="true">Semi automatically prepare</button>
+        </div>
+
+    </div>
+</form>
+
+{% if additional_args[1] %}
+    <div id="get_prepared_table" style="visibility: hidden;"></div>
+{% endif %}
+
+{% include "table_display_include.html" %}
+
+{% endblock %}

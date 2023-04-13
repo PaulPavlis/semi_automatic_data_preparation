@@ -932,3 +932,139 @@ def return_automatically_removed_outliers_df():
         df_prepared = df_prepared.reset_index()
 
     return df_prepared
+
+
+def automatically_prepare_active_df(
+    is_preview,
+    duplicates=True,
+    missing_num=True,
+    missing_categ=True,
+    encode_categ=True,
+    extract_datetime=True,
+    outliers=True,
+):
+    df_prepared = get_active_dataframe(reset_index=False)
+
+    if duplicates:
+        df_prepared = return_df_AutoClean_duplicates(df_prepared, "auto")
+    if missing_num:
+        df_prepared = return_df_AutoClean_missing_num(df_prepared, "auto")
+    if missing_categ:
+        df_prepared = return_df_AutoClean_missing_categ(df_prepared, "auto")
+    if encode_categ:
+        df_prepared = return_df_AutoClean_encode_categ(df_prepared, "auto")
+    if extract_datetime:
+        df_prepared = return_df_AutoClean_extract_datetime(df_prepared, "auto")
+    if outliers:
+        df_prepared = return_df_AutoClean_outliers(df_prepared, "auto")
+
+    if get_active_user_file_config()["has_index"]["value"] == True:
+        df_prepared = df_prepared.reset_index()
+
+    if is_preview:
+        create_or_modify_active_prepared_file(df_prepared)
+        flash(
+            f"Automatically prepared df (preview) succesfully.",
+            "success",
+        )
+    else:
+        create_or_modify_active_file(df_prepared)
+        flash(
+            f"Automatically prepared df succesfully.",
+            "success",
+        )
+
+
+def return_df_AutoClean(autoclean_pipeline):
+    df_prepared = autoclean_pipeline.output
+
+    if get_active_user_file_config()["has_index"]["value"] == True:
+        # print(df_prepared)
+        df_prepared = df_prepared.reset_index()
+        df_prepared = df_prepared.set_index("index")
+
+    return df_prepared
+
+
+def return_df_AutoClean_duplicates(df, selected_mode):
+    df_prepared = return_df_AutoClean(
+        AutoClean(df, mode="manual", duplicates=selected_mode)
+    )
+
+    flash(
+        f"Removed {df.shape[0] - df_prepared.shape[0]} duplicates succesfully.",
+        "success",
+    )
+
+    return df_prepared
+
+
+def return_df_AutoClean_missing_num(df, selected_mode):
+    df_prepared = return_df_AutoClean(
+        AutoClean(df, mode="manual", missing_num=selected_mode)
+    )
+
+    flash(
+        f"Imputed missing numbers.",
+        "success",
+    )
+
+    return df_prepared
+
+
+def return_df_AutoClean_missing_categ(df, selected_mode):
+    df_prepared = return_df_AutoClean(
+        AutoClean(df, mode="manual", missing_categ=selected_mode)
+    )
+
+    flash(
+        f"Imputed missing categories (and text).",
+        "success",
+    )
+
+    return df_prepared
+
+
+def return_df_AutoClean_encode_categ(df, selected_mode):
+    df_prepared = return_df_AutoClean(
+        AutoClean(df, mode="manual", encode_categ=selected_mode)
+    )
+
+    flash(
+        f"Encoded categories (and text).",
+        "success",
+    )
+
+    return df_prepared
+
+
+def return_df_AutoClean_extract_datetime(df, selected_mode):
+    df_prepared = return_df_AutoClean(
+        AutoClean(df, mode="manual", extract_datetime=selected_mode)
+    )
+
+    flash(
+        f"Extracted dates.",
+        "success",
+    )
+
+    return df_prepared
+
+
+def return_df_AutoClean_outliers(df, selected_mode):
+    # this is needed so that the AutoClean outliers detection can handle values moved to .5
+    for column_name in df.select_dtypes(include=["Int64"]):
+        df[column_name] = df[column_name].astype("Float64")
+
+    df_prepared = return_df_AutoClean(
+        AutoClean(df, mode="manual", outliers=selected_mode)
+    )
+
+    # print(df_prepared)
+
+    flash(
+        f"Dealt with outliers.",
+        "success",
+    )
+
+    return df_prepared

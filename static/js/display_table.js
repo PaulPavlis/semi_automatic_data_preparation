@@ -30,6 +30,7 @@ $(document).ready(function () {
         $("#data").DataTable({
             ajax: "/return_active_ajax_data/" + get_prepared_df,
             columns: table_keys_dict,
+            scrollX: true,
         });
     });
 });

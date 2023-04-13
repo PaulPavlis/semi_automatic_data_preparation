@@ -31,6 +31,7 @@ from controller.controller_helper import (
     get_active_dataframe_prepared_formatted,
     extract_dates_and_add,
     return_automatically_removed_outliers_df,
+    automatically_prepare_active_df,
 )
 import numpy as np
 import plotly
@@ -56,7 +57,7 @@ method_preparation_list = [
     "filtering",
     "missing_values",
     "encoding_extracting_duplicates",
-    "automatic_detection",
+    "automatic_preparation",
     # "anomaly_detection",
     # "normalisation",
 ]
@@ -273,12 +274,45 @@ def filtering():
         return "Use get or post to request this page"
 
 
-@data_preparation.route("/automatic_detection", methods=["POST", "GET"])
-def automatic_detection():
-    return get_controller_specific_template_with_args(
-        "index_data_preparation.html",
-        automatic_detection.__name__,
-    )
+@data_preparation.route("/automatic_preparation", methods=["POST", "GET"])
+def automatic_preparation():
+    if not check_if_active_dataset_is_set():
+        return send_user_to_set_active_dataset()
+
+    if request.method == "GET" or request.method == "POST":
+        is_preview = False
+        if request.method == "POST":
+            print(request.form)
+
+            if (
+                "submit_automatically_prepare_preview" in request.form
+                or "submit_automatically_prepare" in request.form
+            ):
+                is_preview = "submit_automatically_prepare_preview" in request.form
+                automatically_prepare_active_df(is_preview)
+            elif (
+                "submit_extract_dates_preview" in request.form
+                or "submit_extract_dates" in request.form
+            ):
+                is_preview = "submit_extract_dates_preview" in request.form
+                extract_dates_and_add(
+                    is_preview, "remove_old_column_dates" in request.form
+                )
+            else:
+                flash(
+                    f"No viable submit option given.",
+                    "warning",
+                )
+        return get_controller_specific_template_with_args(
+            "automatic_preparation.html",
+            automatic_preparation.__name__,
+            get_active_dataframe_prepared_formatted()
+            if is_preview
+            else get_active_dataframe_formatted(),
+            is_preview,
+        )
+    else:
+        return "Use get or post to request this page"
 
 
 @data_preparation.route("/adapt_file_configs", methods=["POST", "GET"])
