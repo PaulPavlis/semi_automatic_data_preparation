@@ -6,16 +6,19 @@
 <!-- My js for display_table -->
 {#
 <script src="{{ url_for('static', filename='js/manual_repairing.js')}}" type="text/javascript"></script> #}
+<label class="form-check-label mb-4 bg-info text-black">manual_repairing, transposing, capping and filtering require domain knowledge and can be semi-automatically done on their respective page.</label>
 
 <form action="#" method="POST" class="mb-3">
     <div class="row mb-3 g-3">
-        <div class="col-6">
+        <div class="col-6 row">
             <h3>Fully automated data preparation approach:</h3>
             <div class="mt-1">
                 <label class="form-label">This automatically prepares, selects and uses data preparation techniques on its own:</label>
             </div>
-            <button type="submit" class="btn btn-info mt-3" name="submit_automatically_prepare_preview" value="true">Automatically prepare (preview)</button>
-            <button type="submit" class="btn btn-warning mt-3" name="submit_automatically_prepare" value="true">Automatically prepare</button>
+            <div class="col-12">
+                <button type="submit" class="btn btn-info mt-3 col-6" name="submit_automatically_prepare_preview" value="true">Automatically prepare (preview)</button>
+                <button type="submit" class="btn btn-warning mt-3 col-5" name="submit_automatically_prepare" value="true">Automatically prepare</button>
+            </div>
         </div>
         <div class="col-6 row">
             <h3>Semi automated data preparation approach:</h3>
@@ -52,7 +55,7 @@
     </div>
 </form>
 
-<label class="form-check-label mb-2 text-info">Depending on your data, it might be beneficial to run the algorithm two times: If you still see 'None' values (missing values) than the algorthm did not catch them. Try re-running it.</label>
+<label class="form-check-label mb-2 text-warning">Depending on your data, it might be beneficial to run the algorithm two times: If you still see 'None' values (missing values) than the algorthm did not catch them. Try re-running it.</label>
 
 
 {% if additional_args[1] %}
