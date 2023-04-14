@@ -1168,8 +1168,8 @@ def generate_h2o_model_instance(column_name_to_predict):
     # This also removes all the features that got encoded from it
     x = [value for value in x if not value.startswith(column_name_to_predict)]
 
-    print(x)
-    print(y)
+    # print(x)
+    # print(y)
 
     train, test, valid = df_h2o.split_frame(ratios=[0.7, 0.15])
 
@@ -1188,8 +1188,8 @@ def generate_h2o_model_instance(column_name_to_predict):
     # Run AutoML for 20 base models
     aml = H2OAutoML(max_models=20, seed=420)
 
-    print(train[x])
-    print(train[y])
+    # print(train[x])
+    # print(train[y])
 
     # aml.train(x=x, y=y, training_frame=train, validation_frame=valid)
     aml.train(x=x, y=y, training_frame=train)
@@ -1221,10 +1221,11 @@ def generate_h2o_model_instance(column_name_to_predict):
     print(best_model.model_performance(test))
     # print(aml.explain(frame=test, figsize=(8, 6)))
     # print(best_model.explain(frame=test, figsize=(8, 6)))
-    print(best_model.varimp_plot())
-    print(best_model.learning_curve_plot())
-    print(h2o.explain(best_model, frame=df_h2o, include_explanations="confusion_matrix"))
-    print(h2o.explain(best_model, frame=df_h2o, include_explanations="residual_analysis"))
+    
+    # print(best_model.varimp_plot())
+    # print(best_model.learning_curve_plot())
+    # print(h2o.explain(best_model, frame=df_h2o, include_explanations="confusion_matrix"))
+    # print(h2o.explain(best_model, frame=df_h2o, include_explanations="residual_analysis"))
 
     return None
 
