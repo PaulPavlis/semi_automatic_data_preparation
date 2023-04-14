@@ -4,6 +4,7 @@ import pandas as pd
 import yaml
 import shutil
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 
 from AutoClean import AutoClean
 
@@ -1139,39 +1140,69 @@ executor = ThreadPoolExecutor()
 
 
 def generate_h2o_model(column_name_to_predict):
-    executor.submit(generate_h2o_model_instance(column_name_to_predict))
+    # executor.submit(generate_h2o_model_instance(column_name_to_predict))
+    generate_h2o_model_instance(column_name_to_predict)
     # return None
 
 
 def generate_h2o_model_instance(column_name_to_predict):
-    # Start the H2O cluster (locally)
+    # # Start the H2O cluster (locally)
+    start_date = datetime.now()
     h2o.init()
 
-    # Import a sample binary outcome train/test set into H2O
-    train = h2o.import_file(
-        "https://s3.amazonaws.com/erin-data/higgs/higgs_train_10k.csv"
-    )
-    test = h2o.import_file("https://s3.amazonaws.com/erin-data/higgs/higgs_test_5k.csv")
+    # # Import a sample binary outcome train/test set into H2O
+    # train = h2o.import_file(
+    #     "https://s3.amazonaws.com/erin-data/higgs/higgs_train_10k.csv"
+    # )
+    # test = h2o.import_file("https://s3.amazonaws.com/erin-data/higgs/higgs_test_5k.csv")
+
+    df = get_active_dataframe()
+
+    df_h2o = h2o.H2OFrame(df)
 
     # Identify predictors and response
-    x = train.columns
-    y = "response"
-    x.remove(y)
+    x = list(df.columns)
+    y = column_name_to_predict
+    # x.remove(y)
 
-    # For binary classification, response should be a factor
-    train[y] = train[y].asfactor()
-    test[y] = test[y].asfactor()
+    # This also removes all the features that got encoded from it
+    x = [value for value in x if not value.startswith(column_name_to_predict)]
+
+    print(x)
+    print(y)
+
+    train, test, valid = df_h2o.split_frame(ratios=[0.7, 0.15])
+
+    config_dict = get_active_user_file_config()
+
+    if ("column_types" in config_dict
+        and column_name_to_predict in config_dict["column_types"]
+        and (config_dict["column_types"][column_name_to_predict] == "category" 
+             or config_dict["column_types"][column_name_to_predict] == "string")):
+        print("Category or text used to predict.")
+        # For binary classification, response should be a factor
+        train[y] = train[y].asfactor()
+        test[y] = test[y].asfactor()
+        valid[y] = valid[y].asfactor()
 
     # Run AutoML for 20 base models
-    aml = H2OAutoML(max_models=5, seed=1)
+    aml = H2OAutoML(max_models=20, seed=420)
+
+    print(train[x])
+    print(train[y])
+
+    # aml.train(x=x, y=y, training_frame=train, validation_frame=valid)
     aml.train(x=x, y=y, training_frame=train)
 
+    best_model = aml.leader
+    
     # save the model
     model_path = h2o.save_model(
-        model=aml.leader, path=current_app.config["STORED_ML_MODELS_FOLDER"], force=True
+        model=best_model, path=current_app.config["STORED_ML_MODELS_FOLDER"], force=True
     )
 
-    print(str(model_path))
+    path = os.path.dirname(os.path.abspath(model_path))
+    os.rename(model_path, os.path.join(path,f'{start_date.year:04d}{start_date.month:02d}{start_date.day:02d}_colum_{column_name_to_predict}_for_{get_filename_without_extension(get_active_dataset_name())}'))
 
     # # download the model built above to your local machine
     # my_local_model = h2o.download_model(
@@ -1181,11 +1212,19 @@ def generate_h2o_model_instance(column_name_to_predict):
     # View the AutoML Leaderboard
     lb = aml.leaderboard
     print(lb.head(rows=lb.nrows))  # Print all rows instead of default (10 rows)
-    
-    # flash(
-    #     "Model creation was successful and the ML model can now be used.",
-    #     "success",
-    # )
+
+    print("Model creation was successful and the ML model can now be used.")
+
+    test_predict = best_model.predict(test)
+
+    print(test_predict.head())
+    print(best_model.model_performance(test))
+    # print(aml.explain(frame=test, figsize=(8, 6)))
+    # print(best_model.explain(frame=test, figsize=(8, 6)))
+    print(best_model.varimp_plot())
+    print(best_model.learning_curve_plot())
+    print(h2o.explain(best_model, frame=df_h2o, include_explanations="confusion_matrix"))
+    print(h2o.explain(best_model, frame=df_h2o, include_explanations="residual_analysis"))
 
     return None
 
