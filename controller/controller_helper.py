@@ -1146,6 +1146,7 @@ def generate_h2o_model(column_name_to_predict):
 
 
 def generate_h2o_model_instance(column_name_to_predict):
+    
     # # Start the H2O cluster (locally)
     start_date = datetime.now()
     h2o.init()
@@ -1159,6 +1160,8 @@ def generate_h2o_model_instance(column_name_to_predict):
     # test = h2o.import_file("https://s3.amazonaws.com/erin-data/higgs/higgs_test_5k.csv")
 
     df = get_active_dataframe()
+
+    df = df.drop(['generated_index'], axis=1, errors='ignore')
 
     df_h2o = h2o.H2OFrame(df)
     print("h2o df transformed")
@@ -1189,8 +1192,12 @@ def generate_h2o_model_instance(column_name_to_predict):
         test[y] = test[y].asfactor()
         valid[y] = valid[y].asfactor()
 
+    # Save the test file for the other page where statistics are displayed.
+    new_ml_model_name = f'{start_date.year:04d}{start_date.month:02d}{start_date.day:02d}_{start_date.hour:02d}{start_date.minute:02d}{start_date.second:02d}_colum_{column_name_to_predict}_for_{get_filename_without_extension(get_active_dataset_name())}'
+    h2o.export_file(test, path=os.path.join(current_app.config["STORED_ML_TEST_DATA_FOLDER"], f"{new_ml_model_name}.csv",), force=True, sep=config_dict["file_separator"]["value"], header=config_dict["has_header"]["value"], format="csv")
+
     # Run AutoML for 20 base models
-    aml = H2OAutoML(max_models=20, seed=420)
+    aml = H2OAutoML(max_models=5, seed=420)
     print("H2o AutoMl Model created. Starting to train:")
 
     # print(train[x])
@@ -1209,7 +1216,7 @@ def generate_h2o_model_instance(column_name_to_predict):
     )
 
     path = os.path.dirname(os.path.abspath(model_path))
-    os.rename(model_path, os.path.join(path,f'{start_date.year:04d}{start_date.month:02d}{start_date.day:02d}_{start_date.hour:02d}{start_date.minute:02d}{start_date.second:02d}_colum_{column_name_to_predict}_for_{get_filename_without_extension(get_active_dataset_name())}'))
+    os.rename(model_path, os.path.join(path, new_ml_model_name))
     print("Saved model to server")
 
     # # download the model built above to your local machine

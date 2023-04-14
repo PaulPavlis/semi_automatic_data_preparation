@@ -106,21 +106,22 @@ def output_to_file():
 def make_predictions():
     if request.method == "GET" or request.method == "POST":
         if request.method == "POST":
-            if (
-                "submit_predict_using_h2o" in request.form
-                and "column_to_predict" in request.form
-                and request.form["column_to_predict"] != "None"
-            ):
-                # print(request.form["column_to_predict"])
-                print(generate_h2o_model(request.form["column_to_predict"]))
-            else:
-                flash(
-                    "Please choose a dataset and a column to predict to use this functionality",
-                    "info",
-                )
+            print("nothing")
+            # if (
+            #     "submit_predict_using_h2o" in request.form
+            #     and "column_to_predict" in request.form
+            #     and request.form["column_to_predict"] != "None"
+            # ):
+            #     # print(request.form["column_to_predict"])
+            #     print(generate_h2o_model(request.form["column_to_predict"]))
+            # else:
+            #     flash(
+            #         "Please choose a dataset and a column to predict to use this functionality",
+            #         "info",
+            #     )
 
         return get_controller_specific_template_with_args(
-            "make_predictions.html", h2o_automl.__name__, get_all_ml_models()
+            "make_predictions.html", make_predictions.__name__, get_all_ml_models()
         )
     else:
         return "Use get or post to request this page"
