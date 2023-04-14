@@ -3,7 +3,7 @@ from controller.controller_helper import (
     get_controller_general_template_with_args,
     get_controller_filename,
     get_all_datasets,
-    get_active_dataframe_prepared,
+    get_active_dataframe_formatted,
     generate_h2o_model,
     get_all_ml_models,
     download_file,
@@ -61,7 +61,7 @@ def h2o_automl():
                 )
 
         return get_controller_specific_template_with_args(
-            "h2o_automl.html", h2o_automl.__name__, get_active_dataframe_prepared()
+            "h2o_automl.html", h2o_automl.__name__, get_active_dataframe_formatted()
         )
     else:
         return "Use get or post to request this page"
