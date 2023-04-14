@@ -1150,6 +1150,8 @@ def generate_h2o_model_instance(column_name_to_predict):
     start_date = datetime.now()
     h2o.init()
 
+    print("h2o instance started")
+
     # # Import a sample binary outcome train/test set into H2O
     # train = h2o.import_file(
     #     "https://s3.amazonaws.com/erin-data/higgs/higgs_train_10k.csv"
@@ -1159,6 +1161,7 @@ def generate_h2o_model_instance(column_name_to_predict):
     df = get_active_dataframe()
 
     df_h2o = h2o.H2OFrame(df)
+    print("h2o df transformed")
 
     # Identify predictors and response
     x = list(df.columns)
@@ -1172,6 +1175,7 @@ def generate_h2o_model_instance(column_name_to_predict):
     # print(y)
 
     train, test, valid = df_h2o.split_frame(ratios=[0.7, 0.15])
+    print("Train/Test/Validation split done")
 
     config_dict = get_active_user_file_config()
 
@@ -1187,14 +1191,17 @@ def generate_h2o_model_instance(column_name_to_predict):
 
     # Run AutoML for 20 base models
     aml = H2OAutoML(max_models=20, seed=420)
+    print("H2o AutoMl Model created. Starting to train:")
 
     # print(train[x])
     # print(train[y])
 
     # aml.train(x=x, y=y, training_frame=train, validation_frame=valid)
     aml.train(x=x, y=y, training_frame=train)
+    print("H2o Model training completed")
 
     best_model = aml.leader
+    print("Extracted best model")
     
     # save the model
     model_path = h2o.save_model(
@@ -1202,7 +1209,8 @@ def generate_h2o_model_instance(column_name_to_predict):
     )
 
     path = os.path.dirname(os.path.abspath(model_path))
-    os.rename(model_path, os.path.join(path,f'{start_date.year:04d}{start_date.month:02d}{start_date.day:02d}_colum_{column_name_to_predict}_for_{get_filename_without_extension(get_active_dataset_name())}'))
+    os.rename(model_path, os.path.join(path,f'{start_date.year:04d}{start_date.month:02d}{start_date.day:02d}_{start_date.hour:02d}{start_date.minute:02d}{start_date.second:02d}_colum_{column_name_to_predict}_for_{get_filename_without_extension(get_active_dataset_name())}'))
+    print("Saved model to server")
 
     # # download the model built above to your local machine
     # my_local_model = h2o.download_model(
@@ -1210,10 +1218,28 @@ def generate_h2o_model_instance(column_name_to_predict):
     # )
 
     # View the AutoML Leaderboard
+    print("")
+    print("")
+    print("----------------------------------------")
+    print("")
+    print("")
+    print("statistics:")
+    print("")
+    print("")
+    print("----------------------------------------")
+    print("")
+    print("")
     lb = aml.leaderboard
     print(lb.head(rows=lb.nrows))  # Print all rows instead of default (10 rows)
 
+    print("")
+    print("")
     print("Model creation was successful and the ML model can now be used.")
+    print("")
+    print("")
+    print("----------------------------------------")
+    print("")
+    print("")
 
     test_predict = best_model.predict(test)
 
@@ -1221,7 +1247,7 @@ def generate_h2o_model_instance(column_name_to_predict):
     print(best_model.model_performance(test))
     # print(aml.explain(frame=test, figsize=(8, 6)))
     # print(best_model.explain(frame=test, figsize=(8, 6)))
-    
+
     # print(best_model.varimp_plot())
     # print(best_model.learning_curve_plot())
     # print(h2o.explain(best_model, frame=df_h2o, include_explanations="confusion_matrix"))
