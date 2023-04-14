@@ -19,6 +19,7 @@ using_the_data = Blueprint(
 method_usage_list = [
     "output_to_file",
     "h2o_automl",
+    "model_insights",
     "make_predictions",
 ]
 
@@ -120,6 +121,39 @@ def make_predictions():
 
         return get_controller_specific_template_with_args(
             "make_predictions.html", h2o_automl.__name__, get_all_ml_models()
+        )
+    else:
+        return "Use get or post to request this page"
+
+
+@using_the_data.route("/model_insights", methods=["POST", "GET"])
+def model_insights():
+    if request.method == "GET" or request.method == "POST":
+        if request.method == "POST":
+            if (
+                "submit_export_file" in request.form
+                and "file_to_export" in request.form
+                and request.form["file_to_export"] != "None"
+            ):
+                return download_file(request.form["file_to_export"], "dataset")
+                # print(request.form["file_to_export"])
+            elif (
+                "submit_ml_model_to_export" in request.form
+                and "ml_model_to_export" in request.form
+                and request.form["ml_model_to_export"] != "None"
+            ):
+                # print(request.form["ml_model_to_export"])
+                return download_file(request.form["ml_model_to_export"], "ml_model")
+            else:
+                flash(
+                    "Please choose a file or machine learning model.",
+                    "info",
+                )
+
+        return get_controller_specific_template_with_args(
+            "model_insights.html",
+            model_insights.__name__,
+            get_all_ml_models(),
         )
     else:
         return "Use get or post to request this page"

@@ -3,11 +3,10 @@
 {% block title %}Using the data - Output to file{% endblock %}
 {% block main_content %}
 
-Not in V1 of the prototype. If requested, predictions could be made here then.
-
-{# <form action="#" method="POST">
+model_insights
+<form action="#" method="POST">
     <div class="row">
-        <div class="col-6">
+        {# <div class="col-6">
             <label class="form-check-label" for="file_to_export">Loaded file to export:</label>
             <select class="form-select" name="file_to_export">
                 <option selected value="None">None</option>
@@ -16,7 +15,7 @@ Not in V1 of the prototype. If requested, predictions could be made here then.
                 {% endfor %}
             </select>
             <button type="submit" class="btn btn-primary mt-3" name="submit_export_file">Download file</button>
-        </div>
+        </div> #}
         <div class="col-6">
             <label class="form-check-label" for="ml_model_to_export">Choose ML model to download:</label>
             <select class="form-select" name="ml_model_to_export">
@@ -28,7 +27,8 @@ Not in V1 of the prototype. If requested, predictions could be made here then.
             <button type="submit" class="btn btn-primary mt-3" name="submit_ml_model_to_export">Download ML model</button>
         </div>
     </div>
-</form> #}
+</form>
+
 
 
 {% endblock %}
