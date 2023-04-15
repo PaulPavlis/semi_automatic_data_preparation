@@ -169,7 +169,7 @@ def model_insights():
 
                     print(confusion_matrix_df)
 
-                    output = confusion_matrix
+                    output = confusion_matrix_df
                 else: 
                     flash("Model category of the trained model not currently supported nicely.", "info")
                     flash(str(model_statistics), "info")
