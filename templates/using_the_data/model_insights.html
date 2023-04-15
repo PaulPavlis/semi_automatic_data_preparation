@@ -31,9 +31,39 @@
 {% endif %}
 
 {% if additional_args[1] == "category" %}
-    plot confusion matrix: 
-    {{additional_args[0]}}
-    {% include "table_display_include.html" %}
+    <!-- My css for display_table -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/display_table.css')}}" />
+    
+    <p class="text-start">This table is the confusion matrix (Represents the prediction summary in matrix form) - It show how many predictions are correct and incorrect per class:</p>
+    <p class="text-start">The first column and row create a matrix with all the classes. Reading the table per row: It shows the values of the actual class (row - first column '-'') and as to what it was predicted (column name)</p>
+    <p class="text-start">The last row shows the sum oper column. The column Error shows the amount of errors that were made in the classification. The smaller the better. The column Rate shows the Error rate: [errors made] / [predictions made]</p>
+    <p class="text-start">The value on the bottom right shows the total error rate. The lower this number, the better. If you want the accuracy, just subtract this number from 1 (and in percent). e.g. 3/7 --> 1 - 3/7 = 4/7 --> 4/7 * 100 =~ 57% accuracy</p>
+    
+    <table id="data" class="table table-dark table-striped display_table">
+        <thead>
+            <tr>
+                {% for column_name in additional_args[0][0].keys() %}
+                <th>{{column_name}}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in additional_args[0] %}
+            <tr>
+                {% for column_name in entry %}
+                <td>{{ entry[column_name] }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        // Display tables functionality
+        $(document).ready(function () {
+            $(".display_table").DataTable();
+        });
+    </script>
 {% endif %}
 
 

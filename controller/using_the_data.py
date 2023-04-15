@@ -151,10 +151,8 @@ def model_insights():
                     output = [model_statistics["MSE"], model_statistics["mae"], model_statistics["r2"]]
                 elif model_statistics["model_category"] == "Multinomial" or model_statistics["model_category"] == "Binomial":
                     model_type = "category"
-                    print("categorical. Accuracy: ")
-                    # print(model_statistics[""])
-                    print(confusion_matrix)
-                    print(type(confusion_matrix))
+                    # print(confusion_matrix)
+                    # print(type(confusion_matrix))
                     # print(confusion_matrix.to_list())
 
                     confusion_matrix_df = confusion_matrix.as_data_frame()
@@ -165,9 +163,9 @@ def model_insights():
                     first_col.remove("Error")
                     first_col.remove("Rate")
                     first_col.append("Sum")
-                    confusion_matrix_df.insert(loc=0, column="Feature Names", value=first_col)
+                    confusion_matrix_df.insert(loc=0, column="-", value=first_col)
 
-                    # print(confusion_matrix_df)
+                    print(confusion_matrix_df)
 
                     output = confusion_matrix_df.to_dict("records")
                 else: 
