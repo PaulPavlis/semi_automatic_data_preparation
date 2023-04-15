@@ -3,31 +3,38 @@
 {% block title %}Using the data - Output to file{% endblock %}
 {% block main_content %}
 
-model_insights
 <form action="#" method="POST">
     <div class="row">
-        {# <div class="col-6">
-            <label class="form-check-label" for="file_to_export">Loaded file to export:</label>
-            <select class="form-select" name="file_to_export">
-                <option selected value="None">None</option>
-                {% for file in additional_args[0] %}
-                    <option value="{{file}}">{{file}}</option>
-                {% endfor %}
-            </select>
-            <button type="submit" class="btn btn-primary mt-3" name="submit_export_file">Download file</button>
-        </div> #}
         <div class="col-6">
-            <label class="form-check-label" for="ml_model_to_export">Choose ML model to download:</label>
-            <select class="form-select" name="ml_model_to_export">
+            <label class="form-check-label" for="ml_model_for_statistics">Choose ML model to get statistics:</label>
+            <select class="form-select" name="ml_model_for_statistics">
                 <option selected value="None">None</option>
-                {% for ml_model in additional_args[1] %}
+                {% for ml_model in additional_args[2] %}
                     <option value="{{ml_model}}">{{ml_model}}</option>
                 {% endfor %}
             </select>
-            <button type="submit" class="btn btn-primary mt-3" name="submit_ml_model_to_export">Download ML model</button>
+            <button type="submit" class="btn btn-primary mt-3" name="submit_ml_model_for_statistics">Get statistics</button>
         </div>
     </div>
 </form>
+
+<br>
+<br>
+
+{% if additional_args[1] == "regression" %}
+    <p class="text-start">MSE (Average of All squared errors) - The lower this number is, the better your model is:</p>
+    <p class="text-start bg-info text-black">{{additional_args[0][0]}}</p>
+    <p class="text-start">MAE (Average of All absolute errors) - The lower this number is, the better your model is. It is is the same unit and scale as your dataset:</p>
+    <p class="text-start bg-info text-black">{{additional_args[0][1]}}</p>
+    <p class="text-start">R2 (Variance in the predictions) - Is a value between 0 and 1. A value of 1 meens, that the model is perfect and a value of 0 means that the model will perform badly on an unseen dataset:</p>
+    <p class="text-start bg-info text-black">{{additional_args[0][2]}}</p>
+{% endif %}
+
+{% if additional_args[1] == "category" %}
+    plot confusion matrix: 
+    {{additional_args[0]}}
+    {% include "table_display_include.html" %}
+{% endif %}
 
 
 

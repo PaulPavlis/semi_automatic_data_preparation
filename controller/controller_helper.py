@@ -1193,8 +1193,9 @@ def generate_h2o_model_instance(column_name_to_predict):
         valid[y] = valid[y].asfactor()
 
     # Save the test file for the other page where statistics are displayed.
-    new_ml_model_name = f'{start_date.year:04d}{start_date.month:02d}{start_date.day:02d}_{start_date.hour:02d}{start_date.minute:02d}{start_date.second:02d}_colum_{column_name_to_predict}_for_{get_filename_without_extension(get_active_dataset_name())}'
-    h2o.export_file(test, path=os.path.join(current_app.config["STORED_ML_TEST_DATA_FOLDER"], f"{new_ml_model_name}.csv",), force=True, sep=config_dict["file_separator"]["value"], header=config_dict["has_header"]["value"], format="csv")
+    new_ml_model_name = f'{start_date.year:04d}{start_date.month:02d}{start_date.day:02d}_{start_date.hour:02d}{start_date.minute:02d}{start_date.second:02d}_predict_{column_name_to_predict}_for_{get_filename_without_extension(get_active_dataset_name())}'
+    # h2o.export_file(test, path=os.path.join(current_app.config["STORED_ML_TEST_DATA_FOLDER"], f"{new_ml_model_name}.csv",), force=True, sep=config_dict["file_separator"]["value"], header=config_dict["has_header"]["value"], format="csv")
+    h2o.export_file(test, path=os.path.join(current_app.config["STORED_ML_TEST_DATA_FOLDER"], f"{new_ml_model_name}.csv",), force=True, format="csv")
 
     # Run AutoML for 20 base models
     aml = H2OAutoML(max_models=5, seed=420)
@@ -1282,3 +1283,51 @@ def download_file(file_name, type_of_file):
 
     # flash("File was sent to your browser", "success")
     return send_file(full_path, as_attachment=True)
+
+def get_model_statistics(ml_model_name):
+
+    h2o.init()
+
+    ml_model_path = os.path.join(current_app.root_path, current_app.config["STORED_ML_MODELS_FOLDER"], ml_model_name)
+    test_data_path = os.path.join(current_app.root_path, current_app.config["STORED_ML_TEST_DATA_FOLDER"], f"{ml_model_name}.csv")
+
+    ml_model = h2o.load_model(ml_model_path)
+    test_data = h2o.import_file(test_data_path)
+
+    # print("")
+    # print("")
+    # print("")
+    # print(f"{test_data=}")
+    # print("")
+    # print("")
+    # print("")
+    # print(f"{ml_model=}")
+    # print("")
+    # print("")
+    # print("")
+    # test_predict = ml_model.predict(test_data)
+
+    # print(test_predict.head())
+    # print("")
+    # print("")
+    # print("")
+    # print(ml_model.model_performance(test_data))
+    # print("")
+    # print("")
+    # print("")
+    model_performance = ml_model.model_performance(test_data)
+
+    # print(model_performance.rmse())
+    # print("")
+    # print("")
+    # print("")
+
+    confusion_matrix = None
+    if model_performance._metric_json["model_category"] == "Multinomial" or model_performance._metric_json["model_category"] == "Binomial":
+        confusion_matrix = ml_model.confusion_matrix(test_data)
+        # print(ml_model.confusion_matrix(test_data))
+        # print("")
+        # print("")
+        # print("")
+    
+    return [model_performance._metric_json, confusion_matrix]

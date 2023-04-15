@@ -7,6 +7,7 @@ from controller.controller_helper import (
     generate_h2o_model,
     get_all_ml_models,
     download_file,
+    get_model_statistics
 )
 
 using_the_data = Blueprint(
@@ -130,31 +131,60 @@ def make_predictions():
 @using_the_data.route("/model_insights", methods=["POST", "GET"])
 def model_insights():
     if request.method == "GET" or request.method == "POST":
+        model_type = ""
+        output = ""
         if request.method == "POST":
             if (
-                "submit_export_file" in request.form
-                and "file_to_export" in request.form
-                and request.form["file_to_export"] != "None"
+                "submit_ml_model_for_statistics" in request.form
+                and "ml_model_for_statistics" in request.form
+                and request.form["ml_model_for_statistics"] != "None"
             ):
-                return download_file(request.form["file_to_export"], "dataset")
+                model_statistics, confusion_matrix = get_model_statistics(request.form["ml_model_for_statistics"])
+
+                # print(type(model_statistics))
+                print(model_statistics)
+
+                if model_statistics["model_category"] == "Regression":
+                    model_type = "regression"
+                    # print("regression. MAE: ")
+                    # print(model_statistics["mae"])
+                    output = [model_statistics["MSE"], model_statistics["mae"], model_statistics["r2"]]
+                elif model_statistics["model_category"] == "Multinomial" or model_statistics["model_category"] == "Binomial":
+                    model_type = "category"
+                    print("categorical. Accuracy: ")
+                    # print(model_statistics[""])
+                    print(confusion_matrix)
+                    print(type(confusion_matrix))
+                    # print(confusion_matrix.to_list())
+
+                    confusion_matrix_df = confusion_matrix.as_data_frame()
+                    # print(confusion_matrix_df.transpose().reset_index())
+
+                    print(confusion_matrix_df)
+                    first_col = confusion_matrix_df.transpose().reset_index()["index"].tolist()
+                    first_col.remove("Error")
+                    first_col.remove("Rate")
+                    first_col.append("Sum")
+                    confusion_matrix_df.insert(loc=0, column="Feature Names", value=first_col)
+
+                    print(confusion_matrix_df)
+
+                    output = confusion_matrix
+                else: 
+                    flash("Model category of the trained model not currently supported nicely.", "info")
+                    flash(str(model_statistics), "info")
+
                 # print(request.form["file_to_export"])
-            elif (
-                "submit_ml_model_to_export" in request.form
-                and "ml_model_to_export" in request.form
-                and request.form["ml_model_to_export"] != "None"
-            ):
-                # print(request.form["ml_model_to_export"])
-                return download_file(request.form["ml_model_to_export"], "ml_model")
             else:
                 flash(
-                    "Please choose a file or machine learning model.",
+                    "Please choose a machine learning model.",
                     "info",
                 )
 
         return get_controller_specific_template_with_args(
             "model_insights.html",
             model_insights.__name__,
-            get_all_ml_models(),
+            output, model_type, get_all_ml_models()
         )
     else:
         return "Use get or post to request this page"
