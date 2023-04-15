@@ -22,6 +22,7 @@
 <br>
 
 {% if additional_args[1] == "regression" %}
+    <h3>This is a reggresion machine learning model</h3>
     <p class="text-start">MSE (Average of All squared errors) - The lower this number is, the better your model is:</p>
     <p class="text-start bg-info text-black">{{additional_args[0][0]}}</p>
     <p class="text-start">MAE (Average of All absolute errors) - The lower this number is, the better your model is. It is is the same unit and scale as your dataset:</p>
@@ -31,12 +32,13 @@
 {% endif %}
 
 {% if additional_args[1] == "category" %}
+    <h3>This is a classification machine learning model</h3>
     <!-- My css for display_table -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/display_table.css')}}" />
     
     <p class="text-start">This table is the confusion matrix (Represents the prediction summary in matrix form) - It show how many predictions are correct and incorrect per class:</p>
     <p class="text-start">The first column and row create a matrix with all the classes. Reading the table per row: It shows the values of the actual class (row - first column '-'') and as to what it was predicted (column name)</p>
-    <p class="text-start">The last row shows the sum oper column. The column Error shows the amount of errors that were made in the classification. The smaller the better. The column Rate shows the Error rate: [errors made] / [predictions made]</p>
+    <p class="text-start">The last row shows the sum per column. The column Error shows the amount of errors that were made in the classification. The smaller the better. The column Rate shows the Error rate: [errors made] / [predictions made]</p>
     <p class="text-start">The value on the bottom right shows the total error rate. The lower this number, the better. If you want the accuracy, just subtract this number from 1 (and in percent). e.g. 3/7 --> 1 - 3/7 = 4/7 --> 4/7 * 100 =~ 57% accuracy</p>
     
     <table id="data" class="table table-dark table-striped display_table">
