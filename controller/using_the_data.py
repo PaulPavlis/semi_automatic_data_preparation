@@ -160,16 +160,16 @@ def model_insights():
                     confusion_matrix_df = confusion_matrix.as_data_frame()
                     # print(confusion_matrix_df.transpose().reset_index())
 
-                    print(confusion_matrix_df)
+                    # print(confusion_matrix_df)
                     first_col = confusion_matrix_df.transpose().reset_index()["index"].tolist()
                     first_col.remove("Error")
                     first_col.remove("Rate")
                     first_col.append("Sum")
                     confusion_matrix_df.insert(loc=0, column="Feature Names", value=first_col)
 
-                    print(confusion_matrix_df)
+                    # print(confusion_matrix_df)
 
-                    output = confusion_matrix_df
+                    output = confusion_matrix_df.to_dict("records")
                 else: 
                     flash("Model category of the trained model not currently supported nicely.", "info")
                     flash(str(model_statistics), "info")
