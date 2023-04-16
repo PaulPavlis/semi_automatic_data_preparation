@@ -9,6 +9,7 @@ from controller.controller_helper import (
     download_file,
     get_model_statistics
 )
+import unicodedata
 
 using_the_data = Blueprint(
     "using_the_data",
@@ -142,18 +143,30 @@ def model_insights():
                 model_statistics, confusion_matrix = get_model_statistics(request.form["ml_model_for_statistics"])
 
                 # print(type(model_statistics))
-                print(model_statistics)
+                # print(model_statistics)
 
                 if model_statistics["model_category"] == "Regression":
                     model_type = "regression"
                     # print("regression. MAE: ")
                     # print(model_statistics["mae"])
                     output = [model_statistics["MSE"], model_statistics["mae"], model_statistics["r2"]]
-                elif model_statistics["model_category"] == "Multinomial" or model_statistics["model_category"] == "Binomial":
-                    model_type = "category"
-                    # print(confusion_matrix)
-                    # print(type(confusion_matrix))
-                    # print(confusion_matrix.to_list())
+                elif model_statistics["model_category"] == "Multinomial":
+                    model_type = "multinomial"
+                    # # print(confusion_matrix)
+                    # # print(type(confusion_matrix))
+
+                    # object_methods = [method_name for method_name in dir(confusion_matrix)
+                    #               if callable(getattr(confusion_matrix, method_name))]
+                    # print("")
+                    # print("")
+                    # print("")
+                    # print(object_methods)
+                    # print("")
+                    # print("")
+                    # print("")
+                    # print(model_statistics["model_category"])
+                    # print(confusion_matrix.as_data_frame())
+
 
                     confusion_matrix_df = confusion_matrix.as_data_frame()
                     # print(confusion_matrix_df.transpose().reset_index())
@@ -165,9 +178,20 @@ def model_insights():
                     first_col.append("Sum")
                     confusion_matrix_df.insert(loc=0, column="-", value=first_col)
 
-                    print(confusion_matrix_df)
 
-                    output = confusion_matrix_df.to_dict("records")
+                    last_row_column_value = confusion_matrix_df['Rate'].values[-1]
+
+                    print(last_row_column_value)
+                    total_errors = unicodedata.normalize("NFKD", last_row_column_value.split("/")[0]).replace(" ", "").strip()
+                    total_evaluations = unicodedata.normalize("NFKD", last_row_column_value.split("/")[1]).replace(" ", "").strip()
+                    print(total_errors)
+                    print(total_evaluations)
+
+                    output = [confusion_matrix_df.to_dict("records"), (1 - (float(total_errors) / float(total_evaluations))) * 100]
+
+                elif model_statistics["model_category"] == "Binomial":
+                    model_type = "binomial"
+                    output = confusion_matrix.to_html()
                 else: 
                     flash("Model category of the trained model not currently supported nicely.", "info")
                     flash(str(model_statistics), "info")

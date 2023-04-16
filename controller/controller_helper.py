@@ -5,6 +5,7 @@ import yaml
 import shutil
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
+from sklearn.model_selection import train_test_split
 
 from AutoClean import AutoClean
 
@@ -1163,8 +1164,10 @@ def generate_h2o_model_instance(column_name_to_predict):
 
     df = df.drop(['generated_index'], axis=1, errors='ignore')
 
-    df_h2o = h2o.H2OFrame(df)
-    print("h2o df transformed")
+    train_pd, test_pd = train_test_split(df, test_size=0.2)
+
+    # df_h2o = h2o.H2OFrame(df)
+    # print("h2o df transformed")
 
     # Identify predictors and response
     x = list(df.columns)
@@ -1177,7 +1180,10 @@ def generate_h2o_model_instance(column_name_to_predict):
     # print(x)
     # print(y)
 
-    train, test, valid = df_h2o.split_frame(ratios=[0.7, 0.15])
+    # train, test, valid = df_h2o.split_frame(ratios=[0.7, 0.15])
+    train = h2o.H2OFrame(train_pd)
+    test = h2o.H2OFrame(test_pd)
+
     print("Train/Test/Validation split done")
 
     config_dict = get_active_user_file_config()
@@ -1190,15 +1196,27 @@ def generate_h2o_model_instance(column_name_to_predict):
         # For binary classification, response should be a factor
         train[y] = train[y].asfactor()
         test[y] = test[y].asfactor()
-        valid[y] = valid[y].asfactor()
+        # valid[y] = valid[y].asfactor()
 
     # Save the test file for the other page where statistics are displayed.
     new_ml_model_name = f'{start_date.year:04d}{start_date.month:02d}{start_date.day:02d}_{start_date.hour:02d}{start_date.minute:02d}{start_date.second:02d}_predict_{column_name_to_predict}_for_{get_filename_without_extension(get_active_dataset_name())}'
     # h2o.export_file(test, path=os.path.join(current_app.config["STORED_ML_TEST_DATA_FOLDER"], f"{new_ml_model_name}.csv",), force=True, sep=config_dict["file_separator"]["value"], header=config_dict["has_header"]["value"], format="csv")
-    h2o.export_file(test, path=os.path.join(current_app.config["STORED_ML_TEST_DATA_FOLDER"], f"{new_ml_model_name}.csv",), force=True, format="csv")
+    # h2o.export_file(test, path=os.path.join(current_app.config["STORED_ML_TEST_DATA_FOLDER"], f"{new_ml_model_name}.csv",), force=True, format="csv")
+    
+    test_pd.to_csv(
+        os.path.join(
+            current_app.config["STORED_ML_TEST_DATA_FOLDER"],
+            f"{new_ml_model_name}.csv"
+        ),
+        encoding="latin1",
+        index=False,
+        # sep=config_dict["file_separator"]["value"],
+        # header=config_dict["has_header"]["value"],
+    )
 
     # Run AutoML for 20 base models
-    aml = H2OAutoML(max_models=5, seed=420)
+    # aml = H2OAutoML(max_models=2, seed=420)
+    aml = H2OAutoML(seed=420)
     print("H2o AutoMl Model created. Starting to train:")
 
     # print(train[x])
@@ -1292,7 +1310,13 @@ def get_model_statistics(ml_model_name):
     test_data_path = os.path.join(current_app.root_path, current_app.config["STORED_ML_TEST_DATA_FOLDER"], f"{ml_model_name}.csv")
 
     ml_model = h2o.load_model(ml_model_path)
-    test_data = h2o.import_file(test_data_path)
+
+    test_data_pd = pd.read_csv(os.path.join(current_app.root_path, current_app.config["STORED_ML_TEST_DATA_FOLDER"], f"{ml_model_name}.csv"))
+
+    # print(test_data_pd)
+
+    # test_data = h2o.import_file(test_data_path)
+    test_data = h2o.H2OFrame(test_data_pd)
 
     # print("")
     # print("")
@@ -1317,14 +1341,29 @@ def get_model_statistics(ml_model_name):
     # print("")
     model_performance = ml_model.model_performance(test_data)
 
+    # object_methods = [method_name for method_name in dir(model_performance.confusion_matrix())
+    #               if callable(getattr(model_performance.confusion_matrix(), method_name))]
+    # print("")
+    # print("")
+    # print("")
+    # print(object_methods)
+    # print("")
+    # print("")
+    # print("")
+
     # print(model_performance.rmse())
+    # print("")
+    # print("")
+    # print("")
+    # print(model_performance.confusion_matrix())
     # print("")
     # print("")
     # print("")
 
     confusion_matrix = None
     if model_performance._metric_json["model_category"] == "Multinomial" or model_performance._metric_json["model_category"] == "Binomial":
-        confusion_matrix = ml_model.confusion_matrix(test_data)
+        # confusion_matrix = ml_model.confusion_matrix(test_data)
+        confusion_matrix = model_performance.confusion_matrix()
         # print(ml_model.confusion_matrix(test_data))
         # print("")
         # print("")
