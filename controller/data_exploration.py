@@ -57,7 +57,7 @@ def general_overview():
             .reset_index()
             .rename(columns={"index": "Type"})
         )
-        active_dataframe_description.fillna("-", inplace=True)
+        # active_dataframe_description.fillna("", inplace=True)
 
         # add the column type (categorical, numeric, ...) as a row to the df
         # for index in range(active_dataframe_description.shape[1]):
