@@ -149,7 +149,7 @@ def model_insights():
                     model_type = "regression"
                     # print("regression. MAE: ")
                     # print(model_statistics["mae"])
-                    output = ["%.2f" % round(model_statistics["MSE"], 2), "%.2f" % round(model_statistics["mae"], 2), "%.2f" % round(model_statistics["r2"], 6)]
+                    output = ["%.2f" % round(model_statistics["MSE"], 2), "%.2f" % round(model_statistics["mae"], 2), "%.6f" % round(model_statistics["r2"], 6)]
                 elif model_statistics["model_category"] == "Multinomial":
                     model_type = "multinomial"
                     # # print(confusion_matrix)
