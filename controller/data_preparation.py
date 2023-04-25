@@ -485,8 +485,8 @@ def capping():
                         prepared_df[column_prepare] > upper_limit, upper_limit
                     )
                 elif capping_type == "remove":
-                    prepared_df = prepared_df[prepared_df[column_prepare] > lower_limit]
-                    prepared_df = prepared_df[prepared_df[column_prepare] < upper_limit]
+                    prepared_df = prepared_df[prepared_df[column_prepare] >= lower_limit]
+                    prepared_df = prepared_df[prepared_df[column_prepare] <= upper_limit]
                 else:
                     flash(
                         f"Capping type option was not recognised. Nothing was done.",

@@ -594,7 +594,7 @@ def remove_column_from_active_df(column_name):
         if get_active_user_file_config()["has_index"]["value"] == True:
             df_prepared = df_prepared.reset_index()
         create_or_modify_active_file(df_prepared)
-        flash("Removed row from df successfully", "success")
+        flash("Removed column from df successfully", "success")
         return None
     except Exception as e:
         print(f"Error message: {e}")
@@ -871,7 +871,7 @@ def one_hot_encode_column(column_name, is_preview, remove_old_column):
 
         for df_column_name in df_prepared:
             if column_name in df_column_name and column_name != df_column_name:
-                config_dict["column_types"][df_column_name] = "Int64"
+                config_dict["column_types"][df_column_name] = "category"
 
         if is_preview:
             create_or_modify_active_prepared_file(df_prepared)
@@ -1215,8 +1215,8 @@ def generate_h2o_model_instance(column_name_to_predict):
     )
 
     # Run AutoML for 20 base models
-    # aml = H2OAutoML(max_models=2, seed=420)
-    aml = H2OAutoML(seed=420)
+    aml = H2OAutoML(max_models=10, seed=420)
+    # aml = H2OAutoML(seed=420)
     print("H2o AutoMl Model created. Starting to train:")
 
     # print(train[x])
