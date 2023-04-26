@@ -1313,6 +1313,11 @@ def get_model_statistics(ml_model_name):
 
     test_data_pd = pd.read_csv(os.path.join(current_app.root_path, current_app.config["STORED_ML_TEST_DATA_FOLDER"], f"{ml_model_name}.csv"))
 
+    feature_to_predict_name = str(ml_model_name).split("predict_")[1].split("_for")[0]
+    print(f"{feature_to_predict_name=}")
+
+    test_data_pd = test_data_pd[test_data_pd.columns.drop(list(test_data_pd.filter(regex=f"{feature_to_predict_name}_")))]
+
     # print(test_data_pd)
 
     # test_data = h2o.import_file(test_data_path)
