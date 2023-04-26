@@ -15,8 +15,8 @@ df = df.sample(frac=0.1, random_state=42)
 # Try not to overload participants with too many columns
 df = df.drop(columns=["arrival_date_week_number", "arrival_date_year", "arrival_date_month", "arrival_date_day_of_month", "is_canceled", "reserved_room_type", "assigned_room_type", "booking_changes", "required_car_parking_spaces", "total_of_special_requests"])
 
-# Clarify abbreviation
-df.rename(columns={"adr": "average_daily_rate"}, inplace=True)
+# # Clarify abbreviation
+# df.rename(columns={"adr": "average_daily_rate"}, inplace=True)
 
 # Generate unclean data additionally to unclean data present
 for index, row in df.iterrows():
