@@ -948,6 +948,8 @@ def extract_dates_and_add(is_preview, remove_old_column):
 def remove_complete_duplicates(is_preview):
     active_df = get_active_dataframe(reset_index=False)
 
+    active_df = active_df.drop(['generated_index'], axis=1, errors='ignore')
+
     df_pipeline = AutoClean(
         active_df,
         mode="manual",
