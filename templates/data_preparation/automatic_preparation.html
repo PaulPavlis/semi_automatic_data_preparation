@@ -6,8 +6,10 @@
 <!-- My js for display_table -->
 {#
 <script src="{{ url_for('static', filename='js/manual_repairing.js')}}" type="text/javascript"></script> #}
+  <button type="button" class="btn btn-secondary m-2 mb-4" data-bs-toggle="tooltip" data-bs-placement="left" title="Data capping aims to remove or replace outliers (speak, values that are nonsensical or completly out of range) as to improve data quality. Outliers can happen due to technical or human errors and faulty data should be dealt with. This method only works with numerical data (you can change the type of a column in manual_repairing). Select a column and you should see a violin plot that shows you the distribution density on top and the individual entries as dots at the bottom. With this plus your domain knowledge you should gauge what a suitable range for your values is. E.g. if you are looking at adults staying in a hotel room, values from 0-5 may sound fine, but values like 20 are probably errors and should be handled. Choose upper and lower limits and wheter you like to delete the rows outside of it or replace it with the limit value. Then click on preview. You can now see on the left side the original distribution and on the right side the newly generated preview. Now you can adapt the values or make it permament by clicking on the corresponding button.">
+    What am I suppposed to do here?
+  </button>
 <label class="form-check-label mb-3 bg-info text-black">manual_repairing, transposing, capping and filtering require domain knowledge and can be semi-automatically done on their respective page.</label>
-
 <form action="#" method="POST" class="mb-3">
     <div class="row mb-3 g-3">
         <div class="col-6 row">
