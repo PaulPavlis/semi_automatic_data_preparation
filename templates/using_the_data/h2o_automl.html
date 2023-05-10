@@ -4,19 +4,39 @@
 {% block main_content %}
 
 <form action="#" method="POST" id="h2o_form">
-    <label class="form-check-label" for="column_to_predict">Column to predict:</label>
-    <select class="form-select" name="column_to_predict">
-        <option selected value="None">None</option>
-        {% for column_name in additional_args[0] %}
-            <option {% if column_name == request.form["column_to_predict"] %}selected{% endif %} value="{{column_name}}">{{column_name}}</option>
-        {% endfor %}
-    </select>
-    <button type="submit" class="btn btn-primary mt-3" name="submit_predict_using_h2o">Predict using h2o</button>
+    <div class="row">
+        <div class="col-6 mt-1">
+            <label class="form-check-label mb-1" for="column_to_predict">Column to predict:</label>
+            <select class="form-select" name="column_to_predict">
+                <option selected value="None">None</option>
+                {% for column_name in additional_args[0] %}
+                <option {% if column_name==request.form["column_to_predict"] %}selected{% endif %}
+                    value="{{column_name}}">{{column_name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-5">
+            <label for="max_runtime_limit" class="form-label">Maximum runtime in minutes (plus startup cost: ~1
+                minute)</label>
+            <input type="number" class="form-control" name="max_runtime_limit" id="max_runtime_limit" value="30">
+        </div>
+    </div>
+    <div class="row m-1 mt-3">
+        <button type="button" class="btn btn-secondary m-2 col-3" data-bs-toggle="tooltip" data-bs-placement="left"
+            title="Data capping aims to remove or replace outliers (speak, values that are nonsensical or completly out of range) as to improve data quality. Outliers can happen due to technical or human errors and faulty data should be dealt with. This method only works with numerical data (you can change the type of a column in manual_repairing). Select a column and you should see a violin plot that shows you the distribution density on top and the individual entries as dots at the bottom. With this plus your domain knowledge you should gauge what a suitable range for your values is. E.g. if you are looking at adults staying in a hotel room, values from 0-5 may sound fine, but values like 20 are probably errors and should be handled. Choose upper and lower limits and wheter you like to delete the rows outside of it or replace it with the limit value. Then click on preview. You can now see on the left side the original distribution and on the right side the newly generated preview. Now you can adapt the values or make it permament by clicking on the corresponding button.">
+            What am I suppposed to do here?
+        </button>
+        <button type="submit" class="btn btn-primary m-2 col-3" name="submit_predict_using_h2o">Predict using h2o</button>
+        <div class="form-check col-auto col-5 m-3">
+            <input type="checkbox" name="use_stored_model" id="use_stored_model" class="form-check-input">
+            <label class="form-check-label" for="use_stored_model">Use original dataset (not the active one - useful for comparisons)</label>
+        </div>
+    </div>
 </form>
 
 <script>
-    $("#h2o_form").submit(function( event ) {
-        setTimeout(function() {
+    $("#h2o_form").submit(function (event) {
+        setTimeout(function () {
             alert("Creation of ml model was started in the background. Depending on your data and the settings this can take minutes to hours. You do not have to stay on this site for it to work (altough the app might be slower due to the training of multiple ml models)")
         }, 3000)
     })

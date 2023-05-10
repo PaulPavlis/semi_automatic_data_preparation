@@ -1142,14 +1142,16 @@ def return_df_AutoClean_outliers(df, selected_mode):
 executor = ThreadPoolExecutor()
 
 
-def generate_h2o_model(column_name_to_predict):
+def generate_h2o_model(column_name_to_predict, max_runtime_limit, use_stored_model):
     # executor.submit(generate_h2o_model_instance(column_name_to_predict))
-    generate_h2o_model_instance(column_name_to_predict)
+    generate_h2o_model_instance(column_name_to_predict, max_runtime_limit, use_stored_model)
     # return None
 
 
-def generate_h2o_model_instance(column_name_to_predict):
+def generate_h2o_model_instance(column_name_to_predict, max_runtime_limit, use_stored_model):
     
+    print(f"max_runtime_limit = {max_runtime_limit}")
+
     # # Start the H2O cluster (locally)
     start_date = datetime.now()
     h2o.init()
@@ -1162,7 +1164,11 @@ def generate_h2o_model_instance(column_name_to_predict):
     # )
     # test = h2o.import_file("https://s3.amazonaws.com/erin-data/higgs/higgs_test_5k.csv")
 
-    df = get_active_dataframe()
+    if use_stored_model:
+        # was not implemented due to time constraints
+        df = get_active_dataframe()
+    else:
+        df = get_active_dataframe()
 
     df = df.drop(['generated_index'], axis=1, errors='ignore')
 
@@ -1201,7 +1207,7 @@ def generate_h2o_model_instance(column_name_to_predict):
         # valid[y] = valid[y].asfactor()
 
     # Save the test file for the other page where statistics are displayed.
-    new_ml_model_name = f'{start_date.year:04d}{start_date.month:02d}{start_date.day:02d}_{start_date.hour:02d}{start_date.minute:02d}{start_date.second:02d}_predict_{column_name_to_predict}_for_{get_filename_without_extension(get_active_dataset_name())}'
+    new_ml_model_name = f'{start_date.year:04d}{start_date.month:02d}{start_date.day:02d}_{start_date.hour:02d}{start_date.minute:02d}{start_date.second:02d}_predict_{column_name_to_predict}_for_{get_filename_without_extension(get_active_dataset_name())}_max_time_{max_runtime_limit}'
     # h2o.export_file(test, path=os.path.join(current_app.config["STORED_ML_TEST_DATA_FOLDER"], f"{new_ml_model_name}.csv",), force=True, sep=config_dict["file_separator"]["value"], header=config_dict["has_header"]["value"], format="csv")
     # h2o.export_file(test, path=os.path.join(current_app.config["STORED_ML_TEST_DATA_FOLDER"], f"{new_ml_model_name}.csv",), force=True, format="csv")
     
@@ -1217,7 +1223,7 @@ def generate_h2o_model_instance(column_name_to_predict):
     )
 
     # Run AutoML for 20 base models
-    aml = H2OAutoML(max_models=10, seed=420)
+    aml = H2OAutoML(seed=420, max_runtime_secs=max_runtime_limit*60)
     # aml = H2OAutoML(seed=420)
     print("H2o AutoMl Model created. Starting to train:")
 

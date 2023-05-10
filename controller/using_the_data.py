@@ -54,9 +54,11 @@ def h2o_automl():
                 "submit_predict_using_h2o" in request.form
                 and "column_to_predict" in request.form
                 and request.form["column_to_predict"] != "None"
+                and "max_runtime_limit" in request.form
+                and int(request.form["max_runtime_limit"]) > 0 
             ):
                 # print(request.form["column_to_predict"])
-                print(generate_h2o_model(request.form["column_to_predict"]))
+                print(generate_h2o_model(request.form["column_to_predict"], int(request.form["max_runtime_limit"]), "use_stored_model" in request.form))
             else:
                 flash(
                     "Please choose a dataset and a column to predict to use this functionality",
